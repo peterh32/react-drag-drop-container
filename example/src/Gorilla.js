@@ -42,7 +42,7 @@ class Gorilla extends React.Component {
     };
     return (
       <div style={styles} ref="test_target">
-        <img src="img/gorilla.png" width="100"/>
+        <img src="https://s28.postimg.org/5c28kbqex/gorilla.png" width="100"/>
       </div>
     );
   }

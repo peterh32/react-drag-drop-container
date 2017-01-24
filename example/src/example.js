@@ -12,31 +12,31 @@ var App = React.createClass({
 						dataKey="food_data" 
 						dragData={{'label': 'banana', 'tastes': 'yummy', 'domId': 'mybanana'}}
 					>
-						<img id="mybanana" src="img/banana.png"/>
+						<img id="mybanana" src="https://s28.postimg.org/bocsgf43d/banana.png" height="32"/>
 					</DragDropContainer>
+
+					<br/><br/>
+					<DragDropContainer
+						dataKey="food_data"
+						dragData={{'label': 'surprise', 'tastes': 'excellent'}}
+						dragGhost={<img id="surprise" src="https://s28.postimg.org/3o335ocjd/surprise.png" height="32"/>}
+					>
+						Drag Me for a Surprise!
+					</DragDropContainer>
+					<br/><br/>
 					
 					<DragDropContainer 
 						dataKey="food_data" 
 						dragData={{'label': 'orange', 'tastes': 'yummy', 'domId': 'myorange'}}
 					>
-						<img id="myorange" src="img/orange.png"/>
+						<img id="myorange" src="https://s28.postimg.org/3yalp0r5l/orange.png" height="32"/>
 					</DragDropContainer>
 					
 					<DragDropContainer
 						dataKey="food_data"
 						dragData={{'label': 'pickle', 'tastes': 'bad', 'domId': 'mypickle'}}
 					>
-						<img id="mypickle" src="img/pickle.png"/>
-					</DragDropContainer>
-					
-					<br/><br/>
-					
-					<DragDropContainer
-						dataKey="food_data"
-						dragData={{'label': 'surprise', 'tastes': 'ok'}}
-						dragGhost={<img id="surprise" src="img/surprise.png"/>}
-					>
-						<h2>Surprise!</h2>
+						<img id="mypickle" src="https://s28.postimg.org/5em475u2h/pickle.png" height="32"/>
 					</DragDropContainer>
 					
 					<br/><br/><br/>
