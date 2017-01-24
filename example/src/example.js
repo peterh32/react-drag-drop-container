@@ -14,18 +14,32 @@ var App = React.createClass({
 					>
 						<img id="mybanana" src="img/banana.png"/>
 					</DragDropContainer>
+					
 					<DragDropContainer 
 						dataKey="food_data" 
 						dragData={{'label': 'orange', 'tastes': 'yummy', 'domId': 'myorange'}}
 					>
 						<img id="myorange" src="img/orange.png"/>
 					</DragDropContainer>
-					<DragDropContainer 
-						dataKey="food_data" 
+					
+					<DragDropContainer
+						dataKey="food_data"
 						dragData={{'label': 'pickle', 'tastes': 'bad', 'domId': 'mypickle'}}
 					>
 						<img id="mypickle" src="img/pickle.png"/>
 					</DragDropContainer>
+					
+					<br/><br/>
+					
+					<DragDropContainer
+						dataKey="food_data"
+						dragData={{'label': 'surprise', 'tastes': 'ok'}}
+						dragGhost={<img id="surprise" src="img/surprise.png"/>}
+					>
+						<h2>Surprise!</h2>
+					</DragDropContainer>
+					
+					<br/><br/><br/>
 				</div>
 
 				<DragDropContainer returnToBase={false}>

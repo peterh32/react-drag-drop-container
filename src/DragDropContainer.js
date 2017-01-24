@@ -54,7 +54,8 @@ class DragDropContainer extends React.Component {
     // add stringified dragData to the event and make it accessible via html5-style method event.dataTransfer.getData()
     var data = JSON.stringify(this.props.dragData);
     evt.dataTransfer = {
-      getData: (arg)=>{return arg === this.props.dataKey ? data : undefined}
+      'getData': (arg)=>{return arg === this.props.dataKey ? data : undefined},
+			'types': [this.props.dataKey]
     };
     return evt
   }

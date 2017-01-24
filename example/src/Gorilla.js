@@ -19,9 +19,11 @@ class Gorilla extends React.Component {
   dropOn(ev){
     var data = this.getData(ev);
     if (data) {
-			if (data.tastes === 'yummy') {
-				document.getElementById(data.domId).style.visibility = 'hidden';
-				alert('Thanks for the ' + data.label + '! They are ' + data.tastes + '!');
+			if (data.tastes != 'bad') {
+				if (data.domId) {
+					document.getElementById(data.domId).style.visibility = 'hidden';
+				}
+				alert('Thanks for the ' + data.label + '! It is ' + data.tastes + '!');
 			} else {
 				alert('Yech! ' + data.label + ' are ' + data.tastes + '!');
 			}
