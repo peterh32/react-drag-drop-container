@@ -7,7 +7,7 @@ class Gorilla extends React.Component {
     };
   }
   componentDidMount() {
-    this.refs.test_target.addEventListener('drop', (ev) => {this.dropOn(ev)}, false);
+    this.refs.test_target.addEventListener('drop', (ev) => {this.handleDrop(ev)}, false);
     this.refs.test_target.addEventListener('dragEnter', (ev) => {this.setState({'highlighted': true})}, false);
     this.refs.test_target.addEventListener('dragLeave', (ev) => {this.setState({'highlighted': false})}, false);
   }
@@ -16,7 +16,7 @@ class Gorilla extends React.Component {
     return JSON.parse(event.dataTransfer.getData('food_data'));
   }
 
-  dropOn(ev){
+  handleDrop(ev){
     var data = this.getData(ev);
     if (data) {
 			if (data.tastes != 'bad') {
