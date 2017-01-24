@@ -3,15 +3,15 @@
 Wrapper component for dragging an element and dropping it on a target. 
 
 * Emulates HTML5 events __dragEnter__, __dragLeave__, and __drop__ so you can use it 
-on many HTML5 drag targets.
+as-is on many HTML5 drag targets.
 
 * Works on mouse and touch devices.
 
 * Can set it up to drag the element itself or drag a "ghost" node that 
 represents the element.
 
-* Can specify a "key" to help drop targets recognize compatible drag items, for 
-example to highlight compatible targets when you drag over them.
+* Can specify a __dataKey__ to help drop targets recognize compatible drag items, for 
+example so that compatible targets will highlight when you drag over them.
 
 * Can also customize drag event names -- another way for your targets to 
 recognize compatible drag items.
@@ -73,9 +73,9 @@ Specify a data key for your data:
 
 Go look at your element -- it should now be draggable.
 
-#### Set up Target
+#### Set up Target(s)
 
-Tell your target to capture drag/drop events:
+Tell your target(s) to capture drag/drop events:
 ```
   componentDidMount() {
     var elem = this.refs.my_component;  // get DOM element
@@ -107,30 +107,36 @@ again using the ```dataKey``` you set above.
 Now add handlers for the events:
 ```
   handleDragEnter(ev){
-  	this.setState({'highlighted': true})
+    if (this.isCompatible(ev)) {
+ 	  this.setState({'highlighted': true})
+	}
   }
 
   handleDragLeave(ev){
-  	this.setState({'highlighted': false})
+    if (this.isCompatible(ev)) {
+ 	  this.setState({'highlighted': false})
+	}
   }
   
   handleDrop(ev){
-    let data = this.getData(ev);
-    ... do something with data ...
+    if (this.isCompatible(ev)) {
+      let data = this.getData(ev);
+      ... do something with data ...
+    }
   }
 ```
 
 #### What if I want the target to "consume" the draggable?
 Include the DOM ID of the draggable in the dragData:
 ```
-<DragDropContainer dragData={{'label': 'Example', 'id': 123, 'id': 'bar'}} dataKey="foo">
+<DragDropContainer dragData={{'label': 'Example', 'id': 123, 'elemId': 'bar'}} dataKey="foo">
 	<div id="bar">Example</div>
 </DragDropContainer>
 ```
 
 ...then in the method that handles the data, do something like this:
 ```
-  document.getElementById(data.id).style.visibility = 'hidden';
+  document.getElementById(data.elemId).style.visibility = 'hidden';
 ```
 
 
@@ -140,11 +146,7 @@ Include the DOM ID of the draggable in the dragData:
 Data about the dragged item that you want to pass to the target. 
 
 ##### dataKey
-They key for retrieving the dragData from the event using 
-```event.dataTransfer.getData(dataKey)```
-
-
-Default is 'data'.
+They key for retrieving the dragData from the event. Default is 'data'.
 
 ##### dragEnterEventName, dragLeaveEventName, dropEventName
 Optional custom names for the three events. You can use these
