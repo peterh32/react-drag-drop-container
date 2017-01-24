@@ -84,6 +84,7 @@ Tell your target(s) to capture drag/drop events:
     elem.addEventListener('drop', (ev) => {this.handleDrop(ev)}, false);
   }
 ```
+(You could also use custom event names, see [section below](#dragentereventname-dragleaveeventname-dropeventname).)
 
 Add a method to check whether the dragged item is compatible with this target,
 based on the ```dataKey``` value you set above:
