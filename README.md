@@ -21,11 +21,11 @@ recognize compatible drag items.
 * Includes callback properties for __onStartDrag__, __onDragging__, and __onEndDrag__.
 
 
-## Demo & Examples
+## Demo 
 
 Live demo: [peterh32.github.io/react-drag-drop-container](http://peterh32.github.io/react-drag-drop-container/)
 
-To build the examples locally, run:
+To build the demo locally, run:
 
 ```
 npm install
