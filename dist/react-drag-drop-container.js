@@ -77,7 +77,7 @@ var DragDropContainer = (function (_React$Component) {
       if (typeof window.CustomEvent !== 'function') {
         // we are in IE 11 and must use old-style method of creating event
         evt = document.createEvent('CustomEvent');
-        evt.initCustomEvent(eventName, true, true);
+        evt.initCustomEvent(eventName, true, true, {});
       } else {
         evt = new CustomEvent(eventName, { 'bubbles': true, 'cancelable': true });
       }
