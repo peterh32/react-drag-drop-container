@@ -7,9 +7,9 @@ class Gorilla extends React.Component {
     };
   }
   componentDidMount() {
-    this.refs.test_target.addEventListener('drop', (ev) => {this.handleDrop(ev)}, false);
-    this.refs.test_target.addEventListener('dragEnter', (ev) => {this.setState({'highlighted': true})}, false);
-    this.refs.test_target.addEventListener('dragLeave', (ev) => {this.setState({'highlighted': false})}, false);
+    this.refs.test_target.addEventListener('drop', (ev) => {this.handleDrop(ev);}, false);
+    this.refs.test_target.addEventListener('dragEnter', (ev) => {this.setState({'highlighted': true});}, false);
+    this.refs.test_target.addEventListener('dragLeave', (ev) => {this.setState({'highlighted': false});}, false);
   }
 
   getData(event){

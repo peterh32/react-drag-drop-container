@@ -1,4 +1,6 @@
 import React from 'react';
+import DragDropGhost from './DragDropGhost';
+
 /**
  * A container for dragging an element and dropping it on a target.
  */
@@ -28,13 +30,14 @@ class DragDropContainer extends React.Component {
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.drop = this.drop.bind(this);
 
-    // these are not set in state they do not involve re-rendering
+    // the DOM elem we're dragging, and the elements we're dragging over
     this.dragElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
   }
 
   componentDidMount() {
+    // figure out what we're going to drag
     if (this.props.dragGhost) {
       this.dragElem = this.refs['drag_ghost'].refs['the_ghost'];
     } else {
@@ -51,17 +54,18 @@ class DragDropContainer extends React.Component {
     } else {
       evt = new CustomEvent(eventName, {'bubbles': true, 'cancelable': true});
     }
-    // add stringified dragData to the event and make it accessible via html5-style method event.dataTransfer.getData()
+    // Add stringified dragData to the event and make it accessible via HTML5-style
+    // method event.dataTransfer.getData() and property event.dataTransfer.types
     var data = JSON.stringify(this.props.dragData);
     evt.dataTransfer = {
-      'getData': (arg)=>{return arg === this.props.dataKey ? data : undefined},
+      'getData': (arg)=>{return arg === this.props.dataKey ? data : undefined;},
 			'types': [this.props.dataKey]
     };
-    return evt
+    return evt;
   }
 
   setCurrentTarget(x, y) {
-    // drop the z-index, figure out what element we're dragging over, then reset the z index
+    // drop the z-index to get this elem out of the way, figure out what we're dragging over, then reset the z index
     this.dragElem.style.zIndex = -1;
     var target = document.elementFromPoint(x, y) || document.body;
     this.dragElem.style.zIndex = this.props.zIndex;
@@ -70,31 +74,33 @@ class DragDropContainer extends React.Component {
   }
 
   generateEnterLeaveEvents(x, y) {
+    // generate events as we enter and leave elements while dragging
     this.setCurrentTarget(x, y);
     if (this.currentTarget !== this.prevTarget) {
-      if (this.prevTarget) {this.prevTarget.dispatchEvent(this.createEvent(this.props.dragLeaveEventName, x, y));}
-      if (this.currentTarget) {this.currentTarget.dispatchEvent(this.createEvent(this.props.dragEnterEventName, x, y))}
+      if (this.prevTarget) {this.prevTarget.dispatchEvent(this.createEvent(this.props.customEventNameDragLeave, x, y));}
+      if (this.currentTarget) {this.currentTarget.dispatchEvent(this.createEvent(this.props.customEventNameDragEnter, x, y));}
     }
     this.prevTarget = this.currentTarget;
   }
 
   generateDropEvent(x, y) {
+    // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    this.currentTarget.dispatchEvent(this.createEvent(this.props.dropEventName, x, y));
+    this.currentTarget.dispatchEvent(this.createEvent(this.props.customEventNameDrop, x, y));
   }
 
   // Start the Drag
   handleMouseDown(e) {
     e.preventDefault();
-    document.addEventListener("mousemove", this.handleMouseMove);
-    document.addEventListener("mouseup", this.handleMouseUp);
+    document.addEventListener('mousemove', this.handleMouseMove);
+    document.addEventListener('mouseup', this.handleMouseUp);
     this.startDrag(e.clientX, e.clientY);
   }
 
   handleTouchStart(e){
     e.preventDefault();
-    document.addEventListener("touchmove", this.handleTouchMove);
-    document.addEventListener("touchend", this.handleTouchEnd);
+    document.addEventListener('touchmove', this.handleTouchMove);
+    document.addEventListener('touchend', this.handleTouchEnd);
     this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
   }
 
@@ -107,18 +113,18 @@ class DragDropContainer extends React.Component {
     this.props.onStartDrag(this.props.dragData);
   }
 
-  // Drag
+  // During Drag
   handleMouseMove(e) {
     e.preventDefault();
     if (this.state.clicked){
-      this.drag(e.clientX, e.clientY)
+      this.drag(e.clientX, e.clientY);
     }
   }
 
   handleTouchMove(e) {
     e.preventDefault();
     if (this.state.clicked){
-      this.drag(e.targetTouches[0].pageX, e.targetTouches[0].pageY)
+      this.drag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
     }
   }
 
@@ -137,8 +143,8 @@ class DragDropContainer extends React.Component {
   handleMouseUp(e) {
     this.setState({clicked: false});
     if (this.state.dragging){
-      document.removeEventListener("mousemove", this.handleMouseMove);
-      document.removeEventListener("mouseup", this.handleMouseUp);
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('mouseup', this.handleMouseUp);
       this.drop(e.clientX, e.clientY);
     }
   }
@@ -146,8 +152,8 @@ class DragDropContainer extends React.Component {
   handleTouchEnd(e) {
     this.setState({clicked: false});
     if (this.state.dragging){
-      document.removeEventListener("touchmove", this.handleTouchMove);
-      document.removeEventListener("touchend", this.handleTouchEnd);
+      document.removeEventListener('touchmove', this.handleTouchMove);
+      document.removeEventListener('touchend', this.handleTouchEnd);
       this.drop(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
     }
   }
@@ -157,7 +163,7 @@ class DragDropContainer extends React.Component {
     if (this.props.returnToBase){
       this.setState({left: 0, top: 0, dragging: false});
     } else {
-      this.setState({dragged: true, dragging: false})
+      this.setState({dragged: true, dragging: false});
     }
     this.props.onEndDrag(this.props.dragData, this.currentTarget, x, y);
   }
@@ -174,7 +180,7 @@ class DragDropContainer extends React.Component {
         <DragDropGhost dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex} ref="drag_ghost">
           {this.props.dragGhost}
         </DragDropGhost>
-      )
+      );
     } else {
       // dragging will be applied to the DragDropContainer itself
       styles['left'] = this.state.left;
@@ -191,22 +197,30 @@ class DragDropContainer extends React.Component {
 }
 
 DragDropContainer.propTypes = {
-  // callbacks (optional):
-  onStartDrag: React.PropTypes.func,
-  onDragging: React.PropTypes.func,
-  onEndDrag: React.PropTypes.func,
-  // We will pass a stringified version of this object to the target when you drag or drop over it
-  dragData: React.PropTypes.object.isRequired,
+  children: React.PropTypes.any, // just for the linter
+
+  // You can customize these to make it easy for your target to spot the events it's interested in
+  customEventNameDragEnter: React.PropTypes.string,
+  customEventNameDragLeave: React.PropTypes.string,
+  customEventNameDrop: React.PropTypes.string,
+
   // The key that the target will use to retrieve dragData from the event with event.dataTransfer.getData([dataKey])
   dataKey: React.PropTypes.string,
-  // If false, then object will not return to its starting point after you let go of it
-  returnToBase: React.PropTypes.bool,
+
+  // We will pass a stringified version of this object to the target when you drag or drop over it
+  dragData: React.PropTypes.object.isRequired,
+
   // If provided, we'll drag this instead of the actual object
   dragGhost: React.PropTypes.node,
-  // You can customize these to make it easy for your target to spot the events it's interested in
-  dragEnterEventName: React.PropTypes.string,
-  dragLeaveEventName: React.PropTypes.string,
-  dropEventName: React.PropTypes.string,
+
+  // callbacks (optional):
+  onDragging: React.PropTypes.func,
+  onEndDrag: React.PropTypes.func,
+  onStartDrag: React.PropTypes.func,
+
+  // If false, then object will not return to its starting point after you let go of it
+  returnToBase: React.PropTypes.bool,
+
   // Defaults to 1000 while dragging, but you can customize it
   zIndex: React.PropTypes.number
 };
@@ -214,31 +228,13 @@ DragDropContainer.propTypes = {
 DragDropContainer.defaultProps = {
   onStartDrag: () => {},
   onDragging: () => {},
-  onEndDrag: function(){},
+  onEndDrag: () => {},
   dataKey: 'data',
   returnToBase: true,
-  dragEnterEventName: 'dragEnter',
-  dragLeaveEventName: 'dragLeave',
-  dropEventName: 'drop',
+  customEventNameDragEnter: 'dragEnter',
+  customEventNameDragLeave: 'dragLeave',
+  customEventNameDrop: 'drop',
   zIndex: 1000
 };
-
-class DragDropGhost extends React.Component {
-  render() {
-    var styles = {
-      'position': 'absolute',
-      'zIndex': this.props.zIndex,
-      'left': this.props.left,
-      'top': this.props.top,
-      'display': this.props.dragging ? 'block' : 'none'
-    };
-    return (
-      <div style={styles} ref="the_ghost">
-        {this.props.children}
-      </div>
-    )
-  }
-}
-
 
 export default DragDropContainer;

@@ -149,7 +149,7 @@ Data about the dragged item that you want to pass to the target.
 ##### dataKey
 They key for retrieving the dragData from the event. Default is 'data'.
 
-##### dragEnterEventName, dragLeaveEventName, dropEventName
+##### customEventNameDragEnter, customEventNameDragLeave, customEventNameDrop
 Optional custom names for the three events. You can use these
 to tell your target which events to watch for. (This lets you write a little
 less code in the target, since it doesn't have to validate the 
