@@ -1,6 +1,6 @@
 {
   "name": "react-drag-drop-container",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "DragDropContainer",
   "main": "lib/DragDropContainer.js",
   "author": "Medidata",
