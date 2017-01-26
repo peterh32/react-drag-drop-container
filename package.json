@@ -3,7 +3,7 @@
   "version": "0.0.8",
   "description": "DragDropContainer",
   "main": "lib/DragDropContainer.js",
-  "author": "Peter Hollingsworth",
+  "author": "Medidata",
   "homepage": "https://github.com/peterh32/react-drag-drop-container",
   "repository": {
     "type": "git",
