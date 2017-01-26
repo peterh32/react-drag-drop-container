@@ -1,10 +1,15 @@
 import React from 'react';
+/*
+ * Gorilla -- an example target component for DragDropContainer
+ */
+
 class Gorilla extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       'highlighted': false
     };
+    this.dataKey = 'food_data'; // this is where Gorilla will look for the data in the drag object
   }
   componentDidMount() {
     this.refs.test_target.addEventListener('drop', (ev) => {this.handleDrop(ev);}, false);
@@ -13,18 +18,20 @@ class Gorilla extends React.Component {
   }
 
   getData(event){
-    return JSON.parse(event.dataTransfer.getData('food_data'));
+    return event.dataTransfer.getData(this.dataKey);
+  }
+
+  getSourceElement(event) {
+    return event.sourceElement;
   }
 
   handleDrop(ev){
     var data = this.getData(ev);
     if (data) {
 			if (data.tastes != 'bad') {
-				if (data.domId) {
-					document.getElementById(data.domId).style.visibility = 'hidden';
-				}
 				alert('Thanks for the ' + data.label + '! It is ' + data.tastes + '!');
-			} else {
+        this.getSourceElement(ev).style.visibility = 'hidden';
+      } else {
 				alert('Yech! ' + data.label + ' are ' + data.tastes + '!');
 			}
     }

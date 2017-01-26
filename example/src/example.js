@@ -7,46 +7,43 @@ var App = React.createClass({
 	render () {
 		return (
 			<div>
+				<DragDropContainer returnToBase={false}>
+					<Gorilla />
+				</DragDropContainer>
+
 				<div style={{ 'float': 'left' }}>
 					<DragDropContainer 
 						dataKey="food_data" 
-						dragData={{'label': 'banana', 'tastes': 'yummy', 'domId': 'mybanana'}}
+						dragData={{'label': 'banana', 'tastes': 'yummy'}}
 					>
-						<img id="mybanana" src="https://s28.postimg.org/bocsgf43d/banana.png" height="32"/>
+						<img src="https://s28.postimg.org/bocsgf43d/banana.png" height="45"/>
 					</DragDropContainer>
 
-					<br/><br/>
 					<DragDropContainer
 						dataKey="food_data"
-						dragData={{'label': 'surprise', 'tastes': 'excellent'}}
-						dragGhost={<img id="surprise" src="https://s28.postimg.org/3o335ocjd/surprise.png" height="32"/>}
+						dragData={{'label': 'cheeseburger', 'tastes': 'excellent'}}
+						dragGhost={<div style={{backgroundColor: '#eaa', padding: 6, borderRadius: 4}}>Cheeseburger!</div>}
 					>
-						Drag Me for a Surprise!
+						<img src="https://s28.postimg.org/3o335ocjd/surprise.png" height="45"/>
 					</DragDropContainer>
-					<br/><br/>
-					
+
 					<DragDropContainer 
 						dataKey="food_data" 
-						dragData={{'label': 'orange', 'tastes': 'yummy', 'domId': 'myorange'}}
+						dragData={{'label': 'orange', 'tastes': 'yummy'}}
 					>
-						<img id="myorange" src="https://s28.postimg.org/3yalp0r5l/orange.png" height="32"/>
+						<img src="https://s28.postimg.org/3yalp0r5l/orange.png" height="45"/>
 					</DragDropContainer>
 					
 					<DragDropContainer
 						dataKey="food_data"
-						dragData={{'label': 'pickle', 'tastes': 'bad', 'domId': 'mypickle'}}
+						dragData={{'label': 'pickle', 'tastes': 'bad'}}
 					>
-						<img id="mypickle" src="https://s28.postimg.org/5em475u2h/pickle.png" height="32"/>
+						<img src="https://s28.postimg.org/5em475u2h/pickle.png" height="45"/>
 					</DragDropContainer>
 					
 					<br/><br/><br/>
 				</div>
 
-				<DragDropContainer returnToBase={false}>
-					<Gorilla />
-				</DragDropContainer>
-				
-				
 			</div>
 		);
 	}

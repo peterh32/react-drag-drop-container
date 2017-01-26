@@ -54,13 +54,15 @@ class DragDropContainer extends React.Component {
     } else {
       evt = new CustomEvent(eventName, {'bubbles': true, 'cancelable': true});
     }
-    // Add stringified dragData to the event and make it accessible via HTML5-style
-    // method event.dataTransfer.getData() and property event.dataTransfer.types
-    var data = JSON.stringify(this.props.dragData);
+    // Add dragData to the event and make it accessible through HTML5-style dataTransfer object
+    // via method: event.dataTransfer.getData()  and property:  event.dataTransfer.types
     evt.dataTransfer = {
-      'getData': (arg)=>{return arg === this.props.dataKey ? data : undefined;},
-			'types': [this.props.dataKey]
+      'getData': (arg)=>{return arg === this.props.dataKey ? this.props.dragData : undefined;},
+      'types': [this.props.dataKey]
     };
+    // Also throw in a bonus reference to this element, which you can use (for example) to
+    // delete or hide this thing after a successful drop
+    evt.sourceElement = this.refs['drag_container'];
     return evt;
   }
 
@@ -208,7 +210,7 @@ DragDropContainer.propTypes = {
   dataKey: React.PropTypes.string,
 
   // We will pass a stringified version of this object to the target when you drag or drop over it
-  dragData: React.PropTypes.object.isRequired,
+  dragData: React.PropTypes.object,
 
   // If provided, we'll drag this instead of the actual object
   dragGhost: React.PropTypes.node,
@@ -229,6 +231,7 @@ DragDropContainer.defaultProps = {
   onStartDrag: () => {},
   onDragging: () => {},
   onEndDrag: () => {},
+  dragData: {},
   dataKey: 'data',
   returnToBase: true,
   customEventNameDragEnter: 'dragEnter',

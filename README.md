@@ -99,9 +99,8 @@ Add a method to grab the drag data from the event (this follows HTML 5 practice)
 again using the ```dataKey``` you set above.
 ```
   // Retrieve drag data using HTML 5 dataTransfer.getData method
-  // Note that data is stringified and must be JSON.parse'd
   getData(ev){
-    return JSON.parse(ev.dataTransfer.getData('foo'));
+    return ev.dataTransfer.getData('foo');
   }
 ```
 
@@ -128,23 +127,18 @@ Now add handlers for the events:
 ```
 
 #### What if I want the target to "consume" the draggable?
-Include the DOM ID of the draggable in the dragData:
+The events passed to the target include a reference to the drag source DOM element
+in __event.sourceElement__. Use this to hide or delete the source element after a successful
+drop!
 ```
-<DragDropContainer dragData={{'label': 'Example', 'id': 123, 'elemId': 'bar'}} dataKey="foo">
-	<div id="bar">Example</div>
-</DragDropContainer>
-```
-
-...then in the method that handles the data, do something like this:
-```
-  document.getElementById(data.elemId).style.visibility = 'hidden';
+  event.sourceElement.style.visibility = 'hidden';
 ```
 
 
 ### Properties
 
-##### dragData (required)
-Data about the dragged item that you want to pass to the target. 
+##### dragData
+Data about the dragged item that you want to pass to the target. Default is empty object.
 
 ##### dataKey
 They key for retrieving the dragData from the event. Default is 'data'.
@@ -153,7 +147,9 @@ They key for retrieving the dragData from the event. Default is 'data'.
 Optional custom names for the three events. You can use these
 to tell your target which events to watch for. (This lets you write a little
 less code in the target, since it doesn't have to validate the 
-event data before highlighting or whatever).
+event data before highlighting or whatever). 
+
+Defaults are dragEnter, dragLeave, and drop.
 
 
 ##### dragGhost
@@ -162,7 +158,7 @@ will remain in place).
 
 Example:
 ```
-var ghost = <div class="drag_elem">Drag Me</div>;
+let ghost = <div class="drag_elem">Drag Me</div>;
 
 <DragDropContainer dragGhost={ghost}>
 ```
