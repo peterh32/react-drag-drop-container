@@ -96,7 +96,7 @@ var DragDropContainer = (function (_React$Component) {
     value: function setCurrentTarget(x, y) {
       // drop the z-index, figure out what element we're dragging over, then reset the z index
       this.dragElem.style.zIndex = -1;
-      var target = document.elementFromPoint(x, y);
+      var target = document.elementFromPoint(x, y) || document.body;
       this.dragElem.style.zIndex = this.props.zIndex;
       // prevent it from selecting itself as the target
       this.currentTarget = this.dragElem.contains(target) ? document.body : target;
