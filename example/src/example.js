@@ -40,7 +40,18 @@ var App = React.createClass({
 					>
 						<img src="https://s28.postimg.org/5em475u2h/pickle.png" height="45"/>
 					</DragDropContainer>
-					
+
+					<DragDropContainer
+						dataKey="food_data"
+						dragData={{'label': 'dogfood', 'tastes': 'yummy'}}
+						dragHandleClassName="drag_handle"
+					>
+						<div>
+							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>Grab here</div>
+							<div style={{backgroundColor: "#eee"}}>this<br/>you<br/>cannot<br/>grab!<br/></div>
+							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>Grab here</div>
+						</div>
+					</DragDropContainer>
 					<br/><br/><br/>
 				</div>
 

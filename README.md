@@ -16,6 +16,8 @@ example so that compatible targets will highlight when you drag over them.
 * Can also customize drag event names -- another way for your targets to 
 recognize compatible drag items.
 
+* Can specify a className to use for draghandle(s).
+
 * Can tell the element to return-to-base after dragging, or to stay where you put it.
 
 * Includes callback properties for __onStartDrag__, __onDragging__, and __onEndDrag__.
@@ -139,6 +141,9 @@ Data about the dragged item that you want to pass to the target. Default is empt
 
 ##### dataKey
 They key for retrieving the dragData from the event. Default is 'data'.
+
+##### dragHandleClassName
+Class name for drag handle(s). Optional. If omitted, the whole thing is grabbable.
 
 ##### customEventNameDragEnter, customEventNameDragLeave, customEventNameDrop
 Optional custom names for the three events. You can use these

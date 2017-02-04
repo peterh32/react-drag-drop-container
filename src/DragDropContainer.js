@@ -43,6 +43,21 @@ class DragDropContainer extends React.Component {
     } else {
       this.dragElem = this.refs['drag_container'];
     }
+    // capture events
+    let elem = this.refs['drag_container'];
+    if (this.props.dragHandleClassName) {
+      let elems = elem.getElementsByClassName(this.props.dragHandleClassName);
+      for (let i=0; i<elems.length; i++){
+        this.addListeners(elems[i]);
+      }
+    } else {
+      this.addListeners(elem);
+    }
+  }
+
+  addListeners(elem) {
+    elem.addEventListener('mousedown', (e) => {this.handleMouseDown(e)}, false);
+    elem.addEventListener('touchstart', (e) => {this.handleTouchStart(e)}, false);
   }
 
   createEvent(eventName, x, y) {
@@ -190,7 +205,7 @@ class DragDropContainer extends React.Component {
       styles['zIndex'] = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
     }
     return (
-      <div style={styles} onMouseDown={this.handleMouseDown} onTouchStart={this.handleTouchStart} ref="drag_container">
+      <div style={styles} ref="drag_container">
         {this.props.children}
         {ghost}
       </div>
@@ -214,6 +229,8 @@ DragDropContainer.propTypes = {
 
   // If provided, we'll drag this instead of the actual object
   dragGhost: React.PropTypes.node,
+
+  dragHandleClassName: React.PropTypes.string,
 
   // callbacks (optional):
   onDragging: React.PropTypes.func,
