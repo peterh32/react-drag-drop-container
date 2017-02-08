@@ -168,6 +168,7 @@ var DragDropContainer = (function (_React$Component) {
     key: 'handleTouchStart',
     value: function handleTouchStart(e) {
       if (!this.props.noDragging) {
+        e.preventDefault();
         document.addEventListener('touchmove', this.handleTouchMove);
         document.addEventListener('touchend', this.handleTouchEnd);
         this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
