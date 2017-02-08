@@ -13,6 +13,8 @@ class DragDropContainer extends React.Component {
       'clickY': 0,
       'left': 0,
       'top': 0,
+      'initialLeftOffset': 0,
+      'initialTopOffset': 0,
       'clicked': false,
       'dragging': false,
       'dragged': false
@@ -30,18 +32,22 @@ class DragDropContainer extends React.Component {
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.drop = this.drop.bind(this);
 
+    this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
+
     // the DOM elem we're dragging, and the elements we're dragging over
     this.dragElem = null;
+    this.containerElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
   }
 
   componentDidMount() {
+    this.containerElem = this.refs['drag_container'];
     // figure out what we're going to drag
     if (this.props.dragGhost) {
       this.dragElem = this.refs['drag_ghost'].refs['the_ghost'];
     } else {
-      this.dragElem = this.refs['drag_container'];
+      this.dragElem = this.containerElem;
     }
     // capture events
     let elem = this.refs['drag_container'];
@@ -126,9 +132,11 @@ class DragDropContainer extends React.Component {
 
   startDrag(x, y){
     this.setState({
-      'clicked': true,
-      'clickX': x - this.state.left,
-      'clickY': y - this.state.top
+      clicked: true,
+      clickX: x - this.state.left,
+      clickY: y - this.state.top,
+      initialLeftOffset: this.containerElem.offsetLeft,
+      initialTopOffset: this.containerElem.offsetTop,
     });
     this.props.onStartDrag(this.props.dragData);
   }
@@ -155,10 +163,11 @@ class DragDropContainer extends React.Component {
   drag (x, y){
     // drop the z-index, figure out what element we're dragging over, then reset the z index
     this.generateEnterLeaveEvents(x, y);
+    let [dx, dy] = this.checkForOffsetChanges();
     this.setState({
       dragging: true,
-      left: x - this.state.clickX,
-      top: y - this.state.clickY
+      left: dx + x - this.state.clickX,
+      top: dy + y - this.state.clickY
     });
     this.props.onDragging(this.props.dragData, this.currentTarget, x, y);
   }
@@ -190,6 +199,19 @@ class DragDropContainer extends React.Component {
       this.setState({dragged: true, dragging: false});
     }
     this.props.onEndDrag(this.props.dragData, this.currentTarget, x, y);
+  }
+
+  checkForOffsetChanges(){
+    // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
+    let dx, dy;
+    if (this.props.dragGhost) {
+      dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
+      dy = this.state.initialTopOffset - this.containerElem.offsetTop;
+    } else {
+      dx = this.state.initialLeftOffset + this.state.left - this.containerElem.offsetLeft;
+      dy = this.state.initialTopOffset + this.state.top - this.containerElem.offsetTop;
+    }
+    return [dx, dy];
   }
 
   render() {

@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var DragDropContainer = require('react-drag-drop-container');
 import Gorilla from './Gorilla';
+import ExpandsOnDragEnter from './ExpandsOnDragEnter';
 
 var App = React.createClass({
 	render () {
@@ -10,8 +11,12 @@ var App = React.createClass({
 				<DragDropContainer returnToBase={false}>
 					<Gorilla />
 				</DragDropContainer>
-
 				<div style={{ 'float': 'left' }}>
+					<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+					<ExpandsOnDragEnter/>
+				</div>
+				<div style={{ 'float': 'left' }}>
+					<ExpandsOnDragEnter/>
 					<DragDropContainer 
 						dataKey="food_data" 
 						dragData={{'label': 'banana', 'tastes': 'yummy'}}
