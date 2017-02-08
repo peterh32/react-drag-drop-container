@@ -134,16 +134,20 @@ class DragDropContainer extends React.Component {
 
   // During Drag
   handleMouseMove(e) {
-    e.preventDefault();
-    if (this.state.clicked){
-      this.drag(e.clientX, e.clientY);
+    if (!this.props.noDragging) {
+      e.preventDefault();
+      if (this.state.clicked){
+        this.drag(e.clientX, e.clientY);
+      }
     }
   }
 
   handleTouchMove(e) {
-    e.preventDefault();
-    if (this.state.clicked){
-      this.drag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+    if (!this.props.noDragging) {
+      e.preventDefault();
+      if (this.state.clicked){
+        this.drag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+      }
     }
   }
 
