@@ -6,6 +6,8 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -40,8 +42,8 @@ var DragDropContainer = (function (_React$Component) {
       'clickY': 0,
       'left': 0,
       'top': 0,
-      'initialOffsetLeft': 0,
-      'initialOffsetTop': 0,
+      'initialLeftOffset': 0,
+      'initialTopOffset': 0,
       'clicked': false,
       'dragging': false,
       'dragged': false
@@ -59,8 +61,11 @@ var DragDropContainer = (function (_React$Component) {
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.drop = this.drop.bind(this);
 
+    this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
+
     // the DOM elem we're dragging, and the elements we're dragging over
     this.dragElem = null;
+    this.containerElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
   }
@@ -68,11 +73,12 @@ var DragDropContainer = (function (_React$Component) {
   _createClass(DragDropContainer, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      this.containerElem = this.refs['drag_container'];
       // figure out what we're going to drag
       if (this.props.dragGhost) {
         this.dragElem = this.refs['drag_ghost'].refs['the_ghost'];
       } else {
-        this.dragElem = this.refs['drag_container'];
+        this.dragElem = this.containerElem;
       }
       // capture events
       var elem = this.refs['drag_container'];
@@ -180,9 +186,11 @@ var DragDropContainer = (function (_React$Component) {
     key: 'startDrag',
     value: function startDrag(x, y) {
       this.setState({
-        'clicked': true,
-        'clickX': x - this.state.left,
-        'clickY': y - this.state.top
+        clicked: true,
+        clickX: x - this.state.left,
+        clickY: y - this.state.top,
+        initialLeftOffset: this.containerElem.offsetLeft,
+        initialTopOffset: this.containerElem.offsetTop
       });
       this.props.onStartDrag(this.props.dragData);
     }
@@ -213,10 +221,18 @@ var DragDropContainer = (function (_React$Component) {
     value: function drag(x, y) {
       // drop the z-index, figure out what element we're dragging over, then reset the z index
       this.generateEnterLeaveEvents(x, y);
+
+      var _checkForOffsetChanges = this.checkForOffsetChanges();
+
+      var _checkForOffsetChanges2 = _slicedToArray(_checkForOffsetChanges, 2);
+
+      var dx = _checkForOffsetChanges2[0];
+      var dy = _checkForOffsetChanges2[1];
+
       this.setState({
         dragging: true,
-        left: x - this.state.clickX,
-        top: y - this.state.clickY
+        left: dx + x - this.state.clickX,
+        top: dy + y - this.state.clickY
       });
       this.props.onDragging(this.props.dragData, this.currentTarget, x, y);
     }
@@ -252,6 +268,21 @@ var DragDropContainer = (function (_React$Component) {
         this.setState({ dragged: true, dragging: false });
       }
       this.props.onEndDrag(this.props.dragData, this.currentTarget, x, y);
+    }
+  }, {
+    key: 'checkForOffsetChanges',
+    value: function checkForOffsetChanges() {
+      // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
+      var dx = undefined,
+          dy = undefined;
+      if (this.props.dragGhost) {
+        dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
+        dy = this.state.initialTopOffset - this.containerElem.offsetTop;
+      } else {
+        dx = this.state.initialLeftOffset + this.state.left - this.containerElem.offsetLeft;
+        dy = this.state.initialTopOffset + this.state.top - this.containerElem.offsetTop;
+      }
+      return [dx, dy];
     }
   }, {
     key: 'render',
