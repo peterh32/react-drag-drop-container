@@ -108,14 +108,12 @@ class DragDropContainer extends React.Component {
 
   // Start the Drag
   handleMouseDown(e) {
-    e.preventDefault();
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
     this.startDrag(e.clientX, e.clientY);
   }
 
   handleTouchStart(e){
-    e.preventDefault();
     document.addEventListener('touchmove', this.handleTouchMove);
     document.addEventListener('touchend', this.handleTouchEnd);
     this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
