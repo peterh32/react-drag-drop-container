@@ -51,9 +51,9 @@ var App = React.createClass({
 						dragData={{'label': 'dogfood', 'tastes': 'yummy'}}
 						dragHandleClassName="drag_handle"
 					>
-						<div>
+						<div style={{width: 80, textAlign: "center"}}>
 							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>drag handle</div>
-							<div style={{backgroundColor: "#eee"}}>this<br/>you<br/>cannot<br/>grab!<br/></div>
+							<div style={{backgroundColor: "#eee"}}>Dog<br/>Food<br/><br/>(use<br/>drag<br/>handles)<br/></div>
 							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>drag handle</div>
 						</div>
 					</DragDropContainer>
