@@ -47,10 +47,18 @@ var App = React.createClass({
 						dragHandleClassName="drag_handle"
 					>
 						<div>
-							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>Grab here</div>
+							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>drag handle</div>
 							<div style={{backgroundColor: "#eee"}}>this<br/>you<br/>cannot<br/>grab!<br/></div>
-							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>Grab here</div>
+							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>drag handle</div>
 						</div>
+					</DragDropContainer>
+					<br/><br/><br/>
+					<DragDropContainer
+						dataKey="food_data"
+						dragData={{'label': 'whatever', 'tastes': 'yummy'}}
+						noDragging={true}
+					>
+						I am not draggable
 					</DragDropContainer>
 					<br/><br/><br/>
 				</div>

@@ -164,6 +164,8 @@ let ghost = <div class="drag_elem">Drag Me</div>;
 
 <DragDropContainer dragGhost={ghost}>
 ```
+##### noDragging
+If true, dragging is turned off.
 
 ##### returnToBase
 Defaults to true. If false, then dragged item stays where you put it when you drop.

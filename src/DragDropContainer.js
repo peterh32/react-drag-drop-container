@@ -108,15 +108,19 @@ class DragDropContainer extends React.Component {
 
   // Start the Drag
   handleMouseDown(e) {
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('mouseup', this.handleMouseUp);
-    this.startDrag(e.clientX, e.clientY);
+    if (e.buttons === 1 && !this.props.noDragging) {
+      document.addEventListener('mousemove', this.handleMouseMove);
+      document.addEventListener('mouseup', this.handleMouseUp);
+      this.startDrag(e.clientX, e.clientY);
+    }
   }
 
   handleTouchStart(e){
-    document.addEventListener('touchmove', this.handleTouchMove);
-    document.addEventListener('touchend', this.handleTouchEnd);
-    this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+    if (!this.props.noDragging) {
+      document.addEventListener('touchmove', this.handleTouchMove);
+      document.addEventListener('touchend', this.handleTouchEnd);
+      this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+    }
   }
 
   startDrag(x, y){
@@ -230,6 +234,9 @@ DragDropContainer.propTypes = {
 
   dragHandleClassName: React.PropTypes.string,
 
+  // if True, then dragging is turned off
+  noDragging: React.PropTypes.bool,
+
   // callbacks (optional):
   onDragging: React.PropTypes.func,
   onEndDrag: React.PropTypes.func,
@@ -248,6 +255,7 @@ DragDropContainer.defaultProps = {
   onEndDrag: () => {},
   dragData: {},
   dataKey: 'data',
+  noDragging: false,
   returnToBase: true,
   customEventNameDragEnter: 'dragEnter',
   customEventNameDragLeave: 'dragLeave',
