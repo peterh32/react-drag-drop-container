@@ -189,8 +189,8 @@ var DragDropContainer = (function (_React$Component) {
         clicked: true,
         clickX: x - this.state.left,
         clickY: y - this.state.top,
-        initialLeftOffset: this.containerElem.offsetLeft,
-        initialTopOffset: this.containerElem.offsetTop
+        initialLeftOffset: this.state.dragged ? this.state.initialLeftOffset : this.containerElem.offsetLeft,
+        initialTopOffset: this.state.dragged ? this.state.initialTopOffset : this.containerElem.offsetTop
       });
       this.props.onStartDrag(this.props.dragData);
     }
