@@ -55,14 +55,14 @@ The element should now be draggable.
 ##### Set up for dragging to a target
 Add the data you want to send to the target when you drop the element on it:
 ```
-<DragDropContainer dragData={{'label': 'Example', 'id': 123}}>
+<DragDropContainer dragData={{label: 'Example', id: 123}}>
 	Example
 </DragDropContainer>
 ```
 
 Specify compatKey. This determines what dropTargets will accept your drag:
 ```
-<DragDropContainer dragData={{label: 'Example', 'id': 123}} compatKey="foo">
+<DragDropContainer dragData={{label: 'Example', id: 123}} compatKey="foo">
 	Example
 </DragDropContainer>
 ```
@@ -72,7 +72,9 @@ Specify compatKey. This determines what dropTargets will accept your drag:
 
 Wrap an element in a DropTarget, giving it the same compatKey as your draggable:
 ```
-  <DropTarget compatKey="foo">[some other element or text]</DropTarget>
+  import { DropTarget } from 'react-drag-drop-container';
+
+  <DropTarget compatKey="foo">[some element or text]</DropTarget>
 ```
 
 In DropTarget's parent, add handlers for the enter, leave, and drop events. For example:
@@ -97,30 +99,8 @@ to the child element, which we assume toggles some highlighted style.
   </DropTarget>
 ```
 
-### What is In the Event object?
-Here's the event object passed to the onDragEnter, onDragLeave, and onDrop callbacks:
-```
-{
-    dragData: [whatever you provided in the dragData property]
-    dragElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
-}
-```
-The __sourceElem___ and __dragElem__ properties point to the same object unless you
-set __dragGhost__ (see below), in which case __dragElem__ is the ghost, and __sourceElem__
-is the DragDropContainer.
 
-#### Example: make the target "consume" the draggable?
-Use __event.sourceElem__ to hide or delete the source element after a successful
-drop.
-```
-  dropped(ev){
-      ev.sourceElem.style.visibility = 'hidden';
-  }
-```
-
-
-### Properties
+### DragDropContainer Properties
 
 ##### dragData
 Data about the dragged item that you want to pass to the target. Default is empty object.
@@ -172,6 +152,35 @@ over; __x__ and __y__ are the current position.
 ##### onDragEnd(dragData, currentTarget, x, y)
 When you drop.
 
+### DropTarget Properties
+
+##### compatKey
+Optional string to specify which DragDropContainers this target will accept.
+
+#### Callbacks 
+
+All optional; specify in props.
+##### onDragEnter(e), onDragLeave(e), onDrop(e)
+The event e contains
+```
+{
+    dragData: [whatever you put in the dragData property for DragDropContainer]
+    dragElem: [reference to the DOM element being dragged]
+    sourceElem: [reference to the DragDropContainer DOM element]
+}
+```
+The __sourceElem___ and __dragElem__ properties point to the same object unless you
+set __dragGhost__ (see below), in which case __dragElem__ is the ghost, and __sourceElem__
+is the DragDropContainer.
+
+##### Example: make the target "consume" the draggable
+Use __event.sourceElem__ to hide or delete the source element after a successful
+drop.
+```
+  dropped(ev){
+      ev.sourceElem.style.visibility = 'hidden';
+  }
+```
 
 
 ## Development (`src`, `lib` and the build process)
