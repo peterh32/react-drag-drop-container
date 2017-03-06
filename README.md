@@ -7,10 +7,10 @@ Wrapper components for dragging an element and dropping it on a target.
 * Can set it up to drag the element itself or drag a "ghost" node that 
 represents the element.
 
-* Can specify __compatKey__ string to to identify compatible drag elements 
+* Use property __compatKey__ to to identify compatible drag elements 
 and targets.
 
-* Can specify drag handle(s) with a className.
+* Can specify drag handle(s) (if desired) with property __dragHandleClassName__.
 
 * Can tell the element to return-to-base after dragging, or to stay where you put it.
 
@@ -62,7 +62,7 @@ Add the data you want to send to the target when you drop the element on it:
 
 Specify compatKey. This determines what dropTargets will accept your drag:
 ```
-<DragDropContainer dragData={{'label': 'Example', 'id': 123}} compatKey="foo">
+<DragDropContainer dragData={{label: 'Example', 'id': 123}} compatKey="foo">
 	Example
 </DragDropContainer>
 ```
