@@ -12,6 +12,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -26,9 +28,9 @@ var _DragDropGhost = require('./DragDropGhost');
 
 var _DragDropGhost2 = _interopRequireDefault(_DragDropGhost);
 
-/**
- * A container for dragging an element and dropping it on a target.
- */
+var _DropTarget = require('./DropTarget');
+
+var _DropTarget2 = _interopRequireDefault(_DropTarget);
 
 var DragDropContainer = (function (_React$Component) {
   _inherits(DragDropContainer, _React$Component);
@@ -63,7 +65,8 @@ var DragDropContainer = (function (_React$Component) {
 
     this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
 
-    // the DOM elem we're dragging, and the elements we're dragging over
+    // The DOM elem we're dragging, and the elements we're dragging over.
+    // Changes to these do not trigger a re-render and so don't need to go in state
     this.dragElem = null;
     this.containerElem = null;
     this.currentTarget = null;
@@ -81,14 +84,13 @@ var DragDropContainer = (function (_React$Component) {
         this.dragElem = this.containerElem;
       }
       // capture events
-      var elem = this.refs['drag_container'];
       if (this.props.dragHandleClassName) {
-        var elems = elem.getElementsByClassName(this.props.dragHandleClassName);
+        var elems = this.containerElem.getElementsByClassName(this.props.dragHandleClassName);
         for (var i = 0; i < elems.length; i++) {
           this.addListeners(elems[i]);
         }
       } else {
-        this.addListeners(elem);
+        this.addListeners(this.containerElem);
       }
     }
   }, {
@@ -106,28 +108,21 @@ var DragDropContainer = (function (_React$Component) {
   }, {
     key: 'createEvent',
     value: function createEvent(eventName, x, y) {
-      var _this2 = this;
-
-      var evt;
+      var e = undefined;
       if (typeof window.CustomEvent !== 'function') {
         // we are in IE 11 and must use old-style method of creating event
-        evt = document.createEvent('CustomEvent');
-        evt.initCustomEvent(eventName, true, true, {});
+        e = document.createEvent('CustomEvent');
+        e.initCustomEvent(eventName, true, true, {});
       } else {
-        evt = new CustomEvent(eventName, { 'bubbles': true, 'cancelable': true });
+        e = new CustomEvent(eventName, { 'bubbles': true, 'cancelable': true });
       }
-      // Add dragData to the event and make it accessible through HTML5-style dataTransfer object
-      // via method: event.dataTransfer.getData()  and property:  event.dataTransfer.types
-      evt.dataTransfer = {
-        'getData': function getData(arg) {
-          return arg === _this2.props.dataKey ? _this2.props.dragData : undefined;
-        },
-        'types': [this.props.dataKey]
-      };
-      // Also throw in a bonus reference to this element, which you can use (for example) to
-      // delete or hide this thing after a successful drop
-      evt.sourceElement = this.refs['drag_container'];
-      return evt;
+      // Add useful data to the event
+      _extends(e, {
+        dragData: this.props.dragData,
+        dragElem: this.dragElem,
+        sourceElem: this.containerElem
+      });
+      return e;
     }
   }, {
     key: 'setCurrentTarget',
@@ -143,13 +138,14 @@ var DragDropContainer = (function (_React$Component) {
     key: 'generateEnterLeaveEvents',
     value: function generateEnterLeaveEvents(x, y) {
       // generate events as we enter and leave elements while dragging
+      var prefix = this.props.compatKey;
       this.setCurrentTarget(x, y);
       if (this.currentTarget !== this.prevTarget) {
         if (this.prevTarget) {
-          this.prevTarget.dispatchEvent(this.createEvent(this.props.customEventNameDragLeave, x, y));
+          this.prevTarget.dispatchEvent(this.createEvent(prefix + 'DragLeave', x, y));
         }
         if (this.currentTarget) {
-          this.currentTarget.dispatchEvent(this.createEvent(this.props.customEventNameDragEnter, x, y));
+          this.currentTarget.dispatchEvent(this.createEvent(prefix + 'DragEnter', x, y));
         }
       }
       this.prevTarget = this.currentTarget;
@@ -159,7 +155,7 @@ var DragDropContainer = (function (_React$Component) {
     value: function generateDropEvent(x, y) {
       // generate a drop event in whatever we're currently dragging over
       this.setCurrentTarget(x, y);
-      this.currentTarget.dispatchEvent(this.createEvent(this.props.customEventNameDrop, x, y));
+      this.currentTarget.dispatchEvent(this.createEvent(this.props.compatKey + 'Drop', x, y));
     }
 
     // Start the Drag
@@ -318,22 +314,18 @@ var DragDropContainer = (function (_React$Component) {
 })(_react2['default'].Component);
 
 DragDropContainer.propTypes = {
-  children: _react2['default'].PropTypes.any, // just for the linter
+  children: _react2['default'].PropTypes.any.isRequired,
 
-  // You can customize these to make it easy for your target to spot the events it's interested in
-  customEventNameDragEnter: _react2['default'].PropTypes.string,
-  customEventNameDragLeave: _react2['default'].PropTypes.string,
-  customEventNameDrop: _react2['default'].PropTypes.string,
+  // Determines what you can drop on
+  compatKey: _react2['default'].PropTypes.string,
 
-  // The key that the target will use to retrieve dragData from the event with event.dataTransfer.getData([dataKey])
-  dataKey: _react2['default'].PropTypes.string,
-
-  // We will pass a stringified version of this object to the target when you drag or drop over it
+  // We will pass this to the target when you drag or drop over it
   dragData: _react2['default'].PropTypes.object,
 
   // If provided, we'll drag this instead of the actual object
   dragGhost: _react2['default'].PropTypes.node,
 
+  // If included, we'll only let you drag by grabbing the draghandle
   dragHandleClassName: _react2['default'].PropTypes.string,
 
   // if True, then dragging is turned off
@@ -344,7 +336,7 @@ DragDropContainer.propTypes = {
   onEndDrag: _react2['default'].PropTypes.func,
   onStartDrag: _react2['default'].PropTypes.func,
 
-  // If false, then object will not return to its starting point after you let go of it
+  // If true, then object will return to its starting point after you let go of it
   returnToBase: _react2['default'].PropTypes.bool,
 
   // Defaults to 1000 while dragging, but you can customize it
@@ -352,24 +344,23 @@ DragDropContainer.propTypes = {
 };
 
 DragDropContainer.defaultProps = {
+  compatKey: 'ddc',
+  dragData: {},
+  dragGhost: null,
+  dragHandleClassName: '',
   onStartDrag: function onStartDrag() {},
   onDragging: function onDragging() {},
   onEndDrag: function onEndDrag() {},
-  dragData: {},
-  dataKey: 'data',
   noDragging: false,
-  returnToBase: true,
-  customEventNameDragEnter: 'dragEnter',
-  customEventNameDragLeave: 'dragLeave',
-  customEventNameDrop: 'drop',
+  returnToBase: false,
   zIndex: 1000
 };
 
-exports['default'] = DragDropContainer;
-module.exports = exports['default'];
+exports.DragDropContainer = DragDropContainer;
+exports.DropTarget = _DropTarget2['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./DragDropGhost":2}],2:[function(require,module,exports){
+},{"./DragDropGhost":2,"./DropTarget":3}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -435,6 +426,96 @@ DragDropGhost.propTypes = {
 };
 
 exports['default'] = DragDropGhost;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
+
+var _react2 = _interopRequireDefault(_react);
+
+var DropTarget = (function (_React$Component) {
+  _inherits(DropTarget, _React$Component);
+
+  function DropTarget() {
+    _classCallCheck(this, DropTarget);
+
+    _get(Object.getPrototypeOf(DropTarget.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  _createClass(DropTarget, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this = this;
+
+      var elem = this.refs.drop_target;
+      elem.addEventListener(this.props.compatKey + 'DragEnter', function (e) {
+        _this.props.onDragEnter(e);
+      }, false);
+      elem.addEventListener(this.props.compatKey + 'DragLeave', function (e) {
+        _this.props.onDragLeave(e);
+      }, false);
+      elem.addEventListener(this.props.compatKey + 'Drop', function (e) {
+        _this.props.onDrop(e);
+      }, false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2['default'].createElement(
+        'div',
+        { ref: 'drop_target', style: _extends({ display: 'inline-block' }, this.props.style) },
+        this.props.children
+      );
+    }
+  }]);
+
+  return DropTarget;
+})(_react2['default'].Component);
+
+DropTarget.propTypes = {
+  children: _react2['default'].PropTypes.any.isRequired,
+  compatKey: _react2['default'].PropTypes.string,
+  onDragEnter: _react2['default'].PropTypes.func,
+  onDragLeave: _react2['default'].PropTypes.func,
+  onDrop: _react2['default'].PropTypes.func,
+  style: _react2['default'].PropTypes.object
+};
+
+DropTarget.defaultProps = {
+  compatKey: 'ddc',
+  onDragEnter: function onDragEnter() {
+    console.log('drag enter');
+  },
+  onDragLeave: function onDragLeave() {
+    console.log('drag leave');
+  },
+  onDrop: function onDrop() {
+    console.log('dropped!');
+  },
+  style: {}
+};
+
+exports['default'] = DropTarget;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
