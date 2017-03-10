@@ -14,6 +14,8 @@ and targets.
 
 * Can tell the element to return-to-base after dragging, or to stay where you put it.
 
+* Can constrain dragging to one dimension, horizontal or vertical.
+
 * Includes callback properties for __onStartDrag__, __onDragging__, and __onEndDrag__.
 
 
@@ -132,6 +134,8 @@ If true, dragging is turned off.
 ##### returnToBase
 If true, then dragged item goes back to where you put it when you drop.
 
+##### xOnly, yOnly
+If true, then dragging is constrained to the x- or y direction, respectively.
 
 ##### zIndex
 The z-index for the dragged item defaults to 1000 (so that it floats over the target). 

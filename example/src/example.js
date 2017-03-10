@@ -35,7 +35,7 @@ var App = React.createClass({
 	render () {
 		return (
 			<div>
-				<DragDropContainer>
+				<DragDropContainer xOnly={true}>
 					<DropTarget
 						onDrop={this.dropped}
 						onDragEnter={()=>{this.highlight('gorilla')}}
@@ -45,12 +45,13 @@ var App = React.createClass({
 						<Gorilla highlighted={this.state.gorillaHighlighted} />
 					</DropTarget>
 				</DragDropContainer>
-				<DragDropContainer>
+				<DragDropContainer yOnly={true}>
 					<DropTarget
 						onDrop={this.dropped}
 						onDragEnter={()=>{this.highlight('puppy')}}
 						onDragLeave={()=>{this.unHighlight('puppy')}}
-						compatKey="puppy">
+						compatKey="puppy"
+					>
 						<Puppy highlighted={this.state.puppyHighlighted} />
 					</DropTarget>
 				</DragDropContainer>
@@ -73,7 +74,7 @@ var App = React.createClass({
 						compatKey="puppy"
 						returnToBase={true}
 						dragData={{'label': 'cheeseburger', 'tastes': 'excellent'}}
-						dragGhost={<div style={{backgroundColor: '#eaa', padding: 6, borderRadius: 4}}>Cheeseburger!</div>}
+						dragGhost={<div style={{backgroundColor: '#ddd', padding: 6, borderRadius: 4, textAlign: 'center'}}>Cheeseburger<br/>Drag Ghost</div>}
 					>
 						<img src="https://s28.postimg.org/3o335ocjd/surprise.png" height="45"/>
 					</DragDropContainer>

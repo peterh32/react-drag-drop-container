@@ -159,11 +159,10 @@ class DragDropContainer extends React.Component {
     // drop the z-index, figure out what element we're dragging over, then reset the z index
     this.generateEnterLeaveEvents(x, y);
     let [dx, dy] = this.checkForOffsetChanges();
-    this.setState({
-      dragging: true,
-      left: dx + x - this.state.clickX,
-      top: dy + y - this.state.clickY
-    });
+    let stateChanges = {dragging: true};
+    if (!this.props.yOnly) {stateChanges['left'] = dx + x - this.state.clickX}
+    if (!this.props.xOnly) {stateChanges['top'] = dy + y - this.state.clickY}
+    this.setState(stateChanges);
     this.props.onDragging(this.props.dragData, this.currentTarget, x, y);
   }
 
@@ -263,6 +262,10 @@ DragDropContainer.propTypes = {
   // If true, then object will return to its starting point after you let go of it
   returnToBase: React.PropTypes.bool,
 
+  // Constrain dragging to the x or y directions only
+  xOnly: React.PropTypes.bool,
+  yOnly: React.PropTypes.bool,
+
   // Defaults to 1000 while dragging, but you can customize it
   zIndex: React.PropTypes.number
 };
@@ -277,6 +280,8 @@ DragDropContainer.defaultProps = {
   onEndDrag: () => {},
   noDragging: false,
   returnToBase: false,
+  xOnly: false,
+  yOnly: false,
   zIndex: 1000
 };
 

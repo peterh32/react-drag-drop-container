@@ -13,7 +13,7 @@ class Gorilla extends React.Component {
       backgroundColor: (this.props.highlighted ? 'aqua' : 'transparent'),
       position: 'absolute',
       left: 650,
-      top: 200
+      top: 150
     };
     return (
       <div style={styles} ref="test_target">
@@ -37,7 +37,7 @@ class Puppy extends React.Component {
       backgroundColor: (this.props.highlighted ? 'aqua' : 'transparent'),
       position: 'absolute',
       left: 650,
-      top: 200
+      top: 0
     };
     return (
       <div style={styles} ref="test_target">
