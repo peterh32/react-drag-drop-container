@@ -62,9 +62,9 @@ Add the data you want to send to the target when you drop the element on it:
 </DragDropContainer>
 ```
 
-Specify compatKey. This determines what dropTargets will accept your drag:
+Specify targetKey. This determines what dropTargets will accept your drag:
 ```
-<DragDropContainer dragData={{label: 'Example', id: 123}} compatKey="foo">
+<DragDropContainer dragData={{label: 'Example', id: 123}} targetKey="foo">
 	Example
 </DragDropContainer>
 ```
@@ -72,11 +72,11 @@ Specify compatKey. This determines what dropTargets will accept your drag:
 
 #### Set up Target(s)
 
-Wrap an element in a DropTarget, giving it the same compatKey as your draggable:
+Wrap an element in a DropTarget, giving it the same targetKey as your draggable:
 ```
   import { DropTarget } from 'react-drag-drop-container';
 
-  <DropTarget compatKey="foo">[some element or text]</DropTarget>
+  <DropTarget targetKey="foo">[some element or text]</DropTarget>
 ```
 
 In DropTarget's parent, add handlers for the enter, leave, and drop events. For example:
@@ -96,7 +96,7 @@ In DropTarget's parent, add handlers for the enter, leave, and drop events. For 
 Wire them up to DropTarget. In this example we are passing the "highlighted" state
 to the child element, which we assume toggles some highlighted style.
 ```
-  <DropTarget compatKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onDrop={this.dropped}>
+  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onDrop={this.dropped}>
     <ChildElement highlighted=this.state.highlighted />
   </DropTarget>
 ```
@@ -107,7 +107,7 @@ to the child element, which we assume toggles some highlighted style.
 ##### dragData
 Data about the dragged item that you want to pass to the target. Default is empty object.
 
-##### compatKey
+##### targetKey
 Optional string to specify which DropTargets will accept which DragDropContainers.
 
 ##### dragHandleClassName
@@ -158,7 +158,7 @@ When you drop.
 
 ### DropTarget Properties
 
-##### compatKey
+##### targetKey
 Optional string to specify which DragDropContainers this target will accept.
 
 #### Callbacks 

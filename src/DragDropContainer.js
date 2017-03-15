@@ -92,7 +92,7 @@ class DragDropContainer extends React.Component {
 
   generateEnterLeaveEvents(x, y) {
     // generate events as we enter and leave elements while dragging
-    let prefix = this.props.compatKey;
+    let prefix = this.props.targetKey;
     this.setCurrentTarget(x, y);
     if (this.currentTarget !== this.prevTarget) {
       if (this.prevTarget) {this.prevTarget.dispatchEvent(this.createEvent(`${prefix}DragLeave`, x, y));}
@@ -104,7 +104,7 @@ class DragDropContainer extends React.Component {
   generateDropEvent(x, y) {
     // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    this.currentTarget.dispatchEvent(this.createEvent(`${this.props.compatKey}Drop`, x, y));
+    this.currentTarget.dispatchEvent(this.createEvent(`${this.props.targetKey}Drop`, x, y));
   }
 
   // Start the Drag
@@ -240,7 +240,7 @@ DragDropContainer.propTypes = {
   children: React.PropTypes.any.isRequired,
 
   // Determines what you can drop on
-  compatKey: React.PropTypes.string,
+  targetKey: React.PropTypes.string,
 
   // We will pass this to the target when you drag or drop over it
   dragData: React.PropTypes.object,
@@ -271,7 +271,7 @@ DragDropContainer.propTypes = {
 };
 
 DragDropContainer.defaultProps = {
-  compatKey: 'ddc',
+  targetKey: 'ddc',
   dragData: {},
   dragGhost: null,
   dragHandleClassName: '',

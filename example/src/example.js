@@ -40,7 +40,7 @@ var App = React.createClass({
 						onDrop={this.dropped}
 						onDragEnter={()=>{this.highlight('gorilla')}}
 						onDragLeave={()=>{this.unHighlight('gorilla')}}
-						compatKey="gorilla"
+						targetKey="gorilla"
 					>
 						<Gorilla highlighted={this.state.gorillaHighlighted} />
 					</DropTarget>
@@ -50,7 +50,7 @@ var App = React.createClass({
 						onDrop={this.dropped}
 						onDragEnter={()=>{this.highlight('puppy')}}
 						onDragLeave={()=>{this.unHighlight('puppy')}}
-						compatKey="puppy"
+						targetKey="puppy"
 					>
 						<Puppy highlighted={this.state.puppyHighlighted} />
 					</DropTarget>
@@ -64,14 +64,14 @@ var App = React.createClass({
 					<ExpandsOnDragEnter/>
 					<DragDropContainer
 						returnToBase={true}
-						compatKey="gorilla"
+						targetKey="gorilla"
 						dragData={{'label': 'banana', 'tastes': 'yummy'}}
 					>
 						<img src="https://s28.postimg.org/bocsgf43d/banana.png" height="45"/>
 					</DragDropContainer>
 
 					<DragDropContainer
-						compatKey="puppy"
+						targetKey="puppy"
 						returnToBase={true}
 						dragData={{'label': 'cheeseburger', 'tastes': 'excellent'}}
 						dragGhost={<div style={{backgroundColor: '#ddd', padding: 6, borderRadius: 4, textAlign: 'center'}}>Cheeseburger<br/>Drag Ghost</div>}
@@ -80,7 +80,7 @@ var App = React.createClass({
 					</DragDropContainer>
 
 					<DragDropContainer
-						compatKey="gorilla"
+						targetKey="gorilla"
 						returnToBase={true}
 						dragData={{'label': 'orange', 'tastes': 'yummy'}}
 					>
@@ -88,7 +88,7 @@ var App = React.createClass({
 					</DragDropContainer>
 					
 					<DragDropContainer
-						compatKey="puppy"
+						targetKey="puppy"
 						returnToBase={true}
 						dragData={{'label': 'pickle', 'tastes': 'bad'}}
 					>
@@ -99,7 +99,7 @@ var App = React.createClass({
 				<div style={{ float: 'left', marginLeft: 20 }}>
 
 					<DragDropContainer
-						compatKey="puppy"
+						targetKey="puppy"
 						returnToBase={true}
 						dragData={{'label': 'dogfood', 'tastes': 'yummy'}}
 						dragHandleClassName="drag_handle"

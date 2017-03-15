@@ -20,8 +20,8 @@ class ExpandsOnDragEnter extends React.Component {
       textAlign: "center",
     };
     return (
-      <DropTarget compatKey="puppy" onDragEnter={() => this.setState({big: true})} onDragLeave={() => this.setState({big: false})}>
-        <DropTarget compatKey="gorilla" onDragEnter={() => this.setState({big: true})} onDragLeave={() => this.setState({big: false})}>
+      <DropTarget targetKey="puppy" onDragEnter={() => this.setState({big: true})} onDragLeave={() => this.setState({big: false})}>
+        <DropTarget targetKey="gorilla" onDragEnter={() => this.setState({big: true})} onDragLeave={() => this.setState({big: false})}>
         <h3 style={styles} ref={(el) => {this.elem = el;}}>
           EXPANDS<br/>ON<br/>DRAGOVER
         </h3>

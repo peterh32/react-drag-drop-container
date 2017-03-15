@@ -3,10 +3,12 @@ import React from 'react';
 class DropTarget extends React.Component {
   componentDidMount() {
     var elem = this.refs.drop_target;
-    elem.addEventListener(`${this.props.compatKey}DragEnter`, (e) => {this.props.onDragEnter(e);}, false);
-    elem.addEventListener(`${this.props.compatKey}DragLeave`, (e) => {this.props.onDragLeave(e);}, false);
-    elem.addEventListener(`${this.props.compatKey}Drop`, (e) => {this.props.onDrop(e);}, false);
+    elem.addEventListener(`${this.props.targetKey}DragEnter`, (e) => {this.props.onDragEnter(e);}, false);
+    elem.addEventListener(`${this.props.targetKey}DragLeave`, (e) => {this.props.onDragLeave(e);}, false);
+    elem.addEventListener(`${this.props.targetKey}Drop`, (e) => {this.props.onDrop(e);}, false);
   }
+
+
 
   render() {
     return (
@@ -19,7 +21,7 @@ class DropTarget extends React.Component {
 
 DropTarget.propTypes = {
   children: React.PropTypes.any.isRequired,
-  compatKey: React.PropTypes.string,
+  targetKey: React.PropTypes.string,
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
   onDrop: React.PropTypes.func,
@@ -27,7 +29,7 @@ DropTarget.propTypes = {
 };
 
 DropTarget.defaultProps = {
-  compatKey: 'ddc',
+  targetKey: 'ddc',
   onDragEnter: () => {console.log('drag enter');},
   onDragLeave: () => {console.log('drag leave');},
   onDrop: () => {console.log('dropped!');},
