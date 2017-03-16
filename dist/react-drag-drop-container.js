@@ -64,6 +64,7 @@ var DragDropContainer = (function (_React$Component) {
     this.drop = this.drop.bind(this);
 
     this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
+    this.getChildrenWithDraggableFalse = this.getChildrenWithDraggableFalse.bind(this);
 
     // The DOM elem we're dragging, and the elements we're dragging over.
     // Changes to these do not trigger a re-render and so don't need to go in state
@@ -138,7 +139,7 @@ var DragDropContainer = (function (_React$Component) {
     key: 'generateEnterLeaveEvents',
     value: function generateEnterLeaveEvents(x, y) {
       // generate events as we enter and leave elements while dragging
-      var prefix = this.props.compatKey;
+      var prefix = this.props.targetKey;
       this.setCurrentTarget(x, y);
       if (this.currentTarget !== this.prevTarget) {
         if (this.prevTarget) {
@@ -155,7 +156,7 @@ var DragDropContainer = (function (_React$Component) {
     value: function generateDropEvent(x, y) {
       // generate a drop event in whatever we're currently dragging over
       this.setCurrentTarget(x, y);
-      this.currentTarget.dispatchEvent(this.createEvent(this.props.compatKey + 'Drop', x, y));
+      this.currentTarget.dispatchEvent(this.createEvent(this.props.targetKey + 'Drop', x, y));
     }
 
     // Start the Drag
@@ -181,6 +182,7 @@ var DragDropContainer = (function (_React$Component) {
   }, {
     key: 'startDrag',
     value: function startDrag(x, y) {
+      document.addEventListener(this.props.targetKey + 'Dropped', this.props.onDropped);
       this.setState({
         clicked: true,
         clickX: x - this.state.left,
@@ -225,11 +227,14 @@ var DragDropContainer = (function (_React$Component) {
       var dx = _checkForOffsetChanges2[0];
       var dy = _checkForOffsetChanges2[1];
 
-      this.setState({
-        dragging: true,
-        left: dx + x - this.state.clickX,
-        top: dy + y - this.state.clickY
-      });
+      var stateChanges = { dragging: true };
+      if (!this.props.yOnly) {
+        stateChanges['left'] = dx + x - this.state.clickX;
+      }
+      if (!this.props.xOnly) {
+        stateChanges['top'] = dy + y - this.state.clickY;
+      }
+      this.setState(stateChanges);
       this.props.onDragging(this.props.dragData, this.currentTarget, x, y);
     }
 
@@ -257,6 +262,7 @@ var DragDropContainer = (function (_React$Component) {
   }, {
     key: 'drop',
     value: function drop(x, y) {
+      // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
       this.generateDropEvent(x, y);
       if (this.props.returnToBase) {
         this.setState({ left: 0, top: 0, dragging: false });
@@ -279,6 +285,16 @@ var DragDropContainer = (function (_React$Component) {
         dy = this.state.initialTopOffset + this.state.top - this.containerElem.offsetTop;
       }
       return [dx, dy];
+    }
+  }, {
+    key: 'getChildrenWithDraggableFalse',
+    value: function getChildrenWithDraggableFalse() {
+      // because otherwise can conflict with built-in browser dragging behavior
+      var inputReactObject = _react2['default'].Children.only(this.props.children);
+      var clonedChild = _react2['default'].cloneElement(inputReactObject, {
+        draggable: "false"
+      });
+      return clonedChild;
     }
   }, {
     key: 'render',
@@ -304,7 +320,7 @@ var DragDropContainer = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         { style: styles, ref: 'drag_container' },
-        this.props.children,
+        this.getChildrenWithDraggableFalse(),
         ghost
       );
     }
@@ -317,7 +333,7 @@ DragDropContainer.propTypes = {
   children: _react2['default'].PropTypes.any.isRequired,
 
   // Determines what you can drop on
-  compatKey: _react2['default'].PropTypes.string,
+  targetKey: _react2['default'].PropTypes.string,
 
   // We will pass this to the target when you drag or drop over it
   dragData: _react2['default'].PropTypes.object,
@@ -332,6 +348,7 @@ DragDropContainer.propTypes = {
   noDragging: _react2['default'].PropTypes.bool,
 
   // callbacks (optional):
+  onDropped: _react2['default'].PropTypes.func,
   onDragging: _react2['default'].PropTypes.func,
   onEndDrag: _react2['default'].PropTypes.func,
   onStartDrag: _react2['default'].PropTypes.func,
@@ -339,20 +356,27 @@ DragDropContainer.propTypes = {
   // If true, then object will return to its starting point after you let go of it
   returnToBase: _react2['default'].PropTypes.bool,
 
+  // Constrain dragging to the x or y directions only
+  xOnly: _react2['default'].PropTypes.bool,
+  yOnly: _react2['default'].PropTypes.bool,
+
   // Defaults to 1000 while dragging, but you can customize it
   zIndex: _react2['default'].PropTypes.number
 };
 
 DragDropContainer.defaultProps = {
-  compatKey: 'ddc',
+  targetKey: 'ddc',
   dragData: {},
   dragGhost: null,
   dragHandleClassName: '',
   onStartDrag: function onStartDrag() {},
   onDragging: function onDragging() {},
   onEndDrag: function onEndDrag() {},
+  onDropped: function onDropped() {},
   noDragging: false,
   returnToBase: false,
+  xOnly: false,
+  yOnly: false,
   zIndex: 1000
 };
 
@@ -456,10 +480,12 @@ var _react2 = _interopRequireDefault(_react);
 var DropTarget = (function (_React$Component) {
   _inherits(DropTarget, _React$Component);
 
-  function DropTarget() {
+  function DropTarget(props) {
     _classCallCheck(this, DropTarget);
 
-    _get(Object.getPrototypeOf(DropTarget.prototype), 'constructor', this).apply(this, arguments);
+    _get(Object.getPrototypeOf(DropTarget.prototype), 'constructor', this).call(this, props);
+    this.elem = null;
+    this.handleDrop = this.handleDrop.bind(this);
   }
 
   _createClass(DropTarget, [{
@@ -467,16 +493,39 @@ var DropTarget = (function (_React$Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      var elem = this.refs.drop_target;
-      elem.addEventListener(this.props.compatKey + 'DragEnter', function (e) {
+      this.elem = this.refs.drop_target;
+      this.elem.addEventListener(this.props.targetKey + 'DragEnter', function (e) {
         _this.props.onDragEnter(e);
       }, false);
-      elem.addEventListener(this.props.compatKey + 'DragLeave', function (e) {
+      this.elem.addEventListener(this.props.targetKey + 'DragLeave', function (e) {
         _this.props.onDragLeave(e);
       }, false);
-      elem.addEventListener(this.props.compatKey + 'Drop', function (e) {
-        _this.props.onDrop(e);
+      this.elem.addEventListener(this.props.targetKey + 'Drop', function (e) {
+        _this.handleDrop(e);
       }, false);
+    }
+  }, {
+    key: 'createEvent',
+    value: function createEvent(eventName, eventData) {
+      // utility to create an event
+      var e = undefined;
+      if (typeof window.CustomEvent !== 'function') {
+        // we are in IE 11 and must use old-style method of creating event
+        e = document.createEvent('CustomEvent');
+        e.initCustomEvent(eventName, true, true, {});
+      } else {
+        e = new CustomEvent(eventName, { 'bubbles': true, 'cancelable': true });
+      }
+      _extends(e, eventData);
+      return e;
+    }
+  }, {
+    key: 'handleDrop',
+    value: function handleDrop(e) {
+      // tell the drop source about the drop, then do the callback
+      var evt = this.createEvent(this.props.targetKey + 'Dropped', { dropElem: this.elem, dropData: this.props.dropData });
+      e.sourceElem.dispatchEvent(evt);
+      this.props.onDrop(e);
     }
   }, {
     key: 'render',
@@ -494,15 +543,16 @@ var DropTarget = (function (_React$Component) {
 
 DropTarget.propTypes = {
   children: _react2['default'].PropTypes.any.isRequired,
-  compatKey: _react2['default'].PropTypes.string,
+  targetKey: _react2['default'].PropTypes.string,
   onDragEnter: _react2['default'].PropTypes.func,
   onDragLeave: _react2['default'].PropTypes.func,
   onDrop: _react2['default'].PropTypes.func,
+  dropData: _react2['default'].PropTypes.object,
   style: _react2['default'].PropTypes.object
 };
 
 DropTarget.defaultProps = {
-  compatKey: 'ddc',
+  targetKey: 'ddc',
   onDragEnter: function onDragEnter() {
     console.log('drag enter');
   },
@@ -512,6 +562,7 @@ DropTarget.defaultProps = {
   onDrop: function onDrop() {
     console.log('dropped!');
   },
+  dropData: {},
   style: {}
 };
 
