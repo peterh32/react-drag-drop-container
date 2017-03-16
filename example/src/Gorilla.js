@@ -6,46 +6,14 @@ import React from 'react';
 class Gorilla extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      'highlighted': false
-    };
-    this.dataKey = 'food_data'; // this is where Gorilla will look for the data in the drag object
   }
-  componentDidMount() {
-    this.refs.test_target.addEventListener('drop', (ev) => {this.handleDrop(ev);}, false);
-    this.refs.test_target.addEventListener('dragEnter', (ev) => {this.setState({'highlighted': true});}, false);
-    this.refs.test_target.addEventListener('dragLeave', (ev) => {this.setState({'highlighted': false});}, false);
-  }
-
-  getData(event){
-    return event.dataTransfer.getData(this.dataKey);
-  }
-
-  getSourceElement(event) {
-    return event.sourceElement;
-  }
-
-  handleDrop(ev){
-    var data = this.getData(ev);
-    if (data) {
-			if (data.tastes != 'bad') {
-				alert('Thanks for the ' + data.label + '! It is ' + data.tastes + '!');
-        this.getSourceElement(ev).style.visibility = 'hidden';
-      } else {
-				alert('Yech! ' + data.label + ' are ' + data.tastes + '!');
-			}
-    }
-		this.setState({'highlighted': false});
-  }
-
   render() {
     var styles = {
-      'position': 'absolute',
-      'top': 30,
-      'left': 500,
-      'padding': 10,
-      'backgroundColor': (this.state.highlighted ? 'aqua' : 'transparent'),
-      'textAlign': 'center'
+      padding: 10,
+      backgroundColor: (this.props.highlighted ? 'aqua' : 'transparent'),
+      position: 'absolute',
+      left: 650,
+      top: 150
     };
     return (
       <div style={styles} ref="test_target">
@@ -54,4 +22,33 @@ class Gorilla extends React.Component {
     );
   }
 }
-export default Gorilla;
+
+Gorilla.propTypes = {
+  highlighted: React.PropTypes.bool
+};
+
+class Puppy extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    var styles = {
+      padding: 10,
+      backgroundColor: (this.props.highlighted ? 'aqua' : 'transparent'),
+      position: 'absolute',
+      left: 650,
+      top: 0
+    };
+    return (
+      <div style={styles} ref="test_target">
+        <img src="http://icons.iconarchive.com/icons/fixicon/farm/256/dog-icon.png" width="100"/>
+      </div>
+    );
+  }
+}
+
+Puppy.propTypes = {
+  highlighted: React.PropTypes.bool
+};
+
+export  {Gorilla, Puppy};

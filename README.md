@@ -1,27 +1,26 @@
-# DragDropContainer
+# DragDropContainer and DropTarget
 
-Wrapper component for dragging an element and dropping it on a target. 
-
-* Emulates HTML5 events __dragEnter__, __dragLeave__, and __drop__ so you can use it 
-as-is on many HTML5 drag targets.
+Wrapper components for dragging an element and dropping it on a target. 
 
 * Works on mouse and touch devices.
 
 * Can set it up to drag the element itself or drag a "ghost" node that 
 represents the element.
 
-* Can specify a __dataKey__ to help drop targets recognize compatible drag items, for 
-example so that compatible targets will highlight when you drag over them.
+* Use property __targetKey__ to to identify compatible drag elements 
+and targets.
 
-* Can also customize drag event names -- another way for your targets to 
-recognize compatible drag items.
-
-* Can specify a className to use for draghandle(s).
+* Can specify drag handle(s) (if desired) with property __dragHandleClassName__.
 
 * Can tell the element to return-to-base after dragging, or to stay where you put it.
 
-* Includes callback properties for __onStartDrag__, __onDragging__, and __onEndDrag__.
+* Can constrain dragging to one dimension, horizontal or vertical.
 
+* Includes callback properties for __onStartDrag__, __onDragging__,  __onEndDrag__,
+and __onDropped__. 
+ 
+* Data from the target element is included with the __onDropped__ event triggered in 
+the DragDropContainer.
 
 ## Demo 
 
@@ -52,106 +51,74 @@ npm install react-drag-drop-container --save
 Wrap your element in a DragDropContainer:
 
 ```
-var DragDropContainer = require('react-drag-drop-container');
+import { DragDropContainer } from 'react-drag-drop-container';
 
 <DragDropContainer>Example</DragDropContainer>
 ```
-Specify the data that will accompany the drag:
+The element should now be draggable.
+
+##### Set up for dragging to a target
+Add the data you want to send to the target when you drop the element on it:
 ```
-<DragDropContainer dragData={{'label': 'Example', 'id': 123}}>
+<DragDropContainer dragData={{label: 'Example', id: 123}}>
 	Example
 </DragDropContainer>
 ```
 
-Specify a data key for your data:
+Specify targetKey. This determines what dropTargets will accept your drag:
 ```
-<DragDropContainer dragData={{'label': 'Example', 'id': 123}} dataKey="foo">
+<DragDropContainer dragData={{label: 'Example', id: 123}} targetKey="foo">
 	Example
 </DragDropContainer>
 ```
 
-Go look at your element -- it should now be draggable.
 
 #### Set up Target(s)
 
-Tell your target(s) to capture drag/drop events:
+Wrap an element in a DropTarget, giving it the same targetKey as your draggable:
 ```
-  componentDidMount() {
-    var elem = this.refs.my_component;  // get DOM element
-    elem.addEventListener('dragEnter', (ev) => {this.handleDragEnter(ev)}, false);
-    elem.addEventListener('dragLeave', (ev) => {this.handleDragLeave(ev)}, false);
-    elem.addEventListener('drop', (ev) => {this.handleDrop(ev)}, false);
-  }
-```
-(You could also use custom event names, see [section below](#dragentereventname-dragleaveeventname-dropeventname).)
+  import { DropTarget } from 'react-drag-drop-container';
 
-Add a method to check whether the dragged item is compatible with this target,
-based on the ```dataKey``` value you set above:
-```
-  // Check drag data using HTML 5 dataTransfer.types property
-  isCompatible(ev){
-    return ev.dataTransfer.types.indexOf('foo') !== -1;
-  }
+  <DropTarget targetKey="foo">[some element or text]</DropTarget>
 ```
 
-Add a method to grab the drag data from the event (this follows HTML 5 practice),
-again using the ```dataKey``` you set above.
+In DropTarget's parent, add handlers for the enter, leave, and drop events. For example:
 ```
-  // Retrieve drag data using HTML 5 dataTransfer.getData method
-  getData(ev){
-    return ev.dataTransfer.getData('foo');
-  }
-```
-
-Now add handlers for the events:
-```
-  handleDragEnter(ev){
-    if (this.isCompatible(ev)) {
- 	  this.setState({'highlighted': true})
-	}
+  highlight(ev){
+    this.setState({'highlighted': true})
   }
 
-  handleDragLeave(ev){
-    if (this.isCompatible(ev)) {
- 	  this.setState({'highlighted': false})
-	}
+  unHighlight(ev){
+ 	this.setState({'highlighted': false})
   }
   
-  handleDrop(ev){
-    if (this.isCompatible(ev)) {
-      let data = this.getData(ev);
-      ... do something with data ...
-    }
+  dropped(ev){
+    ... do something with event data ...
   }
 ```
-
-#### What if I want the target to "consume" the draggable?
-The events passed to the target include a reference to the drag source DOM element
-in __event.sourceElement__. Use this to hide or delete the source element after a successful
-drop!
+Wire them up to DropTarget. In this example we are passing the "highlighted" state
+to the child element, which we assume toggles some highlighted style.
 ```
-  event.sourceElement.style.visibility = 'hidden';
+  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onDrop={this.dropped}>
+    <ChildElement highlighted=this.state.highlighted />
+  </DropTarget>
 ```
 
 
-### Properties
+### DragDropContainer Properties
 
 ##### dragData
 Data about the dragged item that you want to pass to the target. Default is empty object.
 
-##### dataKey
-They key for retrieving the dragData from the event. Default is 'data'.
+##### targetKey
+Optional string to specify which DropTargets will accept which DragDropContainers.
 
 ##### dragHandleClassName
 Class name for drag handle(s). Optional. If omitted, the whole thing is grabbable.
 
-##### customEventNameDragEnter, customEventNameDragLeave, customEventNameDrop
-Optional custom names for the three events. You can use these
-to tell your target which events to watch for. (This lets you write a little
-less code in the target, since it doesn't have to validate the 
-event data before highlighting or whatever). 
-
-Defaults are dragEnter, dragLeave, and drop.
+__Tip:__ If you are using drag handles on an element that contains an image,
+use `<img draggable="false"...` to prevent the browser from letting users 
+drag the image itself, which can be confusing.
 
 
 ##### dragGhost
@@ -168,8 +135,10 @@ let ghost = <div class="drag_elem">Drag Me</div>;
 If true, dragging is turned off.
 
 ##### returnToBase
-Defaults to true. If false, then dragged item stays where you put it when you drop.
+If true, then dragged item goes back to where you put it when you drop.
 
+##### xOnly, yOnly
+If true, then dragging is constrained to the x- or y direction, respectively.
 
 ##### zIndex
 The z-index for the dragged item defaults to 1000 (so that it floats over the target). 
@@ -190,6 +159,43 @@ over; __x__ and __y__ are the current position.
 ##### onDragEnd(dragData, currentTarget, x, y)
 When you drop.
 
+##### onDropped(dropData, dropTarget)
+Triggered after a drop onto a compatible DropTarget. __dropTarget__ is the DOM
+element of the DropTarget you dropped on, and  __dropData__ 
+is  an optional property of DropTarget. 
+
+### DropTarget Properties
+
+##### targetKey
+Optional string to specify which DragDropContainers this target will accept.
+
+##### dropData
+Data to be provided to the DragDropContainer when it is dropped on the target.
+
+#### Callbacks 
+
+All optional; specify in props.
+##### onDragEnter(e), onDragLeave(e), onDrop(e)
+The event e contains
+```
+{
+    dragData: [whatever you put in the dragData property for DragDropContainer]
+    dragElem: [reference to the DOM element being dragged]
+    sourceElem: [reference to the DragDropContainer DOM element]
+}
+```
+The __sourceElem___ and __dragElem__ properties point to the same object unless you
+set __dragGhost__ (see below), in which case __dragElem__ is the ghost, and __sourceElem__
+is the DragDropContainer.
+
+##### Example: make the target "consume" the draggable
+Use __event.sourceElem__ to hide or delete the source element after a successful
+drop.
+```
+  dropped(ev){
+      ev.sourceElem.style.visibility = 'hidden';
+  }
+```
 
 
 ## Development (`src`, `lib` and the build process)
@@ -202,5 +208,5 @@ To build, watch and serve the examples (which will also watch the component sour
 
 __PUT LICENSE HERE__
 
-Copyright (c) 2017 Medidata.
+Copyright (c) 2017.
 

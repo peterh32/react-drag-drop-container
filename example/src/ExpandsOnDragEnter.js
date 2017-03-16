@@ -1,4 +1,5 @@
 import React from 'react';
+import { DropTarget } from 'react-drag-drop-container';
 /*
  * ExpandsOnDragEnter -- for testing offset issues
  */
@@ -10,10 +11,6 @@ class ExpandsOnDragEnter extends React.Component {
       big: false
     };
   }
-  componentDidMount() {
-    this.elem.addEventListener('dragEnter', (ev) => {this.setState({'big': true});}, false);
-    this.elem.addEventListener('dragLeave', (ev) => {this.setState({'big': false});}, false);
-  }
 
   render() {
     var styles = {
@@ -23,9 +20,13 @@ class ExpandsOnDragEnter extends React.Component {
       textAlign: "center",
     };
     return (
-      <h3 style={styles} ref={(el) => {this.elem = el;}}>
-        EXPANDS<br/>ON<br/>DRAGOVER
-      </h3>
+      <DropTarget targetKey="puppy" onDragEnter={() => this.setState({big: true})} onDragLeave={() => this.setState({big: false})}>
+        <DropTarget targetKey="gorilla" onDragEnter={() => this.setState({big: true})} onDragLeave={() => this.setState({big: false})}>
+        <h3 style={styles} ref={(el) => {this.elem = el;}}>
+          EXPANDS<br/>ON<br/>DRAGOVER
+        </h3>
+        </DropTarget>
+      </DropTarget>
     );
   }
 }
