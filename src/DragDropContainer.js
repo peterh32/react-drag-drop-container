@@ -30,6 +30,7 @@ class DragDropContainer extends React.Component {
     this.drop = this.drop.bind(this);
 
     this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
+    this.getChildrenWithDraggableFalse = this.getChildrenWithDraggableFalse.bind(this);
 
     // The DOM elem we're dragging, and the elements we're dragging over.
     // Changes to these do not trigger a re-render and so don't need to go in state
@@ -210,6 +211,15 @@ class DragDropContainer extends React.Component {
     return [dx, dy];
   }
 
+  getChildrenWithDraggableFalse(){
+    // because otherwise can conflict with built-in browser dragging behavior
+    let inputReactObject = React.Children.only(this.props.children);
+    let clonedChild = React.cloneElement(inputReactObject, {
+      draggable: "false"
+    });
+    return clonedChild;
+  }
+
   render() {
     let styles = {
       'position': 'relative'
@@ -231,7 +241,7 @@ class DragDropContainer extends React.Component {
     }
     return (
       <div style={styles} ref="drag_container">
-        {this.props.children}
+        {this.getChildrenWithDraggableFalse()}
         {ghost}
       </div>
     );
