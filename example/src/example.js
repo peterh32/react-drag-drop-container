@@ -32,6 +32,10 @@ var App = React.createClass({
 		this.setState(newState);
 	},
 
+	landedOn(e) {
+		console.log('I was dropped on ' + e.dropData.name)
+	},
+
 	render () {
 		return (
 			<div>
@@ -41,6 +45,7 @@ var App = React.createClass({
 						onDragEnter={()=>{this.highlight('gorilla')}}
 						onDragLeave={()=>{this.unHighlight('gorilla')}}
 						targetKey="gorilla"
+						dropData={{name: 'Kong'}}
 					>
 						<Gorilla highlighted={this.state.gorillaHighlighted} />
 					</DropTarget>
@@ -51,6 +56,7 @@ var App = React.createClass({
 						onDragEnter={()=>{this.highlight('puppy')}}
 						onDragLeave={()=>{this.unHighlight('puppy')}}
 						targetKey="puppy"
+						dropData={{name: 'Sparky'}}
 					>
 						<Puppy highlighted={this.state.puppyHighlighted} />
 					</DropTarget>
@@ -66,6 +72,7 @@ var App = React.createClass({
 						returnToBase={true}
 						targetKey="gorilla"
 						dragData={{'label': 'banana', 'tastes': 'yummy'}}
+						onDropped={this.landedOn}
 					>
 						<img src="https://s28.postimg.org/bocsgf43d/banana.png" height="45"/>
 					</DragDropContainer>
@@ -75,6 +82,7 @@ var App = React.createClass({
 						returnToBase={true}
 						dragData={{'label': 'cheeseburger', 'tastes': 'excellent'}}
 						dragGhost={<div style={{backgroundColor: '#ddd', padding: 6, borderRadius: 4, textAlign: 'center'}}>Cheeseburger<br/>Drag Ghost</div>}
+						onDropped={this.landedOn}
 					>
 						<img src="https://s28.postimg.org/3o335ocjd/surprise.png" height="45"/>
 					</DragDropContainer>
@@ -83,6 +91,7 @@ var App = React.createClass({
 						targetKey="gorilla"
 						returnToBase={true}
 						dragData={{'label': 'orange', 'tastes': 'yummy'}}
+						onDropped={this.landedOn}
 					>
 						<img src="https://s28.postimg.org/3yalp0r5l/orange.png" height="45"/>
 					</DragDropContainer>
@@ -91,6 +100,7 @@ var App = React.createClass({
 						targetKey="puppy"
 						returnToBase={true}
 						dragData={{'label': 'pickle', 'tastes': 'bad'}}
+						onDropped={this.landedOn}
 					>
 						<img src="https://s28.postimg.org/5em475u2h/pickle.png" height="45"/>
 					</DragDropContainer>
@@ -103,6 +113,7 @@ var App = React.createClass({
 						returnToBase={true}
 						dragData={{'label': 'dogfood', 'tastes': 'yummy'}}
 						dragHandleClassName="drag_handle"
+						onDropped={this.landedOn}
 					>
 						<div style={{width: 80, textAlign: "center"}}>
 							<div className="drag_handle" style={{backgroundColor:"#aaa"}}>drag handle</div>

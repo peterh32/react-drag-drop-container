@@ -7,7 +7,7 @@ Wrapper components for dragging an element and dropping it on a target.
 * Can set it up to drag the element itself or drag a "ghost" node that 
 represents the element.
 
-* Use property __compatKey__ to to identify compatible drag elements 
+* Use property __targetKey__ to to identify compatible drag elements 
 and targets.
 
 * Can specify drag handle(s) (if desired) with property __dragHandleClassName__.
@@ -16,8 +16,11 @@ and targets.
 
 * Can constrain dragging to one dimension, horizontal or vertical.
 
-* Includes callback properties for __onStartDrag__, __onDragging__, and __onEndDrag__.
-
+* Includes callback properties for __onStartDrag__, __onDragging__,  __onEndDrag__,
+and __onDropped__. 
+ 
+* Data from the target element is included with the __onDropped__ event triggered in 
+the DragDropContainer.
 
 ## Demo 
 
@@ -156,10 +159,18 @@ over; __x__ and __y__ are the current position.
 ##### onDragEnd(dragData, currentTarget, x, y)
 When you drop.
 
+##### onDropped(dropData, dropTarget)
+Triggered after a drop onto a compatible DropTarget. __dropTarget__ is the DOM
+element of the DropTarget you dropped on, and  __dropData__ 
+is  an optional property of DropTarget. 
+
 ### DropTarget Properties
 
 ##### targetKey
 Optional string to specify which DragDropContainers this target will accept.
+
+##### dropData
+Data to be provided to the DragDropContainer when it is dropped on the target.
 
 #### Callbacks 
 

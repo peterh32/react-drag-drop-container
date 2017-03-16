@@ -126,6 +126,7 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y){
+    document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDropped);
     this.setState({
       clicked: true,
       clickX: x - this.state.left,
@@ -186,6 +187,7 @@ class DragDropContainer extends React.Component {
   }
 
   drop(x, y){
+    // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
     if (this.props.returnToBase){
       this.setState({left: 0, top: 0, dragging: false});
@@ -255,6 +257,7 @@ DragDropContainer.propTypes = {
   noDragging: React.PropTypes.bool,
 
   // callbacks (optional):
+  onDropped: React.PropTypes.func,
   onDragging: React.PropTypes.func,
   onEndDrag: React.PropTypes.func,
   onStartDrag: React.PropTypes.func,
@@ -278,6 +281,7 @@ DragDropContainer.defaultProps = {
   onStartDrag: () => {},
   onDragging: () => {},
   onEndDrag: () => {},
+  onDropped: () => {},
   noDragging: false,
   returnToBase: false,
   xOnly: false,
