@@ -33,8 +33,15 @@ npm install
 npm launch
 ```
 
-This should open the demo in a browser window.
+This should open the demo in a browser window on 
+localhost:8080.
 
+This error means you're already running 
+something on port 8080:
+```
+events.js:160
+      throw er; // Unhandled 'error' event
+```
 
 ## Installation
 Install it in your project using npm:
