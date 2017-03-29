@@ -1,52 +1,48 @@
 {
   "name": "react-drag-drop-container",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "DragDropContainer",
-  "main": "lib/DragDropContainer.js",
-  "author": "Medidata",
-  "homepage": "https://github.com/peterh32/react-drag-drop-container",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/peterh32/react-drag-drop-container.git"
-  },
+  "main": "lib/bundle.js",
+  "author": "Peter!",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/peterh32/react-drag-drop-container/issues"
   },
-  "dependencies": {
-    "classnames": "^2.2.5"
-  },
-  "devDependencies": {
-    "babel-core": "^6.23.1",
-    "babel-eslint": "^7.1.1",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-react": "^6.23.0",
-    "enzyme": "^2.7.1",
-    "eslint": "^3.17.1",
-    "eslint-plugin-react": "^6.10.0",
-    "expect": "^1.20.2",
-    "gulp": "^3.9.1",
-    "mocha": "^3.2.0",
-    "react": "^15.4.2",
-    "react-addons-test-utils": "^15.4.2",
-    "react-component-gulp-tasks": "^0.7.7",
-    "react-dom": "^15.4.2"
-  },
-  "browserify-shim": {
-    "react": "global:React"
-  },
+  "homepage": "https://github.com/peterh32/react-drag-drop-container#readme",
   "scripts": {
-    "build": "gulp clean && NODE_ENV=production gulp build",
-    "examples": "gulp dev:server",
-    "lint": "eslint ./; true",
-    "publish:site": "NODE_ENV=production gulp publish:examples",
-    "release": "NODE_ENV=production gulp release",
-    "start": "export BABEL_ENV=production; gulp dev",
-    "test": "export BABEL_ENV=test; mocha --compilers js:babel-register --require babel-polyfill ./src/*.test.js",
-    "watch": "gulp watch:lib"
+    "build": "npm run build-demo; npm run build-dist",
+    "build-demo": "webpack -d",
+    "build-dist": "webpack --config webpack.dist.config.js -p",
+    "prepublish": "npm run build",
+    "push-demo": "echo \"PUSHING DEMO TO gh-pages\"; git subtree push --prefix public origin gh-pages",
+    "start": "webpack-dev-server --hot --inline",
+    "launch": "webpack-dev-server --hot --inline --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterh32/react-drag-drop-container.git"
   },
   "keywords": [
-    "react",
-    "react-component"
-  ]
+    "drag",
+    "drop",
+    "react"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-latest": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
+    "css-loader": "^0.27.3",
+    "http-server": "^0.9.0",
+    "node-sass": "^4.5.1",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.16.1",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.2"
+  },
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  }
 }
