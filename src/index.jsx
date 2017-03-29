@@ -1,8 +1,6 @@
-import Dog from './Dog';
-import Cat from './Cat';
+import DragDropContainer from './DragDropContainer';
+import DropTarget from './DropTarget';
 
 module.exports = {
-  Dog,
-  Cat
+  DragDropContainer, DropTarget
 };
-

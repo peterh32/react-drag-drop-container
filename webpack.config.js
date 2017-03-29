@@ -2,10 +2,10 @@ var path = require('path');
 
 module.exports = {
   context: path.join(__dirname, 'demo'),
-  entry: ['./app.jsx'],
+  entry: ['./example.jsx'],
   output: {
     path: path.join(__dirname, 'public'),
-    filename: 'app.js'
+    filename: 'example.js'
   },
 
   module: {
