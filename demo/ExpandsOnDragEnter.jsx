@@ -1,5 +1,5 @@
 import React from 'react';
-import { DropTarget } from 'react-drag-drop-container';
+import { DropTarget } from '../src/index';
 /*
  * ExpandsOnDragEnter -- for testing offset issues
  */

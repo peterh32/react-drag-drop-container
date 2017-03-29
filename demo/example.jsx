@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+import { DragDropContainer, DropTarget } from '../src/index';
 import {Gorilla, Puppy} from './Gorilla';
 import ExpandsOnDragEnter from './ExpandsOnDragEnter';
 
@@ -12,10 +12,6 @@ var App = React.createClass({
 
 	dropped (e) {
 		this.setState({gorillaHighlighted: false, puppyHighlighted: false});
-		// console.log(e.dragData);
-		// console.log(e.dragElem);
-		// console.log(e.sourceElem);
-		// console.log(e.target);
 		e.sourceElem.style.visibility="hidden";
 		alert(`Thanks for the ${e.dragData.label}! It tasted ${e.dragData.tastes}!`)
 	},

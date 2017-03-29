@@ -1,6 +1,5 @@
 import React from 'react';
 import DragDropGhost from './DragDropGhost';
-import DropTarget from './DropTarget';
 
 class DragDropContainer extends React.Component {
   constructor(props) {
@@ -299,7 +298,4 @@ DragDropContainer.defaultProps = {
   zIndex: 1000
 };
 
-export {
-  DragDropContainer,
-  DropTarget
-};
+export default DragDropContainer;

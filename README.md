@@ -30,10 +30,10 @@ To build the demo locally, run:
 
 ```
 npm install
-npm start
+npm launch
 ```
 
-Then open [`localhost:8000`](http://localhost:8000) in a browser.
+This should open the demo in a browser window.
 
 
 ## Installation
@@ -198,15 +198,19 @@ drop.
 ```
 
 
-## Development (`src`, `lib` and the build process)
+## Development 
 
-**NOTE:** The source code for the component is in `src`. A transpiled CommonJS version (generated with Babel) is available in `lib` for use with node.js, browserify and webpack. A UMD bundle is also built to `dist`, which can be included without the need for any build system.
+```
+/src    Source code for components
+/demo   Source code for demo
+/lib/bundle.js  Transpiled output
+/public   Demo files, compiled
+```
 
-To build, watch and serve the examples (which will also watch the component source), run `npm start`. If you just want to watch changes to `src` and rebuild `lib`, run `npm run watch` (this is useful if you are working with `npm link`).
 
 ## License
 
-__PUT LICENSE HERE__
+__NOT LICENSED__
 
 Copyright (c) 2017.
 
