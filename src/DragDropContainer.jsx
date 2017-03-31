@@ -1,4 +1,5 @@
 import React from 'react';
+var randomstring = require("randomstring");
 import DragDropGhost from './DragDropGhost';
 
 class DragDropContainer extends React.Component {
@@ -37,13 +38,17 @@ class DragDropContainer extends React.Component {
     this.containerElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
+
+    // Using IDs rather than refs to get DOM elements
+    this.containerId = randomstring.generate({charset: 'alphabetic'});
+    this.ghostId = randomstring.generate({charset: 'alphabetic'});
   }
 
   componentDidMount() {
-    this.containerElem = this.refs['drag_container'];
+    this.containerElem = document.getElementById(this.containerId);
     // figure out what we're going to drag
     if (this.props.dragGhost) {
-      this.dragElem = this.refs['drag_ghost'].refs['the_ghost'];
+      this.dragElem = document.getElementById(this.ghostId);
     } else {
       this.dragElem = this.containerElem;
     }
@@ -228,7 +233,7 @@ class DragDropContainer extends React.Component {
     if (this.props.dragGhost){
       // dragging will be applied to the "ghost" element
       ghost = (
-        <DragDropGhost dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex} ref="drag_ghost">
+        <DragDropGhost dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex} ghostId={this.ghostId}>
           {this.props.dragGhost}
         </DragDropGhost>
       );
@@ -239,7 +244,7 @@ class DragDropContainer extends React.Component {
       styles['zIndex'] = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
     }
     return (
-      <div style={styles} ref="drag_container">
+      <div style={styles}  id={this.containerId}>
         {this.getChildrenWithDraggableFalse()}
         {ghost}
       </div>

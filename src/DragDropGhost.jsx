@@ -13,7 +13,7 @@ class DragDropGhost extends React.Component {
       'display': this.props.dragging ? 'block' : 'none'
     };
     return (
-      <div style={styles} ref="the_ghost">
+      <div style={styles} id={this.props.ghostId}>
         {this.props.children}
       </div>
     );
@@ -26,6 +26,7 @@ DragDropGhost.propTypes = {
   dragging: React.PropTypes.bool,
   left: React.PropTypes.number,
   top: React.PropTypes.number,
+  ghostId: React.PropTypes.string.isRequired,
   zIndex: React.PropTypes.number
 };
 
