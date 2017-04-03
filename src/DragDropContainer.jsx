@@ -1,5 +1,4 @@
 import React from 'react';
-var randomstring = require("randomstring");
 import DragDropGhost from './DragDropGhost';
 
 class DragDropContainer extends React.Component {
@@ -31,6 +30,7 @@ class DragDropContainer extends React.Component {
 
     this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
     this.getChildrenWithDraggableFalse = this.getChildrenWithDraggableFalse.bind(this);
+    this.changeDragElement = this.changeDragElement.bind(this);
 
     // The DOM elem we're dragging, and the elements we're dragging over.
     // Changes to these do not trigger a re-render and so don't need to go in state
@@ -38,20 +38,14 @@ class DragDropContainer extends React.Component {
     this.containerElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
+  }
 
-    // Using IDs rather than refs to get DOM elements
-    this.containerId = randomstring.generate({charset: 'alphabetic'});
-    this.ghostId = randomstring.generate({charset: 'alphabetic'});
+  changeDragElement(elem) {
+    this.dragElem = elem;
   }
 
   componentDidMount() {
-    this.containerElem = document.getElementById(this.containerId);
-    // figure out what we're going to drag
-    if (this.props.dragGhost) {
-      this.dragElem = document.getElementById(this.ghostId);
-    } else {
-      this.dragElem = this.containerElem;
-    }
+    this.dragElem = this.containerElem;
     // capture events
     if (this.props.dragHandleClassName) {
       let elems = this.containerElem.getElementsByClassName(this.props.dragHandleClassName);
@@ -233,7 +227,7 @@ class DragDropContainer extends React.Component {
     if (this.props.dragGhost){
       // dragging will be applied to the "ghost" element
       ghost = (
-        <DragDropGhost dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex} ghostId={this.ghostId}>
+        <DragDropGhost dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex} changeDragElement={this.changeDragElement}>
           {this.props.dragGhost}
         </DragDropGhost>
       );
@@ -244,7 +238,7 @@ class DragDropContainer extends React.Component {
       styles['zIndex'] = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
     }
     return (
-      <div style={styles}  id={this.containerId}>
+      <div style={styles}  ref={(container) => this.containerElem = container}>
         {this.getChildrenWithDraggableFalse()}
         {ghost}
       </div>

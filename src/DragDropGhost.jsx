@@ -4,6 +4,10 @@ import React from 'react';
  */
 
 class DragDropGhost extends React.Component {
+  componentDidMount() {
+    this.props.changeDragElement(this.ghostElem);
+  }
+
   render() {
     var styles = {
       'position': 'absolute',
@@ -13,7 +17,7 @@ class DragDropGhost extends React.Component {
       'display': this.props.dragging ? 'block' : 'none'
     };
     return (
-      <div style={styles} id={this.props.ghostId}>
+      <div style={styles} ref={(c) => this.ghostElem = c}>
         {this.props.children}
       </div>
     );
@@ -22,11 +26,11 @@ class DragDropGhost extends React.Component {
 
 DragDropGhost.propTypes = {
   children: React.PropTypes.any,
+  changeDragElement: React.PropTypes.func.isRequired,
   display: React.PropTypes.string,
   dragging: React.PropTypes.bool,
   left: React.PropTypes.number,
   top: React.PropTypes.number,
-  ghostId: React.PropTypes.string.isRequired,
   zIndex: React.PropTypes.number
 };
 

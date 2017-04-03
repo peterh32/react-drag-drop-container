@@ -1,6 +1,6 @@
 {
   "name": "react-drag-drop-container",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "DragDropContainer",
   "main": "lib/bundle.js",
   "author": "Peter!",
@@ -48,6 +48,5 @@
     "react-dom": ">=0.14.0"
   },
   "dependencies": {
-    "randomstring": "^1.1.5"
   }
 }
