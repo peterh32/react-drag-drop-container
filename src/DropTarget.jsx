@@ -7,10 +7,9 @@ class DropTarget extends React.Component {
     this.handleDrop = this.handleDrop.bind(this);
   }
   componentDidMount() {
-    this.elem = this.refs.drop_target;
-    this.elem.addEventListener(`${this.props.targetKey}DragEnter`, (e) => {this.props.onDragEnter(e);}, false);
-    this.elem.addEventListener(`${this.props.targetKey}DragLeave`, (e) => {this.props.onDragLeave(e);}, false);
-    this.elem.addEventListener(`${this.props.targetKey}Drop`, (e) => {this.handleDrop(e);}, false);
+    this.elem.addEventListener(`${this.props.targetKey}DragEnter`, (e) => { this.props.onDragEnter(e); }, false);
+    this.elem.addEventListener(`${this.props.targetKey}DragLeave`, (e) => { this.props.onDragLeave(e); }, false);
+    this.elem.addEventListener(`${this.props.targetKey}Drop`, (e) => { this.handleDrop(e); }, false);
   }
 
   createEvent(eventName, eventData) {
@@ -21,22 +20,22 @@ class DropTarget extends React.Component {
       e = document.createEvent('CustomEvent');
       e.initCustomEvent(eventName, true, true, {});
     } else {
-      e = new CustomEvent(eventName, {'bubbles': true, 'cancelable': true});
+      e = new CustomEvent(eventName, { bubbles: true, cancelable: true });
     }
     Object.assign(e, eventData);
     return e;
   }
 
-  handleDrop(e){
+  handleDrop(e) {
     // tell the drop source about the drop, then do the callback
-    let evt = this.createEvent(`${this.props.targetKey}Dropped`, {dropElem: this.elem, dropData: this.props.dropData});
+    const evt = this.createEvent(`${this.props.targetKey}Dropped`, { dropElem: this.elem, dropData: this.props.dropData });
     e.sourceElem.dispatchEvent(evt);
-    this.props.onDrop(e)
+    this.props.onDrop(e);
   }
 
   render() {
     return (
-      <div ref="drop_target" style={Object.assign({display: 'inline-block'}, this.props.style)}>
+      <div ref={(t) => { this.elem = t; }} style={Object.assign({ display: 'inline-block' }, this.props.style)}>
         {this.props.children}
       </div>
     );
@@ -44,7 +43,7 @@ class DropTarget extends React.Component {
 }
 
 DropTarget.propTypes = {
-  children: React.PropTypes.any.isRequired,
+  children: React.PropTypes.node.isRequired,
   targetKey: React.PropTypes.string,
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
@@ -55,9 +54,9 @@ DropTarget.propTypes = {
 
 DropTarget.defaultProps = {
   targetKey: 'ddc',
-  onDragEnter: () => {console.log('drag enter');},
-  onDragLeave: () => {console.log('drag leave');},
-  onDrop: () => {console.log('dropped!');},
+  onDragEnter: () => { console.log('drag enter'); },  // eslint-disable-line no-console
+  onDragLeave: () => { console.log('drag leave'); },  // eslint-disable-line no-console
+  onDrop: () => { console.log('dropped!'); },  // eslint-disable-line no-console
   dropData: {},
   style: {},
 };

@@ -13,10 +13,11 @@
     "build": "npm run build-demo; npm run build-dist",
     "build-demo": "webpack -d",
     "build-dist": "webpack --config webpack.dist.config.js -p",
+    "launch": "webpack-dev-server --hot --inline --open",
+    "lint": "./node_modules/.bin/eslint src --fix --ext js,jsx",
     "prepublish": "npm run build",
     "push-demo": "echo \"PUSHING DEMO TO gh-pages\"; git subtree push --prefix public origin gh-pages",
     "start": "webpack-dev-server --hot --inline",
-    "launch": "webpack-dev-server --hot --inline --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,6 +35,11 @@
     "babel-preset-env": "^1.2.2",
     "babel-preset-react": "^6.23.0",
     "css-loader": "^0.27.3",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
     "http-server": "^0.9.0",
     "node-sass": "^4.5.1",
     "react": "^15.4.2",
@@ -47,6 +53,5 @@
     "react": ">=0.14.0",
     "react-dom": ">=0.14.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
