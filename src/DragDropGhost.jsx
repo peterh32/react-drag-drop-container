@@ -5,7 +5,7 @@ import React from 'react';
 
 class DragDropGhost extends React.Component {
   componentDidMount() {
-    this.props.changeDragElement(this.ghostElem);
+    this.props.setGhostElem(this.ghostElem);
   }
 
   render() {
@@ -25,13 +25,12 @@ class DragDropGhost extends React.Component {
 }
 
 DragDropGhost.propTypes = {
-  children: React.PropTypes.any,
-  changeDragElement: React.PropTypes.func.isRequired,
-  display: React.PropTypes.string,
-  dragging: React.PropTypes.bool,
-  left: React.PropTypes.number,
-  top: React.PropTypes.number,
-  zIndex: React.PropTypes.number
+  children: React.PropTypes.any.isRequired,
+  setGhostElem: React.PropTypes.func.isRequired,
+  dragging: React.PropTypes.bool.isRequired,
+  left: React.PropTypes.number.isRequired,
+  top: React.PropTypes.number.isRequired,
+  zIndex: React.PropTypes.number.isRequired
 };
 
 export default DragDropGhost;
