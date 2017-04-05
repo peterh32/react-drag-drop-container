@@ -1,7 +1,5 @@
 import React from 'react';
-/*
- * Gorilla -- an example target component for DragDropContainer
- */
+
 
 class Gorilla extends React.Component {
   constructor(props) {

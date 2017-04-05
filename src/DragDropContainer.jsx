@@ -223,6 +223,7 @@ class DragDropContainer extends React.Component {
   render() {
     const styles = {
       position: 'relative',
+      display: 'inline-block'
     };
 
     let ghost = '';
