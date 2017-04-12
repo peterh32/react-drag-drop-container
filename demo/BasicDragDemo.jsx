@@ -9,6 +9,9 @@ export default function BasicDragDemo(props) {
       <DragDropContainer xOnly={true}><div style={styles}>↔</div></DragDropContainer>
       <DragDropContainer yOnly={true}><div style={styles}>↕</div></DragDropContainer>
       <DragDropContainer><img style={styles} src="img/4-way-arrow.png" width="24"/></DragDropContainer>
+      <textarea disabled value="<DragDropContainer xOnly={true}>[drag left and right]</DragDropContainer>" />
+      <textarea disabled value="<DragDropContainer yOnly={true}>[drag up and down]</DragDropContainer>" />
+      <textarea disabled value="<DragDropContainer>[drag anywhere]</DragDropContainer>" />
     </div>
   )
 }
