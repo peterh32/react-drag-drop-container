@@ -1,6 +1,6 @@
 {
   "name": "react-drag-drop-container",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "DragDropContainer",
   "main": "lib/bundle.js",
   "author": "Peter!",
