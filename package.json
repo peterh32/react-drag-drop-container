@@ -1,6 +1,6 @@
 {
   "name": "react-drag-drop-container",
-  "version": "3.0.9",
+  "version": "3.0.11",
   "description": "DragDropContainer",
   "main": "lib/bundle.js",
   "author": "Peter!",
@@ -11,7 +11,7 @@
   "homepage": "https://github.com/peterh32/react-drag-drop-container#readme",
   "scripts": {
     "build": "npm run build-demo; npm run build-dist",
-    "build-demo": "webpack -d",
+    "build-demo": "webpack -d; cp ./demo/img/* ./public/img/; cp ./demo/*.html ./public/; cp ./demo/*.css ./public/",
     "build-dist": "webpack --config webpack.dist.config.js -p",
     "launch": "webpack-dev-server --hot --inline --open",
     "lint": "./node_modules/.bin/eslint src --fix --ext js,jsx",
@@ -45,6 +45,7 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "sass-loader": "^6.0.3",
+    "shortid": "^2.2.8",
     "style-loader": "^0.16.1",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"

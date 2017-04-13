@@ -189,10 +189,12 @@ class DragDropContainer extends React.Component {
   drop(x, y) {
     // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
-    if (this.props.returnToBase) {
-      this.setState({ left: 0, top: 0, dragging: false });
-    } else {
-      this.setState({ dragged: true, dragging: false });
+    if (this.containerElem) {
+      if (this.props.returnToBase) {
+        this.setState({ left: 0, top: 0, dragging: false });
+      } else {
+        this.setState({ dragged: true, dragging: false });
+      }
     }
     this.props.onEndDrag(this.props.dragData, this.currentTarget, x, y);
   }
@@ -223,6 +225,7 @@ class DragDropContainer extends React.Component {
   render() {
     const styles = {
       position: 'relative',
+      display: 'inline-block',
     };
 
     let ghost = '';
