@@ -54,9 +54,9 @@ DropTarget.propTypes = {
 
 DropTarget.defaultProps = {
   targetKey: 'ddc',
-  onDragEnter: () => { console.log('drag enter'); },  // eslint-disable-line no-console
-  onDragLeave: () => { console.log('drag leave'); },  // eslint-disable-line no-console
-  onDrop: () => { console.log('dropped!'); },  // eslint-disable-line no-console
+  onDragEnter: () => {},
+  onDragLeave: () => {},
+  onDrop: () => () => {},
   dropData: {},
   style: {},
 };
