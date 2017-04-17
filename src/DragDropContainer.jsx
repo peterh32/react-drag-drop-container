@@ -126,7 +126,7 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y) {
-    document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDropped);
+    document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
       clickX: x - this.state.left,
@@ -134,7 +134,7 @@ class DragDropContainer extends React.Component {
       initialLeftOffset: this.state.dragged ? this.state.initialLeftOffset : this.containerElem.offsetLeft,
       initialTopOffset: this.state.dragged ? this.state.initialTopOffset : this.containerElem.offsetTop,
     });
-    this.props.onStartDrag(this.props.dragData);
+    this.props.onDragStart(this.props.dragData);
   }
 
   // During Drag
@@ -196,7 +196,7 @@ class DragDropContainer extends React.Component {
         this.setState({ dragged: true, dragging: false });
       }
     }
-    this.props.onEndDrag(this.props.dragData, this.currentTarget, x, y);
+    this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   }
 
   checkForOffsetChanges() {
@@ -282,10 +282,10 @@ DragDropContainer.propTypes = {
   noDragging: React.PropTypes.bool,
 
   // callbacks (optional):
-  onDropped: React.PropTypes.func,
+  onDrop: React.PropTypes.func,
   onDragging: React.PropTypes.func,
-  onEndDrag: React.PropTypes.func,
-  onStartDrag: React.PropTypes.func,
+  onDragEnd: React.PropTypes.func,
+  onDragStart: React.PropTypes.func,
 
   // If true, then object will return to its starting point after you let go of it
   returnToBase: React.PropTypes.bool,
@@ -304,10 +304,10 @@ DragDropContainer.defaultProps = {
   dragGhost: null,
   ghostOpacity: 0.6,
   dragHandleClassName: '',
-  onStartDrag: () => {},
+  onDragStart: () => {},
   onDragging: () => {},
-  onEndDrag: () => {},
-  onDropped: () => {},
+  onDragEnd: () => {},
+  onDrop: () => {},
   noDragging: false,
   returnToBase: false,
   xOnly: false,

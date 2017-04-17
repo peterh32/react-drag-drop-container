@@ -33,7 +33,7 @@ class Animal extends React.Component {
     };
     return (
       <DropTarget
-        onDrop={this.dropped}
+        onHit={this.dropped}
         onDragEnter={this.highlight}
         onDragLeave={this.unHighlight}
         targetKey={this.props.targetKey}
@@ -59,7 +59,7 @@ class Food extends React.Component {
         returnToBase={true}
         dragData={{label: this.props.label, tastes: this.props.tastes}}
         dragGhost={this.props.dragGhost}
-        onDropped={this.landedOn}
+        onDrop={this.landedOn}
       >
         <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>
       </DragDropContainer>
@@ -91,7 +91,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
         <ul>
           <li><strong>targetKey</strong> to specify compatible drag items and drop targets.</li>
           <li><strong>dragData</strong> to pass the food name and taste ("Yummy", "Weird").</li>
-          <li><strong>onDropped</strong> callback to tell the drag item what it was dropped on (shown in console.log).</li>
+          <li><strong>onDrop</strong> callback to tell the drag item what it was dropped on (shown in console.log).</li>
           <li><strong>dragGhost</strong> (on the cheeseburger) to drag a separate element.</li>
           <li><strong>returnToBase</strong> to specify whether items return to their original location when released.</li>
         </ul>

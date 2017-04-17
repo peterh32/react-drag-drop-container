@@ -51,10 +51,10 @@ class BoxItem extends React.Component {
           targetKey="box"
           returnToBase={true}
           dragData={{label: this.props.children, index: this.props.index}}
-          onDropped={() => {this.props.kill(this.props.uid)}}
+          onDrop={() => {this.props.kill(this.props.uid)}}
         >
           <DropTarget
-            onDrop={this.handleDrop}
+            onHit={this.handleDrop}
             onDragEnter={this.highlight}
             onDragLeave={this.unHighlight}
             targetKey="box"
@@ -116,7 +116,7 @@ class Box extends React.Component {
     };
     return (
       <DropTarget
-        onDrop={this.handleDrop}
+        onHit={this.handleDrop}
         targetKey={this.props.targetKey}
         dropData={{name: this.props.name}}
       >

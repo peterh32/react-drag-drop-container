@@ -30,7 +30,7 @@ class DropTarget extends React.Component {
     // tell the drop source about the drop, then do the callback
     const evt = this.createEvent(`${this.props.targetKey}Dropped`, { dropElem: this.elem, dropData: this.props.dropData });
     e.sourceElem.dispatchEvent(evt);
-    this.props.onDrop(e);
+    this.props.onHit(e);
   }
 
   render() {
@@ -47,7 +47,7 @@ DropTarget.propTypes = {
   targetKey: React.PropTypes.string,
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
-  onDrop: React.PropTypes.func,
+  onHit: React.PropTypes.func,
   dropData: React.PropTypes.object,
   style: React.PropTypes.object,
 };
@@ -56,7 +56,7 @@ DropTarget.defaultProps = {
   targetKey: 'ddc',
   onDragEnter: () => {},
   onDragLeave: () => {},
-  onDrop: () => () => {},
+  onHit: () => () => {},
   dropData: {},
   style: {},
 };

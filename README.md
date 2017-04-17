@@ -106,7 +106,7 @@ In DropTarget's parent, add handlers for the enter, leave, and drop events. For 
 Wire them up to DropTarget. In this example we are passing the "highlighted" state
 to the child element, which we assume toggles some highlighted style.
 ```
-  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onDrop={this.dropped}>
+  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onHit={this.dropped}>
     <ChildElement highlighted=this.state.highlighted />
   </DropTarget>
 ```
@@ -155,7 +155,7 @@ If that doesn't work for you, change it here.
 #### Callbacks 
 
 All optional; specify in props.
-##### onStartDrag(dragData)
+##### onDragStart(dragData)
 Runs when you start dragging. __dragData__ is whatever you passed in with
 the dragData property.
 
@@ -166,7 +166,7 @@ over; __x__ and __y__ are the current position.
 ##### onDragEnd(dragData, currentTarget, x, y)
 When you drop.
 
-##### onDropped(dropData, dropTarget)
+##### onDrop(dropData, dropTarget)
 Triggered after a drop onto a compatible DropTarget. __dropTarget__ is the DOM
 element of the DropTarget you dropped on, and  __dropData__ 
 is  an optional property of DropTarget. 
@@ -182,7 +182,7 @@ Data to be provided to the DragDropContainer when it is dropped on the target.
 #### Callbacks 
 
 All optional; specify in props.
-##### onDragEnter(e), onDragLeave(e), onDrop(e)
+##### onDragEnter(e), onDragLeave(e), onHit(e)
 The event e contains
 ```
 {
