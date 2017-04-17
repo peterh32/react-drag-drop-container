@@ -84,9 +84,9 @@ export default class DragFoodToAnimalsDemo extends React.Component {
         </div>
         <div className="foods">
           <Food targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
-          <Food targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
+          <Food dragGhost="clone" targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
           <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
-          <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
+          <Food dragGhost={<div>Pickle</div>} targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
         </div>
         <ul>
           <li><strong>targetKey</strong> to specify compatible drag items and drop targets.</li>

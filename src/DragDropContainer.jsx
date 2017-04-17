@@ -231,12 +231,18 @@ class DragDropContainer extends React.Component {
     let ghost = '';
     if (this.props.dragGhost) {
       // dragging will be applied to the "ghost" element
+      let ghostContent = this.props.dragGhost;
+      if (ghostContent === 'clone') {
+        ghostContent = this.setDraggableFalseOnChildren();
+      }
       ghost = (
         <DragDropGhost
           dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
           setGhostElem={this.setGhostElem}
         >
-          {this.props.dragGhost}
+          <div style={{opacity: this.props.ghostOpacity}}>
+            {ghostContent}
+          </div>
         </DragDropGhost>
       );
     } else {
@@ -266,6 +272,9 @@ DragDropContainer.propTypes = {
   // If provided, we'll drag this instead of the actual object
   dragGhost: React.PropTypes.node,
 
+  // and use this opacity
+  ghostOpacity: React.PropTypes.number,
+
   // If included, we'll only let you drag by grabbing the draghandle
   dragHandleClassName: React.PropTypes.string,
 
@@ -293,6 +302,7 @@ DragDropContainer.defaultProps = {
   targetKey: 'ddc',
   dragData: {},
   dragGhost: null,
+  ghostOpacity: 0.6,
   dragHandleClassName: '',
   onStartDrag: () => {},
   onDragging: () => {},
