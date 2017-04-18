@@ -35,7 +35,7 @@ class DropTarget extends React.Component {
 
   render() {
     return (
-      <div ref={(t) => { this.elem = t; }} style={Object.assign({ display: 'inline-block' }, this.props.style)}>
+      <div ref={(t) => { this.elem = t; }}>
         {this.props.children}
       </div>
     );
@@ -49,7 +49,6 @@ DropTarget.propTypes = {
   onDragLeave: React.PropTypes.func,
   onHit: React.PropTypes.func,
   dropData: React.PropTypes.object,
-  style: React.PropTypes.object,
 };
 
 DropTarget.defaultProps = {
@@ -58,7 +57,6 @@ DropTarget.defaultProps = {
   onDragLeave: () => {},
   onHit: () => () => {},
   dropData: {},
-  style: {},
 };
 
 export default DropTarget;

@@ -60,7 +60,7 @@ Wrap your element in a DragDropContainer:
 ```
 import { DragDropContainer } from 'react-drag-drop-container';
 
-<DragDropContainer>Example</DragDropContainer>
+<DragDropContainer>	<span>Example</span></DragDropContainer>
 ```
 The element should now be draggable.
 
@@ -68,14 +68,14 @@ The element should now be draggable.
 Add the data you want to send to the target when you drop the element on it:
 ```
 <DragDropContainer dragData={{label: 'Example', id: 123}}>
-	Example
+	<span>Example</span>
 </DragDropContainer>
 ```
 
 Specify targetKey. This determines what dropTargets will accept your drag:
 ```
 <DragDropContainer dragData={{label: 'Example', id: 123}} targetKey="foo">
-	Example
+	<span>Example</span>
 </DragDropContainer>
 ```
 

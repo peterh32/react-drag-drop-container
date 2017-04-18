@@ -240,7 +240,7 @@ class DragDropContainer extends React.Component {
           dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
           setGhostElem={this.setGhostElem}
         >
-          <div style={{opacity: this.props.ghostOpacity}}>
+          <div style={{ opacity: this.props.ghostOpacity, cursor: 'move' }}>
             {ghostContent}
           </div>
         </DragDropGhost>
@@ -250,6 +250,7 @@ class DragDropContainer extends React.Component {
       styles.left = this.state.left;
       styles.top = this.state.top;
       styles.zIndex = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
+      styles.cursor = this.state.dragging ? 'move' : 'pointer';
     }
     return (
       <div style={styles} ref={(container) => { this.containerElem = container; }}>

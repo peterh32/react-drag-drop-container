@@ -109,10 +109,9 @@ class Box extends React.Component {
     const styles = {
       border: "2px solid black",
       borderRadius: 4,
-      width: 200,
-      height: 200,
+      width: 400,
+      height: 100,
       margin: 10,
-      float: 'left'
     };
     return (
       <DropTarget
@@ -156,10 +155,6 @@ export default class DragThingsToBoxesDemo extends React.Component {
       <div>
         <h2>Demo 3: Drag things into boxes</h2>
         You can also drag between boxes and drag to re-order within boxes.
-        <div className="boxes">
-            <Box targetKey="box"/>
-            <Box targetKey = "box"/>
-        </div>
         <div className="things_to_drag">
           <BoxMe targetKey="box" label="bananas"  image="img/banana.png"/>
           <BoxMe targetKey="box" label="cheeseburger"  image="img/surprise.png"/>
@@ -167,6 +162,10 @@ export default class DragThingsToBoxesDemo extends React.Component {
           <BoxMe targetKey="box" label="pickle" image="img/pickle.png"/>
           <BoxMe targetKey="box" label="gorilla" image="img/gorilla.png"/>
           <BoxMe targetKey="box" label="puppy" image="img/puppy.png"/>
+        </div>
+        <div className="boxes">
+            <Box targetKey="box"/>
+            <Box targetKey="box"/>
         </div>
 
 
