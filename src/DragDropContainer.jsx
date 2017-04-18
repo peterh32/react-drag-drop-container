@@ -33,7 +33,6 @@ class DragDropContainer extends React.Component {
     this.setDraggableFalseOnChildren = this.setDraggableFalseOnChildren.bind(this);
 
     // The DOM elem we're dragging, and the elements we're dragging over.
-    // Changes to these do not trigger a re-render and so don't need to go in state
     this.dragElem = null;
     this.ghostElem = null;
     this.containerElem = null;
@@ -203,7 +202,7 @@ class DragDropContainer extends React.Component {
     // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
     let dx;
     let dy;
-    if (this.props.dragGhost) {
+    if (this.props.dragElement) {
       dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
       dy = this.state.initialTopOffset - this.containerElem.offsetTop;
     } else {
@@ -229,9 +228,9 @@ class DragDropContainer extends React.Component {
     };
 
     let ghost = '';
-    if (this.props.dragGhost) {
+    if (this.props.dragElement) {
       // dragging will be applied to the "ghost" element
-      let ghostContent = this.props.dragGhost;
+      let ghostContent = this.props.dragElement;
       if (ghostContent === 'clone') {
         ghostContent = this.setDraggableFalseOnChildren();
       }
@@ -240,7 +239,7 @@ class DragDropContainer extends React.Component {
           dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
           setGhostElem={this.setGhostElem}
         >
-          <div style={{ opacity: this.props.ghostOpacity, cursor: 'move' }}>
+          <div style={{ opacity: this.props.dragElementOpacity, cursor: 'move' }}>
             {ghostContent}
           </div>
         </DragDropGhost>
@@ -271,10 +270,10 @@ DragDropContainer.propTypes = {
   dragData: React.PropTypes.object,
 
   // If provided, we'll drag this instead of the actual object
-  dragGhost: React.PropTypes.node,
+  dragElement: React.oneOfType([PropTypes.string.PropTypes.node]),
 
   // and use this opacity
-  ghostOpacity: React.PropTypes.number,
+  dragElementOpacity: React.PropTypes.number,
 
   // If included, we'll only let you drag by grabbing the draghandle
   dragHandleClassName: React.PropTypes.string,
@@ -302,8 +301,8 @@ DragDropContainer.propTypes = {
 DragDropContainer.defaultProps = {
   targetKey: 'ddc',
   dragData: {},
-  dragGhost: null,
-  ghostOpacity: 0.6,
+  dragElement: null,
+  dragElementOpacity: 0.6,
   dragHandleClassName: '',
   onDragStart: () => {},
   onDrag: () => {},

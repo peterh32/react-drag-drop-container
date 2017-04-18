@@ -142,7 +142,7 @@ class BoxMe extends React.Component {
         targetKey={this.props.targetKey}
         returnToBase={true}
         dragData={{label: this.props.label}}
-        dragGhost={this.props.dragGhost}
+        dragElement={this.props.dragElement}
         onDragStart={()=>(console.log('start'))}
         onDrag={()=>(console.log('dragging'))}
         onDragEnd={()=>(console.log('end'))}
