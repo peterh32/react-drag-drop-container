@@ -112,6 +112,7 @@ class Box extends React.Component {
       width: 400,
       height: 100,
       margin: 10,
+      display: 'inline-block',
     };
     return (
       <DropTarget
@@ -142,6 +143,11 @@ class BoxMe extends React.Component {
         returnToBase={true}
         dragData={{label: this.props.label}}
         dragGhost={this.props.dragGhost}
+        onDragStart={()=>(console.log('start'))}
+        onDrag={()=>(console.log('dragging'))}
+        onDragEnd={()=>(console.log('end'))}
+        onDrop={()=>(console.log('dropped'))}
+
       >
         <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>
       </DragDropContainer>
@@ -164,8 +170,9 @@ export default class DragThingsToBoxesDemo extends React.Component {
           <BoxMe targetKey="box" label="puppy" image="img/puppy.png"/>
         </div>
         <div className="boxes">
-            <Box targetKey="box"/>
-            <Box targetKey="box"/>
+          <Box targetKey="box"/>
+          <br/>
+          <Box targetKey="box"/>
         </div>
 
 

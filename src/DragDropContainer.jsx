@@ -164,7 +164,7 @@ class DragDropContainer extends React.Component {
     if (!this.props.yOnly) { stateChanges.left = (dx + x) - this.state.clickX; }
     if (!this.props.xOnly) { stateChanges.top = (dy + y) - this.state.clickY; }
     this.setState(stateChanges);
-    this.props.onDragging(this.props.dragData, this.currentTarget, x, y);
+    this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
   }
 
   // Drop
@@ -284,7 +284,7 @@ DragDropContainer.propTypes = {
 
   // callbacks (optional):
   onDrop: React.PropTypes.func,
-  onDragging: React.PropTypes.func,
+  onDrag: React.PropTypes.func,
   onDragEnd: React.PropTypes.func,
   onDragStart: React.PropTypes.func,
 
@@ -306,7 +306,7 @@ DragDropContainer.defaultProps = {
   ghostOpacity: 0.6,
   dragHandleClassName: '',
   onDragStart: () => {},
-  onDragging: () => {},
+  onDrag: () => {},
   onDragEnd: () => {},
   onDrop: () => {},
   noDragging: false,

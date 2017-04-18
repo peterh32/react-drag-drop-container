@@ -159,7 +159,7 @@ All optional; specify in props.
 Runs when you start dragging. __dragData__ is whatever you passed in with
 the dragData property.
 
-##### onDragging(dragData, currentTarget, x, y)
+##### onDrag(dragData, currentTarget, x, y)
 Runs as you drag.  __currentTarget__ is the DOM element you're currently dragging
 over; __x__ and __y__ are the current position.
 
