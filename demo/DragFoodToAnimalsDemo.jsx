@@ -58,7 +58,7 @@ class Food extends React.Component {
         targetKey={this.props.targetKey}
         returnToBase={true}
         dragData={{label: this.props.label, tastes: this.props.tastes}}
-        dragElement={this.props.dragElement}
+        customDragElement={this.props.customDragElement}
         onDrop={this.landedOn}
       >
         <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>
@@ -69,6 +69,7 @@ class Food extends React.Component {
 
 export default class DragFoodToAnimalsDemo extends React.Component {
   render() {
+    const customElem = <button>Bananas</button>
     return (
       <div>
         <h2>Demo 2: Drag the food to the correct animal</h2>
@@ -83,16 +84,17 @@ export default class DragFoodToAnimalsDemo extends React.Component {
           </DragDropContainer>
         </div>
         <div className="foods">
-          <Food targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
-          <Food dragElement="clone" targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
           <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
           <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
+          <Food dragClone={true} targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
+          <Food customDragElement={customElem} targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
         </div>
         <ul>
           <li><strong>targetKey</strong> to specify compatible drag items and drop targets.</li>
           <li><strong>dragData</strong> to pass the food name and taste ("Yummy", "Weird").</li>
           <li><strong>onDrop</strong> callback to tell the drag item what it was dropped on (shown in console.log).</li>
-          <li><strong>dragElement</strong> (on the cheeseburger) to drag a separate element.</li>
+          <li><strong>customDragElement</strong> (on the bananas) to drag a custom element.</li>
+          <li><strong>dragClone</strong> (on the cheeseburger) to drag a copy.</li>
           <li><strong>returnToBase</strong> to specify whether items return to their original location when released.</li>
         </ul>
 

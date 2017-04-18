@@ -116,7 +116,7 @@ class Box extends React.Component {
     };
     return (
       <DropTarget
-        onHit={this.handleDrop}
+        onHit={(e)=>{console.log(e)}}
         targetKey={this.props.targetKey}
         dropData={{name: this.props.name}}
       >
@@ -142,11 +142,11 @@ class BoxMe extends React.Component {
         targetKey={this.props.targetKey}
         returnToBase={true}
         dragData={{label: this.props.label}}
-        dragElement={this.props.dragElement}
+        customDragElement={this.props.customDragElement}
         onDragStart={()=>(console.log('start'))}
         onDrag={()=>(console.log('dragging'))}
         onDragEnd={()=>(console.log('end'))}
-        onDrop={()=>(console.log('dropped'))}
+        onDrop={(e)=>(console.log(e))}
 
       >
         <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>

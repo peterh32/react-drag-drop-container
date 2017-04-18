@@ -54,6 +54,7 @@ class DragDropContainer extends React.Component {
   }
 
   setGhostElem(elem) {
+    // this has to run _after_ the DragGhost element renders in order to get the DOM elem for that element
     this.ghostElem = elem;
   }
 
@@ -202,7 +203,7 @@ class DragDropContainer extends React.Component {
     // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
     let dx;
     let dy;
-    if (this.props.dragElement) {
+    if (this.props.customDragElement || this.props.dragClone) {
       dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
       dy = this.state.initialTopOffset - this.containerElem.offsetTop;
     } else {
@@ -228,18 +229,19 @@ class DragDropContainer extends React.Component {
     };
 
     let ghost = '';
-    if (this.props.dragElement) {
-      // dragging will be applied to the "ghost" element
-      let ghostContent = this.props.dragElement;
-      if (ghostContent === 'clone') {
-        ghostContent = this.setDraggableFalseOnChildren();
+    if (this.props.customDragElement || this.props.dragClone) {
+      let ghostContent;
+      if (this.props.customDragElement) {
+        let ghostContent = this.props.customDragElement;
+      } else {
+        ghostContent = this.setDraggableFalseOnChildren();   // dragging a clone
       }
       ghost = (
         <DragDropGhost
           dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
           setGhostElem={this.setGhostElem}
         >
-          <div style={{ opacity: this.props.dragElementOpacity, cursor: 'move' }}>
+          <div style={{ opacity: this.props.dragCloneOpacity, cursor: 'move' }}>
             {ghostContent}
           </div>
         </DragDropGhost>
@@ -266,14 +268,17 @@ DragDropContainer.propTypes = {
   // Determines what you can drop on
   targetKey: React.PropTypes.string,
 
-  // We will pass this to the target when you drag or drop over it
-  dragData: React.PropTypes.object,
+  // If provided, we'll drag this instead of the actual object. Takes priority over dragClone if both are set
+  customDragElement: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
 
-  // If provided, we'll drag this instead of the actual object
-  dragElement: React.oneOfType([PropTypes.string.PropTypes.node]),
+  // If true, then we will drag a clone of the object instead of the object itself. See also customDragElement
+  dragClone: React.PropTypes.bool,
 
   // and use this opacity
-  dragElementOpacity: React.PropTypes.number,
+  dragCloneOpacity: React.PropTypes.number,
+
+  // We will pass this to the target when you drag or drop over it
+  dragData: React.PropTypes.object,
 
   // If included, we'll only let you drag by grabbing the draghandle
   dragHandleClassName: React.PropTypes.string,
@@ -300,9 +305,10 @@ DragDropContainer.propTypes = {
 
 DragDropContainer.defaultProps = {
   targetKey: 'ddc',
+  customDragElement: null,
+  dragClone: false,
+  dragCloneOpacity: 0.6,
   dragData: {},
-  dragElement: null,
-  dragElementOpacity: 0.6,
   dragHandleClassName: '',
   onDragStart: () => {},
   onDrag: () => {},
