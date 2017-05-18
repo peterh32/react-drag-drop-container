@@ -113,23 +113,27 @@ class Box extends React.Component {
       height: 100,
       margin: 10,
       display: 'inline-block',
+      position: 'relative',
     };
     return (
-      <DropTarget
-        onHit={this.handleDrop}
-        targetKey={this.props.targetKey}
-        dropData={{name: this.props.name}}
-      >
-        <div style={styles}>
-          {this.state.items.map((item, index) => {
-            return (
-              <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
-                {item.label}
-              </BoxItem>
-            )
-          })}
-        </div>
-      </DropTarget>
+      <DragDropContainer dragHandleClassName="grab_me">
+        <DropTarget
+          onHit={this.handleDrop}
+          targetKey={this.props.targetKey}
+          dropData={{name: this.props.name}}
+        >
+          <div style={styles}>
+            <div className="grab_me" style={{position: 'absolute', bottom: 0, right: 0}}>x</div>
+            {this.state.items.map((item, index) => {
+              return (
+                <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
+                  {item.label}
+                </BoxItem>
+              )
+            })}
+          </div>
+        </DropTarget>
+      </DragDropContainer>
     );
   }
 }
@@ -160,7 +164,7 @@ export default class DragThingsToBoxesDemo extends React.Component {
     return (
       <div>
         <h2>Demo 3: Drag things into boxes</h2>
-        You can also drag between boxes and drag to re-order within boxes.
+        You can also drag between boxes and drag to re-order within boxes, and drag the boxes using the x as a drag handle.
         <div className="things_to_drag">
           <BoxMe targetKey="box" label="bananas"  image="img/banana.png"/>
           <BoxMe targetKey="box" label="cheeseburger"  image="img/surprise.png"/>

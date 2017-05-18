@@ -16,7 +16,7 @@
     "launch": "webpack-dev-server --hot --inline --open",
     "lint": "./node_modules/.bin/eslint src --fix --ext js,jsx",
     "prepublish": "npm run build",
-    "push-demo": "echo \"PUSHING DEMO TO gh-pages\"; git subtree push --prefix public origin gh-pages",
+    "push-demo": "echo \"PUSHING DEMO TO gh-pages\"; npm run build-demo; git subtree push --prefix public origin gh-pages",
     "start": "webpack-dev-server --hot --inline",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack-dev-server --hot --inline"
