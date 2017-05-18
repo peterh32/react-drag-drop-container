@@ -1,6 +1,6 @@
 # DragDropContainer and DropTarget
 
-**Because drag and drop should be easy.**
+Live demo: [peterh32.github.io/react-drag-drop-container](http://peterh32.github.io/react-drag-drop-container/)
 
 Make something draggable:
 ```
