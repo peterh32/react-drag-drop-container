@@ -30,35 +30,39 @@ class DropTarget extends React.Component {
     // tell the drop source about the drop, then do the callback
     const evt = this.createEvent(`${this.props.targetKey}Dropped`, { dropElem: this.elem, dropData: this.props.dropData });
     e.sourceElem.dispatchEvent(evt);
-    this.props.onDrop(e);
+    this.props.onHit(e);
   }
 
   render() {
     return (
-      <div ref={(t) => { this.elem = t; }} style={Object.assign({ display: 'inline-block' }, this.props.style)}>
+      <span ref={(t) => { this.elem = t; }}>
         {this.props.children}
-      </div>
+      </span>
     );
   }
 }
 
 DropTarget.propTypes = {
   children: React.PropTypes.node.isRequired,
+
+  // needs to match the targetKey in the DragDropContainer
   targetKey: React.PropTypes.string,
+
+  // data that gets sent back to the DragDropContainer and shows up in its onDrop() callback event
+  dropData: React.PropTypes.object,
+
+  // callbacks
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
-  onDrop: React.PropTypes.func,
-  dropData: React.PropTypes.object,
-  style: React.PropTypes.object,
+  onHit: React.PropTypes.func,
 };
 
 DropTarget.defaultProps = {
   targetKey: 'ddc',
   onDragEnter: () => {},
   onDragLeave: () => {},
-  onDrop: () => () => {},
+  onHit: () => () => {},
   dropData: {},
-  style: {},
 };
 
 export default DropTarget;

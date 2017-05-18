@@ -1,6 +1,6 @@
 {
   "name": "react-drag-drop-container",
-  "version": "3.0.11",
+  "version": "4.0.0",
   "description": "DragDropContainer",
   "main": "lib/bundle.js",
   "author": "Peter!",
@@ -18,7 +18,8 @@
     "prepublish": "npm run build",
     "push-demo": "echo \"PUSHING DEMO TO gh-pages\"; git subtree push --prefix public origin gh-pages",
     "start": "webpack-dev-server --hot --inline",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack-dev-server --hot --inline"
   },
   "repository": {
     "type": "git",

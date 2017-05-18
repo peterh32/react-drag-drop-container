@@ -51,10 +51,10 @@ class BoxItem extends React.Component {
           targetKey="box"
           returnToBase={true}
           dragData={{label: this.props.children, index: this.props.index}}
-          onDropped={() => {this.props.kill(this.props.uid)}}
+          onDrop={() => {this.props.kill(this.props.uid)}}
         >
           <DropTarget
-            onDrop={this.handleDrop}
+            onHit={this.handleDrop}
             onDragEnter={this.highlight}
             onDragLeave={this.unHighlight}
             targetKey="box"
@@ -109,14 +109,14 @@ class Box extends React.Component {
     const styles = {
       border: "2px solid black",
       borderRadius: 4,
-      width: 200,
-      height: 200,
+      width: 400,
+      height: 100,
       margin: 10,
-      float: 'left'
+      display: 'inline-block',
     };
     return (
       <DropTarget
-        onDrop={this.handleDrop}
+        onHit={this.handleDrop}
         targetKey={this.props.targetKey}
         dropData={{name: this.props.name}}
       >
@@ -142,7 +142,12 @@ class BoxMe extends React.Component {
         targetKey={this.props.targetKey}
         returnToBase={true}
         dragData={{label: this.props.label}}
-        dragGhost={this.props.dragGhost}
+        customDragElement={this.props.customDragElement}
+        onDragStart={()=>(console.log('start'))}
+        onDrag={()=>(console.log('dragging'))}
+        onDragEnd={()=>(console.log('end'))}
+        onDrop={(e)=>(console.log(e))}
+
       >
         <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>
       </DragDropContainer>
@@ -156,10 +161,6 @@ export default class DragThingsToBoxesDemo extends React.Component {
       <div>
         <h2>Demo 3: Drag things into boxes</h2>
         You can also drag between boxes and drag to re-order within boxes.
-        <div className="boxes">
-            <Box targetKey="box"/>
-            <Box targetKey = "box"/>
-        </div>
         <div className="things_to_drag">
           <BoxMe targetKey="box" label="bananas"  image="img/banana.png"/>
           <BoxMe targetKey="box" label="cheeseburger"  image="img/surprise.png"/>
@@ -167,6 +168,11 @@ export default class DragThingsToBoxesDemo extends React.Component {
           <BoxMe targetKey="box" label="pickle" image="img/pickle.png"/>
           <BoxMe targetKey="box" label="gorilla" image="img/gorilla.png"/>
           <BoxMe targetKey="box" label="puppy" image="img/puppy.png"/>
+        </div>
+        <div className="boxes">
+          <Box targetKey="box"/>
+          <br/>
+          <Box targetKey="box"/>
         </div>
 
 

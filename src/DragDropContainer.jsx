@@ -33,7 +33,6 @@ class DragDropContainer extends React.Component {
     this.setDraggableFalseOnChildren = this.setDraggableFalseOnChildren.bind(this);
 
     // The DOM elem we're dragging, and the elements we're dragging over.
-    // Changes to these do not trigger a re-render and so don't need to go in state
     this.dragElem = null;
     this.ghostElem = null;
     this.containerElem = null;
@@ -45,16 +44,19 @@ class DragDropContainer extends React.Component {
     this.dragElem = this.ghostElem || this.containerElem;
     // capture events
     if (this.props.dragHandleClassName) {
+      // if drag handles
       const elems = this.containerElem.getElementsByClassName(this.props.dragHandleClassName);
       for (let i = 0; i < elems.length; i += 1) {
         this.addListeners(elems[i]);
       }
     } else {
+      // ... or not
       this.addListeners(this.containerElem);
     }
   }
 
   setGhostElem(elem) {
+    // this has to run _after_ the DragGhost element renders in order to get the DOM elem for that element
     this.ghostElem = elem;
   }
 
@@ -126,7 +128,7 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y) {
-    document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDropped);
+    document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
       clickX: x - this.state.left,
@@ -134,7 +136,7 @@ class DragDropContainer extends React.Component {
       initialLeftOffset: this.state.dragged ? this.state.initialLeftOffset : this.containerElem.offsetLeft,
       initialTopOffset: this.state.dragged ? this.state.initialTopOffset : this.containerElem.offsetTop,
     });
-    this.props.onStartDrag(this.props.dragData);
+    this.props.onDragStart(this.props.dragData);
   }
 
   // During Drag
@@ -164,7 +166,7 @@ class DragDropContainer extends React.Component {
     if (!this.props.yOnly) { stateChanges.left = (dx + x) - this.state.clickX; }
     if (!this.props.xOnly) { stateChanges.top = (dy + y) - this.state.clickY; }
     this.setState(stateChanges);
-    this.props.onDragging(this.props.dragData, this.currentTarget, x, y);
+    this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
   }
 
   // Drop
@@ -196,14 +198,14 @@ class DragDropContainer extends React.Component {
         this.setState({ dragged: true, dragging: false });
       }
     }
-    this.props.onEndDrag(this.props.dragData, this.currentTarget, x, y);
+    this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   }
 
   checkForOffsetChanges() {
     // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
     let dx;
     let dy;
-    if (this.props.dragGhost) {
+    if (this.props.customDragElement || this.props.dragClone) {
       dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
       dy = this.state.initialTopOffset - this.containerElem.offsetTop;
     } else {
@@ -229,14 +231,23 @@ class DragDropContainer extends React.Component {
     };
 
     let ghost = '';
-    if (this.props.dragGhost) {
-      // dragging will be applied to the "ghost" element
+    if (this.props.customDragElement || this.props.dragClone) {
+      // dragging will be applied to the DragDropGhost element
+      let ghostContent;
+      if (this.props.customDragElement) {
+        ghostContent = this.props.customDragElement;
+      } else {
+        ghostContent = this.setDraggableFalseOnChildren();   // dragging a clone
+      }
+
       ghost = (
         <DragDropGhost
           dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
           setGhostElem={this.setGhostElem}
         >
-          {this.props.dragGhost}
+          <div style={{ opacity: this.props.dragCloneOpacity, cursor: 'move' }}>
+            {ghostContent}
+          </div>
         </DragDropGhost>
       );
     } else {
@@ -244,6 +255,7 @@ class DragDropContainer extends React.Component {
       styles.left = this.state.left;
       styles.top = this.state.top;
       styles.zIndex = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
+      styles.cursor = this.state.dragging ? 'move' : 'pointer';
     }
     return (
       <div style={styles} ref={(container) => { this.containerElem = container; }}>
@@ -260,23 +272,29 @@ DragDropContainer.propTypes = {
   // Determines what you can drop on
   targetKey: React.PropTypes.string,
 
-  // We will pass this to the target when you drag or drop over it
+  // If provided, we'll drag this instead of the actual object. Takes priority over dragClone if both are set
+  customDragElement: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
+
+  // If true, then we will drag a clone of the object instead of the object itself. See also customDragElement
+  dragClone: React.PropTypes.bool,
+
+  // ghost will display with this opacity
+  dragCloneOpacity: React.PropTypes.number,
+
+  // We will pass this data to the target when you drag or drop over it
   dragData: React.PropTypes.object,
 
-  // If provided, we'll drag this instead of the actual object
-  dragGhost: React.PropTypes.node,
-
-  // If included, we'll only let you drag by grabbing the draghandle
+  // If included, we'll only let you drag by grabbing elements with this className
   dragHandleClassName: React.PropTypes.string,
 
   // if True, then dragging is turned off
   noDragging: React.PropTypes.bool,
 
   // callbacks (optional):
-  onDropped: React.PropTypes.func,
-  onDragging: React.PropTypes.func,
-  onEndDrag: React.PropTypes.func,
-  onStartDrag: React.PropTypes.func,
+  onDrop: React.PropTypes.func,
+  onDrag: React.PropTypes.func,
+  onDragEnd: React.PropTypes.func,
+  onDragStart: React.PropTypes.func,
 
   // If true, then object will return to its starting point after you let go of it
   returnToBase: React.PropTypes.bool,
@@ -285,19 +303,21 @@ DragDropContainer.propTypes = {
   xOnly: React.PropTypes.bool,
   yOnly: React.PropTypes.bool,
 
-  // Defaults to 1000 while dragging, but you can customize it
+  // Defaults to 1000 while dragging, but you can customize it if you need it to go higher
   zIndex: React.PropTypes.number,
 };
 
 DragDropContainer.defaultProps = {
   targetKey: 'ddc',
+  customDragElement: null,
+  dragClone: false,
+  dragCloneOpacity: 0.9,
   dragData: {},
-  dragGhost: null,
   dragHandleClassName: '',
-  onStartDrag: () => {},
-  onDragging: () => {},
-  onEndDrag: () => {},
-  onDropped: () => {},
+  onDragStart: () => {},
+  onDrag: () => {},
+  onDragEnd: () => {},
+  onDrop: () => {},
   noDragging: false,
   returnToBase: false,
   xOnly: false,

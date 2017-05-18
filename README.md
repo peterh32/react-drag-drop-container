@@ -1,5 +1,74 @@
 # DragDropContainer and DropTarget
 
+**Because drag and drop should be easy.**
+
+Make something draggable:
+```
+import { DragDropContainer } from 'react-drag-drop-container';
+
+<DragDropContainer>
+    <div>Look, I'm Draggable!</div>
+</DragDropContainer>
+```
+
+Set up a drop target:
+```
+import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
+
+<DragDropContainer targetKey="foo" >
+    <div>Drag Me!</div>
+</DragDropContainer>
+
+<DropTarget targetKey="foo" >
+    <p>I'm a valid drop target for the object above since we both have the same targetKey!</p>
+</DropTarget>
+```
+
+Wire up events and data on the DragDropContainer:
+```
+<DragDropContainer targetKey="foo" dragData={some object} onDragStart={some method} onDrop={some method}...>
+    <div>Drag Me!</div>
+</DragDropContainer>
+```
+__dragData__: Data to pass to the drop target.
+
+__onDragStart__, __onDrag__, __onDragEnd__: Callbacks during the drag process. These are passed the dragData object set 
+above. __onDrag__ and __onDragEnd__ are also passed dropTarget (the DOM element we're currently over), 
+x, and y (current position).
+
+__onDrop__: Callback that fires after a successful drop on a compatible target. It gets passed an event object that 
+contains all this:
+```
+{
+    dropData: [whatever you put in the dropData property for the DropTarget]
+    dropElem: [reference to the DOM element being dragged]
+    sourceElem: [reference to the DragDropContainer DOM element]
+    target: [reference to the DropContainer DOM element]
+}
+```
+
+Wire up events and data in the DropTarget:
+```
+<DropTarget targetKey="foo" dropData={some object} onDragEnter={highlight method} onDragLeave={unHighlight} onHit={some function}>
+    <p>Drop something on me</p>
+</DropTarget>
+```
+
+__dropData__: Data to pass back to the DragDropContainer.
+
+__onDragEnter__, __onDragLeave__, __onHit__: Callbacks that fire when a compatible DragDropContainer 
+passes over. __onHit__ is when a compatible container is dropped on the target. These
+are passed an event containing...
+```
+{
+    dragData: [whatever you put in the dragData property for the DragDropContainer]
+    dragElem: [reference to the DOM element being dragged]
+    sourceElem: [reference to the DragDropContainer DOM element]
+    target: [reference to the DropContainer DOM element]
+}
+```
+
+
 Wrapper components for dragging an element and dropping it on a target. 
 
 * Works on mouse and touch devices.
@@ -60,7 +129,7 @@ Wrap your element in a DragDropContainer:
 ```
 import { DragDropContainer } from 'react-drag-drop-container';
 
-<DragDropContainer>Example</DragDropContainer>
+<DragDropContainer>	<span>Example</span></DragDropContainer>
 ```
 The element should now be draggable.
 
@@ -68,14 +137,14 @@ The element should now be draggable.
 Add the data you want to send to the target when you drop the element on it:
 ```
 <DragDropContainer dragData={{label: 'Example', id: 123}}>
-	Example
+	<span>Example</span>
 </DragDropContainer>
 ```
 
 Specify targetKey. This determines what dropTargets will accept your drag:
 ```
 <DragDropContainer dragData={{label: 'Example', id: 123}} targetKey="foo">
-	Example
+	<span>Example</span>
 </DragDropContainer>
 ```
 
@@ -106,7 +175,7 @@ In DropTarget's parent, add handlers for the enter, leave, and drop events. For 
 Wire them up to DropTarget. In this example we are passing the "highlighted" state
 to the child element, which we assume toggles some highlighted style.
 ```
-  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onDrop={this.dropped}>
+  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onHit={this.dropped}>
     <ChildElement highlighted=this.state.highlighted />
   </DropTarget>
 ```
@@ -128,15 +197,15 @@ use `<img draggable="false"...` to prevent the browser from letting users
 drag the image itself, which can be confusing.
 
 
-##### dragGhost
+##### customDragElement
 If a DOM node is provided, we'll drag it instead of the actual object (which
 will remain in place). 
 
 Example:
 ```
-let ghost = <div class="drag_elem">Drag Me</div>;
+let elem = <div class="drag_elem">Drag Me</div>;
 
-<DragDropContainer dragGhost={ghost}>
+<DragDropContainer customDragElement={elem}>
 ```
 ##### noDragging
 If true, dragging is turned off.
@@ -155,18 +224,18 @@ If that doesn't work for you, change it here.
 #### Callbacks 
 
 All optional; specify in props.
-##### onStartDrag(dragData)
+##### onDragStart(dragData)
 Runs when you start dragging. __dragData__ is whatever you passed in with
 the dragData property.
 
-##### onDragging(dragData, currentTarget, x, y)
+##### onDrag(dragData, currentTarget, x, y)
 Runs as you drag.  __currentTarget__ is the DOM element you're currently dragging
 over; __x__ and __y__ are the current position.
 
 ##### onDragEnd(dragData, currentTarget, x, y)
 When you drop.
 
-##### onDropped(dropData, dropTarget)
+##### onDrop(dropData, dropTarget)
 Triggered after a drop onto a compatible DropTarget. __dropTarget__ is the DOM
 element of the DropTarget you dropped on, and  __dropData__ 
 is  an optional property of DropTarget. 
@@ -182,7 +251,7 @@ Data to be provided to the DragDropContainer when it is dropped on the target.
 #### Callbacks 
 
 All optional; specify in props.
-##### onDragEnter(e), onDragLeave(e), onDrop(e)
+##### onDragEnter(e), onDragLeave(e), onHit(e)
 The event e contains
 ```
 {
