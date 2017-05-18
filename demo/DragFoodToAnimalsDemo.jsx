@@ -40,7 +40,7 @@ class Animal extends React.Component {
         dropData={{name: this.props.name}}
       >
         <div style={styles}>
-          <img src={this.props.image} width="100"/>
+          {this.props.children}
         </div>
       </DropTarget>
     );
@@ -77,11 +77,26 @@ export default class DragFoodToAnimalsDemo extends React.Component {
         You can also drag the animal
         <div className="animals">
           <DragDropContainer>
-            <Animal image="img/gorilla.png" targetKey="fruitsAndVeggies" name="Kong"/>
+            <Animal targetKey="fruitsAndVeggies" name="Kong">
+              <img src="img/gorilla.png" width="100"/>
+              I eat fruit
+            </Animal>
           </DragDropContainer>
 
           <DragDropContainer>
-            <Animal image="img/puppy.png" targetKey="dogFood" name="Skippy"/>
+            <Animal targetKey="dogFood" name="Skippy">
+              <img src="img/puppy.png" width="100"/>
+              I eat meat & pickles
+            </Animal>
+          </DragDropContainer>
+
+          <DragDropContainer>
+            <Animal targetKey="dogFood" name="Bozo">
+              <Animal targetKey="fruitsAndVeggies" name="Bozo">
+                <img src="img/trashcan.png" width="100"/>
+                I eat everything
+              </Animal>
+            </Animal>
           </DragDropContainer>
         </div>
         <div className="foods">
@@ -97,6 +112,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
           <li><strong>customDragElement</strong> (on the bananas) to drag a custom element.</li>
           <li><strong>dragClone</strong> (on the cheeseburger) to drag a copy.</li>
           <li><strong>returnToBase</strong> to specify whether items return to their original location when released.</li>
+          <li><strong>Trick:</strong> Wrap element in multiple DropTargets to handle different types of data with different targetKeys.</li>
         </ul>
 
 

@@ -44,11 +44,17 @@ class DropTarget extends React.Component {
 
 DropTarget.propTypes = {
   children: React.PropTypes.node.isRequired,
+
+  // needs to match the targetKey in the DragDropContainer
   targetKey: React.PropTypes.string,
+
+  // data that gets sent back to the DragDropContainer and shows up in its onDrop() callback event
+  dropData: React.PropTypes.object,
+
+  // callbacks
   onDragEnter: React.PropTypes.func,
   onDragLeave: React.PropTypes.func,
   onHit: React.PropTypes.func,
-  dropData: React.PropTypes.object,
 };
 
 DropTarget.defaultProps = {

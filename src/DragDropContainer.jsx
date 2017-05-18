@@ -44,11 +44,13 @@ class DragDropContainer extends React.Component {
     this.dragElem = this.ghostElem || this.containerElem;
     // capture events
     if (this.props.dragHandleClassName) {
+      // if drag handles
       const elems = this.containerElem.getElementsByClassName(this.props.dragHandleClassName);
       for (let i = 0; i < elems.length; i += 1) {
         this.addListeners(elems[i]);
       }
     } else {
+      // ... or not
       this.addListeners(this.containerElem);
     }
   }
@@ -230,6 +232,7 @@ class DragDropContainer extends React.Component {
 
     let ghost = '';
     if (this.props.customDragElement || this.props.dragClone) {
+      // dragging will be applied to the DragDropGhost element
       let ghostContent;
       if (this.props.customDragElement) {
         ghostContent = this.props.customDragElement;
@@ -275,13 +278,13 @@ DragDropContainer.propTypes = {
   // If true, then we will drag a clone of the object instead of the object itself. See also customDragElement
   dragClone: React.PropTypes.bool,
 
-  // and use this opacity
+  // ghost will display with this opacity
   dragCloneOpacity: React.PropTypes.number,
 
-  // We will pass this to the target when you drag or drop over it
+  // We will pass this data to the target when you drag or drop over it
   dragData: React.PropTypes.object,
 
-  // If included, we'll only let you drag by grabbing the draghandle
+  // If included, we'll only let you drag by grabbing elements with this className
   dragHandleClassName: React.PropTypes.string,
 
   // if True, then dragging is turned off
@@ -300,7 +303,7 @@ DragDropContainer.propTypes = {
   xOnly: React.PropTypes.bool,
   yOnly: React.PropTypes.bool,
 
-  // Defaults to 1000 while dragging, but you can customize it
+  // Defaults to 1000 while dragging, but you can customize it if you need it to go higher
   zIndex: React.PropTypes.number,
 };
 
