@@ -116,7 +116,7 @@ class Box extends React.Component {
     };
     return (
       <DropTarget
-        onHit={(e)=>{console.log(e)}}
+        onHit={this.handleDrop}
         targetKey={this.props.targetKey}
         dropData={{name: this.props.name}}
       >

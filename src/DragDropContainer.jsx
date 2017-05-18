@@ -232,10 +232,11 @@ class DragDropContainer extends React.Component {
     if (this.props.customDragElement || this.props.dragClone) {
       let ghostContent;
       if (this.props.customDragElement) {
-        let ghostContent = this.props.customDragElement;
+        ghostContent = this.props.customDragElement;
       } else {
         ghostContent = this.setDraggableFalseOnChildren();   // dragging a clone
       }
+
       ghost = (
         <DragDropGhost
           dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
@@ -307,7 +308,7 @@ DragDropContainer.defaultProps = {
   targetKey: 'ddc',
   customDragElement: null,
   dragClone: false,
-  dragCloneOpacity: 0.6,
+  dragCloneOpacity: 0.9,
   dragData: {},
   dragHandleClassName: '',
   onDragStart: () => {},

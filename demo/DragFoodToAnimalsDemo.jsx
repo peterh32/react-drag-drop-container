@@ -56,6 +56,7 @@ class Food extends React.Component {
     return (
       <DragDropContainer
         targetKey={this.props.targetKey}
+        dragClone={this.props.dragClone || false}
         returnToBase={true}
         dragData={{label: this.props.label, tastes: this.props.tastes}}
         customDragElement={this.props.customDragElement}
