@@ -130,7 +130,6 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y) {
-    console.log("START DRAG");
     document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
@@ -192,7 +191,6 @@ class DragDropContainer extends React.Component {
   }
 
   drop(x, y) {
-       console.log("DROPPING");
     // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
     if (this.containerElem) {
