@@ -111,7 +111,9 @@ class DragDropContainer extends React.Component {
 
   // Start the Drag
   handleMouseDown(e) {
-    if (e.buttons === 1 && !this.props.noDragging) {
+    //e.buttons undefined on Safari
+    // if (e.buttons === 1 && !this.props.noDragging) {
+    if (!this.props.noDragging) {
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
       this.startDrag(e.clientX, e.clientY);
@@ -128,6 +130,7 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y) {
+    console.log("START DRAG");
     document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
@@ -189,6 +192,7 @@ class DragDropContainer extends React.Component {
   }
 
   drop(x, y) {
+       console.log("DROPPING");
     // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
     if (this.containerElem) {
@@ -217,6 +221,7 @@ class DragDropContainer extends React.Component {
 
   setDraggableFalseOnChildren() {
     // because otherwise can conflict with built-in browser dragging behavior
+    // NOTE: Does not work on Safari currently
     const inputReactObject = React.Children.only(this.props.children);
     const clonedChild = React.cloneElement(inputReactObject, {
       draggable: 'false',
