@@ -1,6 +1,16 @@
 import React from 'react';
 import DragDropGhost from './DragDropGhost';
 
+function usesLeftButton(e) {
+  console.log(e.buttons || e.which || e.button)
+  console.log('-------')
+  if ("buttons" in e) {
+    return e.buttons === 1;
+  }
+  const button = e.which || e.button;
+  return button === 1;
+}
+
 class DragDropContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -111,7 +121,7 @@ class DragDropContainer extends React.Component {
 
   // Start the Drag
   handleMouseDown(e) {
-    if (e.buttons === 1 && !this.props.noDragging) {
+    if (usesLeftButton(e) && !this.props.noDragging) {
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
       this.startDrag(e.clientX, e.clientY);
@@ -223,7 +233,7 @@ class DragDropContainer extends React.Component {
     });
     return clonedChild;
   }
-
+  
   render() {
     const styles = {
       position: 'relative',
