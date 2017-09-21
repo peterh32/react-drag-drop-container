@@ -1,10 +1,10 @@
 {
   "name": "react-drag-drop-container",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "DragDropContainer",
   "main": "lib/bundle.js",
-  "author": "Peter!",
-  "license": "UNLICENSED",
+  "author": "Peter Hollingsworth",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/peterh32/react-drag-drop-container/issues"
   },
@@ -33,6 +33,7 @@
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.2.2",
     "babel-preset-react": "^6.23.0",
     "css-loader": "^0.27.3",

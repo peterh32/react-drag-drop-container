@@ -73,7 +73,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
     const customElem = <button>Bananas</button>
     return (
       <div>
-        <h2>Demo 2: Drag the food to the correct animal</h2>
+        <h2>Demo: Drag the food to the correct animal</h2>
         You can also drag the animal
         <div className="animals">
           <DragDropContainer>
