@@ -35,7 +35,6 @@ class DragDropContainer extends React.Component {
 
     this.setGhostElem = this.setGhostElem.bind(this);
     this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
-    this.setDraggableFalseOnChildren = this.setDraggableFalseOnChildren.bind(this);
 
     // The DOM elem we're dragging, and the elements we're dragging over.
     this.dragElem = null;
@@ -47,6 +46,11 @@ class DragDropContainer extends React.Component {
 
   componentDidMount() {
     this.dragElem = this.ghostElem || this.containerElem;
+    // set draggable attribute 'false' on any images, to prevent conflicts w browser native dragging
+    const imgs = this.dragElem.getElementsByTagName('IMG');
+    for (var i=0; i<imgs.length; i++) {
+      imgs[i].setAttribute('draggable', 'false');
+    }
     // capture events
     if (this.props.dragHandleClassName) {
       // if drag handles
@@ -113,8 +117,6 @@ class DragDropContainer extends React.Component {
     this.setCurrentTarget(x, y);
     let customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
     this.currentTarget.dispatchEvent(customEvent);
-    //NOTE: Added below to prevent multiplying events on drop
-    document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop, false);
   }
 
   // Start the Drag
@@ -136,7 +138,6 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y) {
-
     document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
@@ -198,8 +199,7 @@ class DragDropContainer extends React.Component {
   }
 
   drop(x, y) {
-    // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
-
+    document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
 
     if (this.containerElem) {
@@ -227,16 +227,6 @@ class DragDropContainer extends React.Component {
     return [dx, dy];
   }
 
-  setDraggableFalseOnChildren() {
-    // because otherwise can conflict with built-in browser dragging behavior
-    // NOTE: Does not work on Safari currently
-    const inputReactObject = React.Children.only(this.props.children);
-    const clonedChild = React.cloneElement(inputReactObject, {
-      draggable: 'false',
-    });
-    return clonedChild;
-  }
-  
   render() {
     const styles = {
       position: 'relative',
@@ -250,7 +240,7 @@ class DragDropContainer extends React.Component {
       if (this.props.customDragElement) {
         ghostContent = this.props.customDragElement;
       } else {
-        ghostContent = this.setDraggableFalseOnChildren();   // dragging a clone
+        ghostContent = this.props.children;   // dragging a clone
       }
 
       ghost = (
@@ -272,7 +262,7 @@ class DragDropContainer extends React.Component {
     }
     return (
       <div style={styles} ref={(container) => { this.containerElem = container; }}>
-        {this.setDraggableFalseOnChildren()}
+        {this.props.children}
         {ghost}
       </div>
     );
