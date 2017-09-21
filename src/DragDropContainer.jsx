@@ -106,12 +106,17 @@ class DragDropContainer extends React.Component {
   generateDropEvent(x, y) {
     // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    this.currentTarget.dispatchEvent(this.buildCustomEvent(`${this.props.targetKey}Drop`));
+    let customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
+    this.currentTarget.dispatchEvent(customEvent);
+    //NOTE: Added below to prevent multiplying events on drop
+    document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop, false);
   }
 
   // Start the Drag
   handleMouseDown(e) {
-    if (e.buttons === 1 && !this.props.noDragging) {
+    //e.buttons undefined on Safari
+    // if (e.buttons === 1 && !this.props.noDragging) {
+    if (!this.props.noDragging) {
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
       this.startDrag(e.clientX, e.clientY);
@@ -128,6 +133,7 @@ class DragDropContainer extends React.Component {
   }
 
   startDrag(x, y) {
+
     document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
@@ -190,7 +196,9 @@ class DragDropContainer extends React.Component {
 
   drop(x, y) {
     // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
+
     this.generateDropEvent(x, y);
+
     if (this.containerElem) {
       if (this.props.returnToBase) {
         this.setState({ left: 0, top: 0, dragging: false });
@@ -199,6 +207,7 @@ class DragDropContainer extends React.Component {
       }
     }
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
+
   }
 
   checkForOffsetChanges() {
@@ -217,6 +226,7 @@ class DragDropContainer extends React.Component {
 
   setDraggableFalseOnChildren() {
     // because otherwise can conflict with built-in browser dragging behavior
+    // NOTE: Does not work on Safari currently
     const inputReactObject = React.Children.only(this.props.children);
     const clonedChild = React.cloneElement(inputReactObject, {
       draggable: 'false',

@@ -12,6 +12,7 @@ class DropTarget extends React.Component {
     this.elem.addEventListener(`${this.props.targetKey}Drop`, (e) => { this.handleDrop(e); }, false);
   }
 
+
   createEvent(eventName, eventData) {
     // utility to create an event
     let e;
