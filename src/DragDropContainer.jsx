@@ -33,7 +33,7 @@ class DragDropContainer extends React.Component {
     this.dragElem = this.ghostElem || this.containerElem;
     // set draggable attribute 'false' on any images, to prevent conflicts w browser native dragging
     const imgs = this.dragElem.getElementsByTagName('IMG');
-    for (var i=0; i<imgs.length; i++) {
+    for (let i = 0; i < imgs.length; i += 1) {
       imgs[i].setAttribute('draggable', 'false');
     }
     // capture events
@@ -100,7 +100,7 @@ class DragDropContainer extends React.Component {
   generateDropEvent = (x, y) => {
     // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    let customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
+    const customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
     this.currentTarget.dispatchEvent(customEvent);
   };
 
@@ -186,7 +186,6 @@ class DragDropContainer extends React.Component {
   drop = (x, y) => {
     document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
-
     if (this.containerElem) {
       if (this.props.returnToBase) {
         this.setState({ left: 0, top: 0, dragging: false });
