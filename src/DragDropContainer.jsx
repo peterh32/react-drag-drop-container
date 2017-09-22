@@ -118,7 +118,7 @@ class DragDropContainer extends React.Component {
       e.preventDefault();
       document.addEventListener('touchmove', this.handleTouchMove);
       document.addEventListener('touchend', this.handleTouchEnd);
-      this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+      this.startDrag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
     }
   };
 
@@ -148,13 +148,12 @@ class DragDropContainer extends React.Component {
     if (!this.props.noDragging) {
       e.preventDefault();
       if (this.state.clicked) {
-        this.drag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+        this.drag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
       }
     }
   };
 
   drag = (x, y) => {
-    // drop the z-index, figure out what element we're dragging over, then reset the z index
     this.generateEnterLeaveEvents(x, y);
     const [dx, dy] = this.checkForOffsetChanges();
     const stateChanges = { dragging: true };
@@ -179,7 +178,7 @@ class DragDropContainer extends React.Component {
     if (this.state.dragging) {
       document.removeEventListener('touchmove', this.handleTouchMove);
       document.removeEventListener('touchend', this.handleTouchEnd);
-      this.drop(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+      this.drop(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
     }
   };
 
