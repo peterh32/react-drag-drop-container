@@ -9,25 +9,26 @@ class BoxItem extends React.Component {
     this.state = {
       highlighted: false,
     };
-    this.highlight = this.highlight.bind(this);
-    this.unHighlight = this.unHighlight.bind(this);
-    this.handleDrop = this.handleDrop.bind(this);
   }
 
-  highlight() {
+  highlight = () => {
     this.setState({highlighted: true});
-  }
+  };
 
-  unHighlight() {
+  unHighlight = () => {
     this.setState({highlighted: false});
-  }
+  };
 
-  handleDrop(e) {
+  handleDrop = (e) => {
     e.stopPropagation();
     this.unHighlight();
     this.props.swap(e.dragData.index, this.props.index, e.dragData);
     e.sourceElem.style.visibility="hidden";
-  }
+  };
+
+  deleteMe = () => {
+    this.props.kill(this.props.uid);
+  };
 
   render() {
     const styles = {
@@ -48,16 +49,16 @@ class BoxItem extends React.Component {
     }
     return (
         <DragDropContainer
-          targetKey="box"
+          targetKey="boxItem"
           returnToBase={true}
           dragData={{label: this.props.children, index: this.props.index}}
-          onDrop={() => {this.props.kill(this.props.uid)}}
+          onDrop={this.deleteMe}
         >
           <DropTarget
             onHit={this.handleDrop}
             onDragEnter={this.highlight}
             onDragLeave={this.unHighlight}
-            targetKey="box"
+            targetKey="boxItem"
           >
             <div style={outerStyles}>
               <div style={styles}>{this.props.children}</div>
@@ -74,27 +75,23 @@ class Box extends React.Component {
     this.state = {
       items: []
     };
-
-    this.handleDrop = this.handleDrop.bind(this);
-    this.kill = this.kill.bind(this);
-    this.swap = this.swap.bind(this);
   }
 
-  handleDrop(e) {
+  handleDrop = (e) => {
     let items = this.state.items.slice();
     items.push({label: e.dragData.label, uid: shortid.generate()});
     this.setState({items: items});
     e.sourceElem.style.visibility="hidden";
-  }
+  };
 
-  swap(fromIndex, toIndex, dragData) {
+  swap = (fromIndex, toIndex, dragData) => {
     let items = this.state.items.slice();
     const item = {label: dragData.label, uid: shortid.generate()};
     items.splice(toIndex, 0, item);
     this.setState({items: items});
-  }
+  };
 
-  kill(uid){
+  kill = (uid) => {
     let items = this.state.items.slice();
     const index = items.findIndex((item) => {
       return item.uid == uid
@@ -103,7 +100,7 @@ class Box extends React.Component {
       items.splice(index, 1);
     }
     this.setState({items: items});
-  }
+  };
 
   render() {
     const styles = {
@@ -115,6 +112,7 @@ class Box extends React.Component {
       display: 'inline-block',
       position: 'relative',
     };
+    // note two layers of DropTarget. This enables it to handle dropped items from outside AND items dragged between boxes.
     return (
       <DragDropContainer dragHandleClassName="grab_me">
         <DropTarget
@@ -122,16 +120,22 @@ class Box extends React.Component {
           targetKey={this.props.targetKey}
           dropData={{name: this.props.name}}
         >
-          <div style={styles}>
-            <div className="grab_me" style={{position: 'absolute', bottom: 0, right: 0}}>x</div>
-            {this.state.items.map((item, index) => {
-              return (
-                <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
-                  {item.label}
-                </BoxItem>
-              )
-            })}
-          </div>
+          <DropTarget
+            onHit={this.handleDrop}
+            targetKey="boxItem"
+            dropData={{name: this.props.name}}
+          >
+            <div style={styles}>
+              <div className="grab_me" style={{position: 'absolute', bottom: 0, right: 0}}>&times;</div>
+              {this.state.items.map((item, index) => {
+                return (
+                  <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
+                    {item.label}
+                  </BoxItem>
+                )
+              })}
+            </div>
+          </DropTarget>
         </DropTarget>
       </DragDropContainer>
     );
