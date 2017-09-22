@@ -99,7 +99,7 @@ To build the demo locally, run:
 
 ```
 npm install
-npm launch
+npm run launch
 ```
 
 This should open the demo in a browser window on 
@@ -129,7 +129,9 @@ Wrap your element in a DragDropContainer:
 ```
 import { DragDropContainer } from 'react-drag-drop-container';
 
-<DragDropContainer>	<span>Example</span></DragDropContainer>
+<DragDropContainer>
+    <span>Example</span>
+</DragDropContainer>
 ```
 The element should now be draggable.
 
@@ -155,7 +157,9 @@ Wrap an element in a DropTarget, giving it the same targetKey as your draggable:
 ```
   import { DropTarget } from 'react-drag-drop-container';
 
-  <DropTarget targetKey="foo">[some element or text]</DropTarget>
+  <DropTarget targetKey="foo">
+      [some element or text]
+  </DropTarget>
 ```
 
 In DropTarget's parent, add handlers for the enter, leave, and drop events. For example:

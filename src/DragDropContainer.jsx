@@ -1,6 +1,11 @@
 import React from 'react';
 import DragDropGhost from './DragDropGhost';
 
+function usesLeftButton(e) {
+  const button = e.buttons || e.which || e.button;
+  return button === 1;
+}
+
 class DragDropContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -16,22 +21,6 @@ class DragDropContainer extends React.Component {
       dragged: false,
     };
 
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleTouchStart = this.handleTouchStart.bind(this);
-    this.startDrag = this.startDrag.bind(this);
-
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleTouchMove = this.handleTouchMove.bind(this);
-    this.drag = this.drag.bind(this);
-
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-    this.handleTouchEnd = this.handleTouchEnd.bind(this);
-    this.drop = this.drop.bind(this);
-
-    this.setGhostElem = this.setGhostElem.bind(this);
-    this.checkForOffsetChanges = this.checkForOffsetChanges.bind(this);
-    this.setDraggableFalseOnChildren = this.setDraggableFalseOnChildren.bind(this);
-
     // The DOM elem we're dragging, and the elements we're dragging over.
     this.dragElem = null;
     this.ghostElem = null;
@@ -42,6 +31,11 @@ class DragDropContainer extends React.Component {
 
   componentDidMount() {
     this.dragElem = this.ghostElem || this.containerElem;
+    // set draggable attribute 'false' on any images, to prevent conflicts w browser native dragging
+    const imgs = this.dragElem.getElementsByTagName('IMG');
+    for (let i = 0; i < imgs.length; i += 1) {
+      imgs[i].setAttribute('draggable', 'false');
+    }
     // capture events
     if (this.props.dragHandleClassName) {
       // if drag handles
@@ -55,17 +49,17 @@ class DragDropContainer extends React.Component {
     }
   }
 
-  setGhostElem(elem) {
+  setGhostElem = (elem) => {
     // this has to run _after_ the DragGhost element renders in order to get the DOM elem for that element
     this.ghostElem = elem;
-  }
+  };
 
-  addListeners(elem) {
+  addListeners = (elem) => {
     elem.addEventListener('mousedown', (e) => { this.handleMouseDown(e); }, false);
     elem.addEventListener('touchstart', (e) => { this.handleTouchStart(e); }, false);
-  }
+  };
 
-  buildCustomEvent(eventName) {
+  buildCustomEvent = (eventName) => {
     let e;
     if (typeof window.CustomEvent !== 'function') {
       // we are in IE 11 and must use old-style method of creating event
@@ -81,18 +75,18 @@ class DragDropContainer extends React.Component {
       sourceElem: this.containerElem,
     });
     return e;
-  }
+  };
 
-  setCurrentTarget(x, y) {
+  setCurrentTarget = (x, y) => {
     // drop the z-index to get this elem out of the way, figure out what we're dragging over, then reset the z index
     this.dragElem.style.zIndex = -1;
     const target = document.elementFromPoint(x, y) || document.body;
     this.dragElem.style.zIndex = this.props.zIndex;
     // prevent it from selecting itself as the target
     this.currentTarget = this.dragElem.contains(target) ? document.body : target;
-  }
+  };
 
-  generateEnterLeaveEvents(x, y) {
+  generateEnterLeaveEvents = (x, y) => {
     // generate events as we enter and leave elements while dragging
     const prefix = this.props.targetKey;
     this.setCurrentTarget(x, y);
@@ -101,39 +95,34 @@ class DragDropContainer extends React.Component {
       if (this.currentTarget) { this.currentTarget.dispatchEvent(this.buildCustomEvent(`${prefix}DragEnter`)); }
     }
     this.prevTarget = this.currentTarget;
-  }
+  };
 
-  generateDropEvent(x, y) {
+  generateDropEvent = (x, y) => {
     // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    let customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
+    const customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
     this.currentTarget.dispatchEvent(customEvent);
-    //NOTE: Added below to prevent multiplying events on drop
-    document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop, false);
-  }
+  };
 
   // Start the Drag
-  handleMouseDown(e) {
-    //e.buttons undefined on Safari
-    // if (e.buttons === 1 && !this.props.noDragging) {
-    if (!this.props.noDragging) {
+  handleMouseDown = (e) => {
+    if (usesLeftButton(e) && !this.props.noDragging) {
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
       this.startDrag(e.clientX, e.clientY);
     }
-  }
+  };
 
-  handleTouchStart(e) {
+  handleTouchStart = (e) => {
     if (!this.props.noDragging) {
       e.preventDefault();
       document.addEventListener('touchmove', this.handleTouchMove);
       document.addEventListener('touchend', this.handleTouchEnd);
-      this.startDrag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+      this.startDrag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
     }
-  }
+  };
 
-  startDrag(x, y) {
-
+  startDrag = (x, y) => {
     document.addEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this.setState({
       clicked: true,
@@ -143,29 +132,28 @@ class DragDropContainer extends React.Component {
       initialTopOffset: this.state.dragged ? this.state.initialTopOffset : this.containerElem.offsetTop,
     });
     this.props.onDragStart(this.props.dragData);
-  }
+  };
 
   // During Drag
-  handleMouseMove(e) {
+  handleMouseMove = (e) => {
     if (!this.props.noDragging) {
       e.preventDefault();
       if (this.state.clicked) {
         this.drag(e.clientX, e.clientY);
       }
     }
-  }
+  };
 
-  handleTouchMove(e) {
+  handleTouchMove = (e) => {
     if (!this.props.noDragging) {
       e.preventDefault();
       if (this.state.clicked) {
-        this.drag(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+        this.drag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
       }
     }
-  }
+  };
 
-  drag(x, y) {
-    // drop the z-index, figure out what element we're dragging over, then reset the z index
+  drag = (x, y) => {
     this.generateEnterLeaveEvents(x, y);
     const [dx, dy] = this.checkForOffsetChanges();
     const stateChanges = { dragging: true };
@@ -173,32 +161,30 @@ class DragDropContainer extends React.Component {
     if (!this.props.xOnly) { stateChanges.top = (dy + y) - this.state.clickY; }
     this.setState(stateChanges);
     this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
-  }
+  };
 
   // Drop
-  handleMouseUp(e) {
+  handleMouseUp = (e) => {
     this.setState({ clicked: false });
     if (this.state.dragging) {
       document.removeEventListener('mousemove', this.handleMouseMove);
       document.removeEventListener('mouseup', this.handleMouseUp);
       this.drop(e.clientX, e.clientY);
     }
-  }
+  };
 
-  handleTouchEnd(e) {
+  handleTouchEnd = (e) => {
     this.setState({ clicked: false });
     if (this.state.dragging) {
       document.removeEventListener('touchmove', this.handleTouchMove);
       document.removeEventListener('touchend', this.handleTouchEnd);
-      this.drop(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+      this.drop(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
     }
-  }
+  };
 
-  drop(x, y) {
-    // document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
-
+  drop = (x, y) => {
+    document.removeEventListener(`${this.props.targetKey}Dropped`, this.handleDrop);
     this.generateDropEvent(x, y);
-
     if (this.containerElem) {
       if (this.props.returnToBase) {
         this.setState({ left: 0, top: 0, dragging: false });
@@ -207,10 +193,9 @@ class DragDropContainer extends React.Component {
       }
     }
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
+  };
 
-  }
-
-  checkForOffsetChanges() {
+  checkForOffsetChanges = () => {
     // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
     let dx;
     let dy;
@@ -222,17 +207,7 @@ class DragDropContainer extends React.Component {
       dy = (this.state.initialTopOffset + this.state.top) - this.containerElem.offsetTop;
     }
     return [dx, dy];
-  }
-
-  setDraggableFalseOnChildren() {
-    // because otherwise can conflict with built-in browser dragging behavior
-    // NOTE: Does not work on Safari currently
-    const inputReactObject = React.Children.only(this.props.children);
-    const clonedChild = React.cloneElement(inputReactObject, {
-      draggable: 'false',
-    });
-    return clonedChild;
-  }
+  };
 
   render() {
     const styles = {
@@ -247,7 +222,7 @@ class DragDropContainer extends React.Component {
       if (this.props.customDragElement) {
         ghostContent = this.props.customDragElement;
       } else {
-        ghostContent = this.setDraggableFalseOnChildren();   // dragging a clone
+        ghostContent = this.props.children;   // dragging a clone
       }
 
       ghost = (
@@ -269,7 +244,7 @@ class DragDropContainer extends React.Component {
     }
     return (
       <div style={styles} ref={(container) => { this.containerElem = container; }}>
-        {this.setDraggableFalseOnChildren()}
+        {this.props.children}
         {ghost}
       </div>
     );

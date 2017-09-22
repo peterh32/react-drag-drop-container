@@ -26,9 +26,9 @@ class Animal extends React.Component {
 
   render() {
     let styles = {
-      padding: 10,
+      padding: 4,
       borderRadius: 30,
-      margin: 40,
+      margin: 12,
       backgroundColor: (this.state.highlighted ? 'aqua' : 'transparent')
     };
     return (
@@ -73,20 +73,20 @@ export default class DragFoodToAnimalsDemo extends React.Component {
     const customElem = <button>Bananas</button>
     return (
       <div>
-        <h2>Demo 2: Drag the food to the correct animal</h2>
+        <h2>Demo: Drag the food to the correct animal</h2>
         You can also drag the animal
         <div className="animals">
           <DragDropContainer>
             <Animal targetKey="fruitsAndVeggies" name="Kong">
               <img src="img/gorilla.png" width="100"/>
-              I eat fruit
+              <h5>I eat fruit</h5>
             </Animal>
           </DragDropContainer>
 
           <DragDropContainer>
             <Animal targetKey="dogFood" name="Skippy">
               <img src="img/puppy.png" width="100"/>
-              I eat meat & pickles
+              <h5>I eat meat & pickles</h5>
             </Animal>
           </DragDropContainer>
 
@@ -94,7 +94,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
             <Animal targetKey="dogFood" name="Bozo">
               <Animal targetKey="fruitsAndVeggies" name="Bozo">
                 <img src="img/trashcan.png" width="100"/>
-                I eat everything
+                <h5>I eat everything</h5>
               </Animal>
             </Animal>
           </DragDropContainer>
