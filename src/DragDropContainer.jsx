@@ -211,7 +211,7 @@ class DragDropContainer extends React.Component {
 
   render() {
     const styles = {
-      position: 'relative',
+      position: 'absolute',
       display: 'inline-block',
     };
 
