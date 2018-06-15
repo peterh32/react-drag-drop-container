@@ -154,16 +154,15 @@ class DragDropContainer extends React.Component {
   };
 
   drag = (x, y) => {
-    this.generateEnterLeaveEvents(x, y);
-    const [dx, dy] = this.checkForOffsetChanges();
-    const stateChanges = { dragging: true };
-    // Apply scale on coords if a tranform scale has been applied to element
-	const scaleX = this.containerElem.getBoundingClientRect().left / this.containerElem.offsetWidth; 
-	const scaleY = this.containerElem.getBoundingClientRect().top / this.containerElem.offsetTop; 
-    if (!this.props.yOnly) { stateChanges.left = ((dx + x) - this.state.clickX) / scaleX; }
-    if (!this.props.xOnly) { stateChanges.top = ((dy + y) - this.state.clickY) / scaleY; }
-    this.setState(stateChanges);
-    this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
+  	const scaleX = this.containerElem.getBoundingClientRect().width / this.containerElem.offsetWidth
+	const scaleY = this.containerElem.getBoundingClientRect().height / this.containerElem.offsetHeight
+	this.generateEnterLeaveEvents(x, y);
+  	const [dx, dy] = this.checkForOffsetChanges();
+  	const stateChanges = { dragging: true };
+  	if (!this.props.yOnly) { stateChanges.left = ((dx + x) - this.state.clickX) / scaleX }
+	if (!this.props.xOnly) { stateChanges.top = ((dy + y) - this.state.clickY) / scaleY }
+	this.setState(stateChanges);
+	this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
   };
 
   // Drop
