@@ -280,6 +280,16 @@ drop.
 
 ## Development 
 
+To view locally, clone the repository then
+```
+$ npm run install
+$ npm run build
+$ npm run watch
+```
+The demo will run on http://localhost:8080/
+
+File locations:
+
 ```
 /src    Source code for components
 /demo   Source code for demo
@@ -290,7 +300,7 @@ drop.
 
 ## License
 
-__NOT LICENSED__
+MIT License
 
 Copyright (c) 2017.
 
