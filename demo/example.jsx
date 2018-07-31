@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 import BasicDragDemo from './BasicDragDemo';
 import DragFoodToAnimalsDemo from './DragFoodToAnimalsDemo';
 import DragThingsToBoxesDemo from './DragThingsToBoxesDemo';
+import DragElementWithClickHandlers from './DragElementWithClickHandlers';
 
 var App = React.createClass({
 
@@ -14,6 +15,8 @@ var App = React.createClass({
 				<DragThingsToBoxesDemo/>
 				<hr />
 				<BasicDragDemo />
+				<hr />
+				<DragElementWithClickHandlers />
 			</div>
 		);
 	}
