@@ -115,6 +115,7 @@ class DragDropContainer extends React.Component {
 
   handleTouchStart = (e) => {
     if (!this.props.noDragging) {
+      //e.preventDefault();  // prevents window scrolling but also prevents clicking in the element
       document.addEventListener('touchmove', this.handleTouchMove);
       document.addEventListener('touchend', this.handleTouchEnd);
       this.startDrag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);

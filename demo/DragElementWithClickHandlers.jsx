@@ -37,8 +37,8 @@ export default class DragElementWithClickHandlers extends React.Component {
           />
           </div>
         </DragDropContainer>
-        <div style={{visibility: this.state.clicked ? 'visible' : 'hidden'}}>You clicked</div>
-        <div style={{visibility: this.state.over ? 'visible' : 'hidden'}}>You are hovering</div>
+        <div>{this.state.clicked ? 'Clicked!' : 'Unclicked'}</div>
+        <div>{this.state.over ? 'Hovering!' : 'Not hovering'}</div>
       </div>
     )
   }
