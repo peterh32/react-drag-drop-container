@@ -31,11 +31,13 @@ class DragDropContainer extends React.Component {
 
   componentDidMount() {
     this.dragElem = this.ghostElem || this.containerElem;
+
     // set draggable attribute 'false' on any images, to prevent conflicts w browser native dragging
-    const imgs = this.dragElem.getElementsByTagName('IMG');
+    const imgs = this.containerElem.getElementsByTagName('IMG');
     for (let i = 0; i < imgs.length; i += 1) {
       imgs[i].setAttribute('draggable', 'false');
     }
+    
     // capture events
     if (this.props.dragHandleClassName) {
       // if drag handles
@@ -57,9 +59,12 @@ class DragDropContainer extends React.Component {
   addListeners = (elem) => {
     elem.addEventListener('mousedown', (e) => { this.handleMouseDown(e); }, false);
     elem.addEventListener('touchstart', (e) => { this.handleTouchStart(e); }, false);
+    // must add touchmove listener here in order for preventDefault() to work, to prevent scrolling during drag..
+    elem.addEventListener('touchmove', this.handleTouchMove, {passive: false});
+    elem.addEventListener('touchend', this.handleTouchEnd);
   };
 
-  buildCustomEvent = (eventName) => {
+  buildCustomEvent = (eventName, extraData = {}) => {
     let e;
     if (typeof window.CustomEvent !== 'function') {
       // we are in IE 11 and must use old-style method of creating event
@@ -73,7 +78,7 @@ class DragDropContainer extends React.Component {
       dragData: this.props.dragData,
       dragElem: this.dragElem,
       sourceElem: this.containerElem,
-    });
+    }, extraData);
     return e;
   };
 
@@ -100,13 +105,14 @@ class DragDropContainer extends React.Component {
   generateDropEvent = (x, y) => {
     // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    const customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
+    const customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`, { x, y });
     this.currentTarget.dispatchEvent(customEvent);
   };
 
   // Start the Drag
   handleMouseDown = (e) => {
     if (usesLeftButton(e) && !this.props.noDragging) {
+      window.getSelection().removeAllRanges(); // prevent firefox native-drag issue when image is highlighted
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
       this.startDrag(e.clientX, e.clientY);
@@ -115,9 +121,7 @@ class DragDropContainer extends React.Component {
 
   handleTouchStart = (e) => {
     if (!this.props.noDragging) {
-      //e.preventDefault();  // prevents window scrolling but also prevents clicking in the element
-      document.addEventListener('touchmove', this.handleTouchMove);
-      document.addEventListener('touchend', this.handleTouchEnd);
+      e.stopPropagation();
       this.startDrag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
     }
   };
@@ -176,8 +180,6 @@ class DragDropContainer extends React.Component {
   handleTouchEnd = (e) => {
     this.setState({ clicked: false });
     if (this.state.dragging) {
-      document.removeEventListener('touchmove', this.handleTouchMove);
-      document.removeEventListener('touchend', this.handleTouchEnd);
       this.drop(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
     }
   };
@@ -242,6 +244,7 @@ class DragDropContainer extends React.Component {
       styles.zIndex = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
       styles.cursor = this.state.dragging ? 'move' : 'pointer';
     }
+    
     return (
       <div style={styles} ref={(container) => { this.containerElem = container; }}>
         {this.props.children}
