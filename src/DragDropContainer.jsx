@@ -64,7 +64,7 @@ class DragDropContainer extends React.Component {
     elem.addEventListener('touchend', this.handleTouchEnd);
   };
 
-  buildCustomEvent = (eventName) => {
+  buildCustomEvent = (eventName, extraData = {}) => {
     let e;
     if (typeof window.CustomEvent !== 'function') {
       // we are in IE 11 and must use old-style method of creating event
@@ -78,7 +78,7 @@ class DragDropContainer extends React.Component {
       dragData: this.props.dragData,
       dragElem: this.dragElem,
       sourceElem: this.containerElem,
-    });
+    }, extraData);
     return e;
   };
 
@@ -105,7 +105,7 @@ class DragDropContainer extends React.Component {
   generateDropEvent = (x, y) => {
     // generate a drop event in whatever we're currently dragging over
     this.setCurrentTarget(x, y);
-    const customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`);
+    const customEvent = this.buildCustomEvent(`${this.props.targetKey}Drop`, { x, y });
     this.currentTarget.dispatchEvent(customEvent);
   };
 

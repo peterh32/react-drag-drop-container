@@ -21,6 +21,7 @@ class Animal extends React.Component {
   dropped(e) {
     e.sourceElem.style.visibility="hidden";
     alert(`Thanks for the ${e.dragData.label}! ${e.dragData.tastes}!`);
+    console.log({'Contents of drop data:':e})
     this.setState({highlighted: false});
   }
 
