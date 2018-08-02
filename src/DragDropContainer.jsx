@@ -31,11 +31,13 @@ class DragDropContainer extends React.Component {
 
   componentDidMount() {
     this.dragElem = this.ghostElem || this.containerElem;
+
     // set draggable attribute 'false' on any images, to prevent conflicts w browser native dragging
-    const imgs = this.dragElem.getElementsByTagName('IMG');
+    const imgs = this.containerElem.getElementsByTagName('IMG');
     for (let i = 0; i < imgs.length; i += 1) {
       imgs[i].setAttribute('draggable', 'false');
     }
+    
     // capture events
     if (this.props.dragHandleClassName) {
       // if drag handles
@@ -241,6 +243,7 @@ class DragDropContainer extends React.Component {
       styles.zIndex = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
       styles.cursor = this.state.dragging ? 'move' : 'pointer';
     }
+    
     return (
       <div style={styles} ref={(container) => { this.containerElem = container; }}>
         {this.props.children}
