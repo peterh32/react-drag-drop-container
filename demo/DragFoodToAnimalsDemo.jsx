@@ -4,7 +4,7 @@ import { DragDropContainer, DropTarget } from '../src/index';
 class Animal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {highlighted: false};
+    this.state = {highlighted: false, thankYouMessage: ''};
     this.highlight = this.highlight.bind(this);
     this.unHighlight = this.unHighlight.bind(this);
     this.dropped = this.dropped.bind(this);
@@ -20,8 +20,8 @@ class Animal extends React.Component {
 
   dropped(e) {
     e.sourceElem.style.visibility="hidden";
-    alert(`Thanks for the ${e.dragData.label}! ${e.dragData.tastes}!`);
-    console.log({'Contents of drop data:':e})
+    this.setState({thankYouMessage: `Thanks for the ${e.dragData.label}! ${e.dragData.tastes}!`})
+    console.log({'Contents of drop data:':e});
     this.setState({highlighted: false});
   }
 
@@ -30,7 +30,10 @@ class Animal extends React.Component {
       padding: 4,
       borderRadius: 30,
       margin: 12,
-      backgroundColor: (this.state.highlighted ? 'aqua' : 'transparent')
+      backgroundColor: (this.state.highlighted ? '#eeeeee' : 'transparent'),
+      display:'inline-block',
+      width: 160,
+      textAlign: 'center',
     };
     return (
       <DropTarget
@@ -41,6 +44,7 @@ class Animal extends React.Component {
         dropData={{name: this.props.name}}
       >
         <div style={styles}>
+          <div style={{minHeight: 24, fontStyle: 'italic'}}>{this.state.thankYouMessage}</div>
           {this.props.children}
         </div>
       </DropTarget>
@@ -51,6 +55,7 @@ class Animal extends React.Component {
 class Food extends React.Component {
   landedOn(e) {
     console.log('I was dropped on ' + e.dropData.name)
+    console.log({'Contents of Drop Data': e});
   }
 
   render() {
@@ -76,6 +81,12 @@ export default class DragFoodToAnimalsDemo extends React.Component {
       <div>
         <h2>Demo: Drag the food to the correct animal</h2>
         You can also drag the animal
+        <div className="foods">
+          <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
+          <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
+          <Food dragClone={true} targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
+          <Food customDragElement={customElem} targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
+        </div>
         <div className="animals">
           <DragDropContainer>
             <Animal targetKey="fruitsAndVeggies" name="Kong">
@@ -100,12 +111,6 @@ export default class DragFoodToAnimalsDemo extends React.Component {
             </Animal>
           </DragDropContainer>
         </div>
-        <div className="foods">
-          <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
-          <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
-          <Food dragClone={true} targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
-          <Food customDragElement={customElem} targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
-        </div>
         <ul>
           <li><strong>targetKey</strong> to specify compatible drag items and drop targets.</li>
           <li><strong>dragData</strong> to pass the food name and taste ("Yummy", "Weird").</li>
@@ -115,8 +120,6 @@ export default class DragFoodToAnimalsDemo extends React.Component {
           <li><strong>returnToBase</strong> to specify whether items return to their original location when released.</li>
           <li><strong>Trick:</strong> Wrap element in multiple DropTargets to handle different types of data with different targetKeys.</li>
         </ul>
-
-
       </div>
     )
   }
