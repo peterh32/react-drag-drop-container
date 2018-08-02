@@ -193,6 +193,7 @@ class DragDropContainer extends React.Component {
         this.setState({ dragged: true, dragging: false });
       }
     }
+    window.getSelection().removeAllRanges(); // prevent firefox issue when image is highlighted
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
