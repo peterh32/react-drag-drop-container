@@ -112,6 +112,7 @@ class DragDropContainer extends React.Component {
   // Start the Drag
   handleMouseDown = (e) => {
     if (usesLeftButton(e) && !this.props.noDragging) {
+      window.getSelection().removeAllRanges(); // prevent firefox native-drag issue when image is highlighted
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
       this.startDrag(e.clientX, e.clientY);
@@ -193,7 +194,6 @@ class DragDropContainer extends React.Component {
         this.setState({ dragged: true, dragging: false });
       }
     }
-    window.getSelection().removeAllRanges(); // prevent firefox issue when image is highlighted
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
