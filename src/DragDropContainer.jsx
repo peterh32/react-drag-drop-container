@@ -44,10 +44,12 @@ class DragDropContainer extends React.Component {
       const elems = this.containerElem.getElementsByClassName(this.props.dragHandleClassName);
       for (let i = 0; i < elems.length; i += 1) {
         this.addListeners(elems[i]);
+        elems[i].style.cursor = 'move';
       }
     } else {
       // ... or not
       this.addListeners(this.containerElem);
+      this.containerElem.style.cursor = 'move';
     }
   }
 
@@ -174,6 +176,7 @@ class DragDropContainer extends React.Component {
       document.removeEventListener('mousemove', this.handleMouseMove);
       document.removeEventListener('mouseup', this.handleMouseUp);
       this.drop(e.clientX, e.clientY);
+      window.getSelection().removeAllRanges(); // prevent weird-looking highlights
     }
   };
 
@@ -188,65 +191,45 @@ class DragDropContainer extends React.Component {
     this.generateDropEvent(x, y);
     document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     if (this.containerElem) {
-      if (this.props.returnToBase || this.props.dragClone) {
-        this.setState({ left: 0, top: 0, dragging: false });
-      } else {
-        this.setState({ dragged: true, dragging: false });
-      }
+      this.setState({ left: 0, top: 0, dragging: false });
     }
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
   checkForOffsetChanges = () => {
-    // deltas for when the system moves, e.g. from other elements on the page that change size on dragover.
-    let dx;
-    let dy;
-    if (this.props.customDragElement || this.props.dragClone) {
-      dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
-      dy = this.state.initialTopOffset - this.containerElem.offsetTop;
-    } else {
-      dx = (this.state.initialLeftOffset + this.state.left) - this.containerElem.offsetLeft;
-      dy = (this.state.initialTopOffset + this.state.top) - this.containerElem.offsetTop;
-    }
+    // deltas for when the container moves, e.g. from other elements on the page that change size on dragover.
+    let dx = this.state.initialLeftOffset - this.containerElem.offsetLeft;
+    let dy = this.state.initialTopOffset - this.containerElem.offsetTop;
     return [dx, dy];
   };
 
   render() {
-    const styles = {
-      position: 'relative',
-      display: 'inline-block',
-    };
-
     let ghost = '';
-    if (this.props.customDragElement || this.props.dragClone) {
-      // dragging will be applied to the DragDropGhost element
-      let ghostContent;
-      if (this.props.customDragElement) {
-        ghostContent = this.props.customDragElement;
-      } else {
-        ghostContent = this.props.children;   // dragging a clone
-      }
-
-      ghost = (
-        <DragDropGhost
-          dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
-          setGhostElem={this.setGhostElem}
-        >
-          <div style={{ opacity: this.props.dragCloneOpacity, cursor: 'move' }}>
-            {ghostContent}
-          </div>
-        </DragDropGhost>
-      );
+    // dragging will be applied to the DragDropGhost element
+    let ghostContent;
+    if (this.props.customDragElement) {
+      ghostContent = this.props.customDragElement;
     } else {
-      // dragging will be applied to the DragDropContainer itself
-      styles.left = this.state.left;
-      styles.top = this.state.top;
-      styles.zIndex = this.state.dragging || this.state.dragged ? (this.props.zIndex) : 'inherit';
-      styles.cursor = this.state.dragging ? 'move' : 'pointer';
+      ghostContent = this.props.children;   // dragging a clone
     }
+
+    ghost = (
+      <DragDropGhost
+        dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
+        setGhostElem={this.setGhostElem}
+      >
+        <div style={{ 
+          opacity: this.props.dragCloneOpacity,
+          position: 'absolute', 
+          cursor: 'move' 
+          }}>
+          {ghostContent}
+        </div>
+      </DragDropGhost>
+    );
     
     return (
-      <div style={styles} ref={(container) => { this.containerElem = container; }}>
+      <div style={{position: 'relative', display: 'inline-block',}} ref={(container) => { this.containerElem = container; }}>
         {this.props.children}
         {ghost}
       </div>
