@@ -204,7 +204,6 @@ class DragDropContainer extends React.Component {
   };
 
   render() {
-    let ghost = '';
     // dragging will be applied to the DragDropGhost element
     let ghostContent;
     if (this.props.customDragElement) {
@@ -213,7 +212,7 @@ class DragDropContainer extends React.Component {
       ghostContent = this.props.children;   // dragging a clone
     }
 
-    ghost = (
+    let ghost = (
       <DragDropGhost
         dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
         setGhostElem={this.setGhostElem}
@@ -230,7 +229,9 @@ class DragDropContainer extends React.Component {
     
     return (
       <div style={{position: 'relative', display: 'inline-block',}} ref={(container) => { this.containerElem = container; }}>
-        {this.props.children}
+        <span style={{visibility: this.state.dragging ? 'hidden': 'visible'}}>
+          {this.props.children}
+        </span>
         {ghost}
       </div>
     );

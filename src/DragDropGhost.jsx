@@ -1,6 +1,6 @@
 import React from 'react';
 /**
- * Optional "ghost" node for dragging with DragDropContainer
+ * The thing that gets dragged
  */
 
 class DragDropGhost extends React.Component {
