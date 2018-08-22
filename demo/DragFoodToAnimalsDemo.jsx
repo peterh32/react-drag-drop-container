@@ -81,7 +81,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
       <div>
         <h2>Demo: Drag the food to the correct animal</h2>
         You can also drag the animal
-        <div className="foods">
+        <div className="foods" style={{float:'left', width: 120, height: 200, overflow: 'scroll'}}>
           <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
           <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
           <Food dragClone={true} targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
