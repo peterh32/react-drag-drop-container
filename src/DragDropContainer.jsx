@@ -1,5 +1,4 @@
 import React from 'react';
-import DragDropGhost from './DragDropGhost';
 
 function usesLeftButton(e) {
   const button = e.buttons || e.which || e.button;
@@ -23,15 +22,12 @@ class DragDropContainer extends React.Component {
 
     // The DOM elem we're dragging, and the elements we're dragging over.
     this.dragElem = null;
-    this.ghostElem = null;
     this.containerElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
   }
 
   componentDidMount() {
-    this.dragElem = this.ghostElem || this.containerElem;
-
     // set draggable attribute 'false' on any images, to prevent conflicts w browser native dragging
     const imgs = this.containerElem.getElementsByTagName('IMG');
     for (let i = 0; i < imgs.length; i += 1) {
@@ -52,11 +48,6 @@ class DragDropContainer extends React.Component {
       this.containerElem.style.cursor = 'move';
     }
   }
-
-  setGhostElem = (elem) => {
-    // this has to run _after_ the DragGhost element renders in order to get the DOM elem for that element
-    this.ghostElem = elem;
-  };
 
   addListeners = (elem) => {
     elem.addEventListener('mousedown', (e) => { this.handleMouseDown(e); }, false);
@@ -191,7 +182,7 @@ class DragDropContainer extends React.Component {
     this.generateDropEvent(x, y);
     document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     if (this.containerElem) {
-      this.setState({ left: 0, top: 0, dragging: false });
+      this.setState({ left: 0, top: 0, dragging: false, dragged: true });
     }
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
@@ -204,7 +195,7 @@ class DragDropContainer extends React.Component {
   };
 
   render() {
-    // dragging will be applied to the DragDropGhost element
+    // dragging will be applied to the "ghost" element
     let ghostContent;
     if (this.props.customDragElement) {
       ghostContent = this.props.customDragElement;
@@ -212,24 +203,25 @@ class DragDropContainer extends React.Component {
       ghostContent = this.props.children;   // dragging a clone
     }
 
+    let ghostStyles = {
+      position: 'absolute',
+      cursor: 'move',
+      left: this.state.left,
+      top: this.state.top,
+      zIndex: this.props.zIndex,
+      opacity: this.props.dragCloneOpacity,
+      display: this.state.dragging ? 'block' : 'none',
+    };
+
     let ghost = (
-      <DragDropGhost
-        dragging={this.state.dragging} left={this.state.left} top={this.state.top} zIndex={this.props.zIndex}
-        setGhostElem={this.setGhostElem}
-      >
-        <div style={{ 
-          opacity: this.props.dragCloneOpacity,
-          position: 'absolute', 
-          cursor: 'move' 
-          }}>
-          {ghostContent}
-        </div>
-      </DragDropGhost>
+      <div style={ghostStyles} ref={(c) => { this.dragElem = c; }}>
+        {ghostContent}
+      </div>
     );
     
     return (
-      <div style={{position: 'relative', display: 'inline-block',}} ref={(container) => { this.containerElem = container; }}>
-        <span style={{visibility: this.state.dragging ? 'hidden': 'visible'}}>
+      <div style={{position: 'relative', display: 'inline-block',}} ref={(c) => { this.containerElem = c; }}>
+        <span style={{visibility: this.state.dragging ? 'hidden': 'inherit'}}>
           {this.props.children}
         </span>
         {ghost}
