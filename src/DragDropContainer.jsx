@@ -23,6 +23,7 @@ class DragDropContainer extends React.Component {
     // The DOM elem we're dragging, and the elements we're dragging over.
     this.dragElem = null;
     this.containerElem = null;
+    this.sourceElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
   }
@@ -71,6 +72,7 @@ class DragDropContainer extends React.Component {
       dragData: this.props.dragData,
       dragElem: this.dragElem,
       containerElem: this.containerElem,
+      sourceElem: this.sourceElem,
     }, extraData);
     return e;
   };
@@ -183,9 +185,7 @@ class DragDropContainer extends React.Component {
   drop = (x, y) => {
     this.generateDropEvent(x, y);
     document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
-    if (this.containerElem) {
-      this.setState({ left: 0, top: 0, dragging: false, dragged: true });
-    }
+    this.setState({ left: 0, top: 0, dragging: false, dragged: true });
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
@@ -213,10 +213,12 @@ class DragDropContainer extends React.Component {
         {ghostContent}
       </div>
     );
+
+    var hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
     
     return (
       <div style={{position: 'relative', display: 'inline-block',}} ref={(c) => { this.containerElem = c; }}>
-        <span style={{visibility: this.state.dragging ? 'hidden': 'inherit'}}>
+        <span style={{visibility: hideSource ? 'hidden': 'inherit'}} ref={(c) => { this.sourceElem = c; }}>
           {this.props.children}
         </span>
         {ghost}

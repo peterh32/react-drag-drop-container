@@ -259,6 +259,7 @@ The event e contains
     dragData: [whatever you put in the dragData property for DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
     containerElem: [reference to the DragDropContainer DOM element]
+    sourceElem: [reference to the DOM element containing children of DragDropContainer]
 }
 ```
 
