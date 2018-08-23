@@ -63,7 +63,6 @@ class Food extends React.Component {
       <DragDropContainer
         targetKey={this.props.targetKey}
         dragClone={this.props.dragClone || false}
-        returnToBase={true}
         dragData={{label: this.props.label, tastes: this.props.tastes}}
         customDragElement={this.props.customDragElement}
         onDrop={this.landedOn}
@@ -117,7 +116,6 @@ export default class DragFoodToAnimalsDemo extends React.Component {
           <li><strong>onDrop</strong> callback to tell the drag item what it was dropped on (shown in console.log).</li>
           <li><strong>customDragElement</strong> (on the bananas) to drag a custom element.</li>
           <li><strong>dragClone</strong> (on the cheeseburger) to drag a copy.</li>
-          <li><strong>returnToBase</strong> to specify whether items return to their original location when released.</li>
           <li><strong>Trick:</strong> Wrap element in multiple DropTargets to handle different types of data with different targetKeys.</li>
         </ul>
       </div>

@@ -255,9 +255,6 @@ DragDropContainer.propTypes = {
   onDragEnd: React.PropTypes.func,
   onDragStart: React.PropTypes.func,
 
-  // If true, then object will return to its starting point after you let go of it
-  returnToBase: React.PropTypes.bool,
-
   // Constrain dragging to the x or y directions only
   xOnly: React.PropTypes.bool,
   yOnly: React.PropTypes.bool,
@@ -278,7 +275,6 @@ DragDropContainer.defaultProps = {
   onDragEnd: () => {},
   onDrop: () => {},
   noDragging: false,
-  returnToBase: false,
   xOnly: false,
   yOnly: false,
   zIndex: 1000,

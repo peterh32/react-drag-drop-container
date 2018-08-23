@@ -50,7 +50,6 @@ class BoxItem extends React.Component {
     return (
         <DragDropContainer
           targetKey="boxItem"
-          returnToBase={true}
           dragData={{label: this.props.children, index: this.props.index}}
           onDrop={this.deleteMe}
         >
@@ -148,7 +147,6 @@ class BoxMe extends React.Component {
     return (
       <DragDropContainer
         targetKey={this.props.targetKey}
-        returnToBase={true}
         dragData={{label: this.props.label}}
         customDragElement={this.props.customDragElement}
         onDragStart={()=>(console.log('start'))}

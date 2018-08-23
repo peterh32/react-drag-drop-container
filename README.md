@@ -214,9 +214,6 @@ let elem = <div class="drag_elem">Drag Me</div>;
 ##### noDragging
 If true, dragging is turned off.
 
-##### returnToBase
-If true, then dragged item goes back to where you put it when you drop.
-
 ##### xOnly, yOnly
 If true, then dragging is constrained to the x- or y direction, respectively.
 
