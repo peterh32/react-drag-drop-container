@@ -70,7 +70,7 @@ class DragDropContainer extends React.Component {
     Object.assign(e, {
       dragData: this.props.dragData,
       dragElem: this.dragElem,
-      sourceElem: this.containerElem,
+      containerElem: this.containerElem,
     }, extraData);
     return e;
   };

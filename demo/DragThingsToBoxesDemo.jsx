@@ -23,7 +23,7 @@ class BoxItem extends React.Component {
     e.stopPropagation();
     this.unHighlight();
     this.props.swap(e.dragData.index, this.props.index, e.dragData);
-    e.sourceElem.style.visibility="hidden";
+    e.containerElem.style.visibility="hidden";
   };
 
   deleteMe = () => {
@@ -80,7 +80,7 @@ class Box extends React.Component {
     let items = this.state.items.slice();
     items.push({label: e.dragData.label, uid: shortid.generate()});
     this.setState({items: items});
-    e.sourceElem.style.visibility="hidden";
+    e.containerElem.style.visibility="hidden";
   };
 
   swap = (fromIndex, toIndex, dragData) => {

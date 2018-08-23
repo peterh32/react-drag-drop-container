@@ -42,7 +42,7 @@ contains all this:
 {
     dropData: [whatever you put in the dropData property for the DropTarget]
     dropElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
+    containerElem: [reference to the DragDropContainer DOM element]
     target: [reference to the DropContainer DOM element]
 }
 ```
@@ -63,7 +63,7 @@ are passed an event containing...
 {
     dragData: [whatever you put in the dragData property for the DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
+    containerElem: [reference to the DragDropContainer DOM element]
     target: [reference to the DropContainer DOM element]
 }
 ```
@@ -258,19 +258,16 @@ The event e contains
 {
     dragData: [whatever you put in the dragData property for DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
+    containerElem: [reference to the DragDropContainer DOM element]
 }
 ```
-The __sourceElem___ and __dragElem__ properties point to the same object unless you
-set __dragGhost__ (see below), in which case __dragElem__ is the ghost, and __sourceElem__
-is the DragDropContainer.
 
 ##### Example: make the target "consume" the draggable
-Use __event.sourceElem__ to hide or delete the source element after a successful
+Use __event.containerElem__ to hide or delete the original element after a successful
 drop.
 ```
   dropped(ev){
-      ev.sourceElem.style.visibility = 'hidden';
+      ev.containerElem.style.visibility = 'hidden';
   }
 ```
 
