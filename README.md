@@ -83,7 +83,7 @@ and targets.
 
 * Can specify drag handle(s) (if desired) with property __dragHandleClassName__.
 
-* Can tell the element to return-to-base after dragging, or to stay where you put it.
+* ~~Can tell the element to return-to-base after dragging, or to stay where you put it.~~ Removed in v 5.0.0. It now always returns to base after dragging.
 
 * Can constrain dragging to one dimension, horizontal or vertical.
 
