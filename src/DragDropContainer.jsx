@@ -25,7 +25,7 @@ class DragDropContainer extends React.Component {
     this.sourceElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
-    
+
     this._isMounted = true;
   }
 
@@ -35,7 +35,7 @@ class DragDropContainer extends React.Component {
     for (let i = 0; i < imgs.length; i += 1) {
       imgs[i].setAttribute('draggable', 'false');
     }
-    
+
     // capture events
     if (this.props.dragHandleClassName) {
       // if drag handles
@@ -59,7 +59,7 @@ class DragDropContainer extends React.Component {
     elem.addEventListener('mousedown', (e) => { this.handleMouseDown(e); }, false);
     elem.addEventListener('touchstart', (e) => { this.handleTouchStart(e); }, false);
     // must add touchmove listener here in order for preventDefault() to work, to prevent scrolling during drag..
-    elem.addEventListener('touchmove', this.handleTouchMove, {passive: false});
+    elem.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     elem.addEventListener('touchend', this.handleTouchEnd);
   };
 
@@ -131,8 +131,8 @@ class DragDropContainer extends React.Component {
     const rect = this.containerElem.getBoundingClientRect();
     this.setState({
       clicked: true,
-      clickX: clickX,
-      clickY: clickY,
+      clickX,
+      clickY,
       initialLeftOffset: rect.left - clickX,
       initialTopOffset: rect.top - clickY,
       left: rect.left,
@@ -164,7 +164,7 @@ class DragDropContainer extends React.Component {
     this.generateEnterLeaveEvents(x, y);
     const stateChanges = { dragging: true };
     if (!this.props.yOnly) { stateChanges.left = this.state.initialLeftOffset + x; }
-    if (!this.props.xOnly) { stateChanges.top =  this.state.initialTopOffset + y; }
+    if (!this.props.xOnly) { stateChanges.top = this.state.initialTopOffset + y; }
     this.setState(stateChanges);
     this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
   };
@@ -203,7 +203,7 @@ class DragDropContainer extends React.Component {
       ghostContent = this.props.children;   // dragging a clone
     }
 
-    let ghostStyles = {
+    const ghostStyles = {
       position: 'fixed',
       cursor: 'move',
       left: this.state.left,
@@ -213,17 +213,17 @@ class DragDropContainer extends React.Component {
       display: this.state.dragging ? 'block' : 'none',
     };
 
-    let ghost = (
+    const ghost = (
       <div style={ghostStyles} ref={(c) => { this.dragElem = c; }}>
         {ghostContent}
       </div>
     );
 
-    var hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
-    
+    const hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
+
     return (
-      <div style={{position: 'relative', display: 'inline-block',}} ref={(c) => { this.containerElem = c; }}>
-        <span style={{visibility: hideSource ? 'hidden': 'inherit'}} ref={(c) => { this.sourceElem = c; }}>
+      <div style={{ position: 'relative', display: 'inline-block' }} ref={(c) => { this.containerElem = c; }}>
+        <span style={{ visibility: hideSource ? 'hidden' : 'inherit' }} ref={(c) => { this.sourceElem = c; }}>
           {this.props.children}
         </span>
         {ghost}

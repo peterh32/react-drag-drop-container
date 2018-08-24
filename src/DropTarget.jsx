@@ -29,11 +29,11 @@ class DropTarget extends React.Component {
   handleDrop(e) {
     // tell the drop source about the drop, then do the callback
     const evt = this.createEvent(
-      `${this.props.targetKey}Dropped`, 
-      { 
-        dropElem: this.elem, 
-        dropData: this.props.dropData 
-      }
+      `${this.props.targetKey}Dropped`,
+      {
+        dropElem: this.elem,
+        dropData: this.props.dropData,
+      },
     );
     e.containerElem.dispatchEvent(evt);
     this.props.onHit(e);
