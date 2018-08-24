@@ -1,8 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import BasicDragDemo from './BasicDragDemo';
-import DragFoodToAnimalsDemo from './DragFoodToAnimalsDemo';
-import DragThingsToBoxesDemo from './DragThingsToBoxesDemo';
+import DragFoodToAnimalsDemo from './DragFoodToAnimals/DragFoodToAnimalsDemo';
+import DragThingsToBoxesDemo from './DragThingsToBoxes/DragThingsToBoxesDemo';
 import DragElementWithClickHandlers from './DragElementWithClickHandlers';
 
 var App = React.createClass({

@@ -42,7 +42,7 @@ contains all this:
 {
     dropData: [whatever you put in the dropData property for the DropTarget]
     dropElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
+    containerElem: [reference to the DragDropContainer DOM element]
     target: [reference to the DropContainer DOM element]
 }
 ```
@@ -63,7 +63,7 @@ are passed an event containing...
 {
     dragData: [whatever you put in the dragData property for the DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
+    containerElem: [reference to the DragDropContainer DOM element]
     target: [reference to the DropContainer DOM element]
 }
 ```
@@ -185,7 +185,11 @@ to the child element, which we assume toggles some highlighted style.
 ```
 
 
-### DragDropContainer Properties
+## DragDropContainer Properties
+
+### Key Properties
+
+These are not required, but you'll almost always want to set them.
 
 ##### dragData
 Data about the dragged item that you want to pass to the target. Default is empty object.
@@ -193,13 +197,7 @@ Data about the dragged item that you want to pass to the target. Default is empt
 ##### targetKey
 Optional string to specify which DropTargets will accept which DragDropContainers.
 
-##### dragHandleClassName
-Class name for drag handle(s). Optional. If omitted, the whole thing is grabbable.
-
-__Tip:__ If you are using drag handles on an element that contains an image,
-use `<img draggable="false"...` to prevent the browser from letting users 
-drag the image itself, which can be confusing.
-
+### Other Properties
 
 ##### customDragElement
 If a DOM node is provided, we'll drag it instead of the actual object (which
@@ -211,11 +209,24 @@ let elem = <div class="drag_elem">Drag Me</div>;
 
 <DragDropContainer customDragElement={elem}>
 ```
+
+##### dragClone
+If true, then the user appears to be dragging a copy of the original element (this is false by
+default, so that the user appears to be dragging the element itself).
+
+##### dragElemOpacity
+Opacity of the element while it's dragging. (Sometimes you want to be able to see what's below the
+element you're dragging.) Default is 0.9 (e.g. 90%).
+
+##### dragHandleClassName
+Class name for drag handle(s). Optional. If omitted, the whole thing is grabbable.
+
+__Tip:__ If you are using drag handles on an element that contains an image,
+use `<img draggable="false"...` to prevent the browser from letting users 
+drag the image itself, which can be confusing.
+
 ##### noDragging
 If true, dragging is turned off.
-
-##### returnToBase
-If true, then dragged item goes back to where you put it when you drop.
 
 ##### xOnly, yOnly
 If true, then dragging is constrained to the x- or y direction, respectively.
@@ -261,19 +272,17 @@ The event e contains
 {
     dragData: [whatever you put in the dragData property for DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
-    sourceElem: [reference to the DragDropContainer DOM element]
+    containerElem: [reference to the DragDropContainer DOM element]
+    sourceElem: [reference to the DOM element containing children of DragDropContainer]
 }
 ```
-The __sourceElem___ and __dragElem__ properties point to the same object unless you
-set __dragGhost__ (see below), in which case __dragElem__ is the ghost, and __sourceElem__
-is the DragDropContainer.
 
 ##### Example: make the target "consume" the draggable
-Use __event.sourceElem__ to hide or delete the source element after a successful
+Use __event.containerElem__ to hide or delete the original element after a successful
 drop.
 ```
   dropped(ev){
-      ev.sourceElem.style.visibility = 'hidden';
+      ev.containerElem.style.visibility = 'hidden';
   }
 ```
 
