@@ -9,10 +9,8 @@ class DragDropContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      clickX: 0,
-      clickY: 0,
-      initialLeftOffset: 0,
-      initialTopOffset: 0,
+      leftOffset: 0,
+      topOffset: 0,
       left: 0,
       top: 0,
       clicked: false,
@@ -130,10 +128,8 @@ class DragDropContainer extends React.Component {
     const rect = this.containerElem.getBoundingClientRect();
     this.setState({
       clicked: true,
-      clickX,
-      clickY,
-      initialLeftOffset: rect.left - clickX,
-      initialTopOffset: rect.top - clickY,
+      leftOffset: rect.left - clickX,
+      topOffset: rect.top - clickY,
       left: rect.left,
       top: rect.top,
     });
@@ -160,11 +156,23 @@ class DragDropContainer extends React.Component {
     }
   };
 
+  getOffscreenCoordinates = (x, y) => {
+    // are we offscreen? if so by how much?
+    const xOff = x < 0 ? x : x > window.innerWidth ? x - window.innerWidth : 0;
+    const yOff = y < 0 ? y : y > window.innerHeight? y - window.innerHeight : 0;
+    return yOff || xOff ? [xOff, yOff] : false;
+  };
+
   drag = (x, y) => {
     this.generateEnterLeaveEvents(x, y);
     const stateChanges = { dragging: true };
-    if (!this.props.yOnly) { stateChanges.left = this.state.initialLeftOffset + x; }
-    if (!this.props.xOnly) { stateChanges.top = this.state.initialTopOffset + y; }
+    const offScreen = this.getOffscreenCoordinates(x, y);
+    if (offScreen) {
+      window.scrollBy(...offScreen)
+    } else {
+      if (!this.props.yOnly) { stateChanges.left = this.state.leftOffset + x; }
+      if (!this.props.xOnly) { stateChanges.top = this.state.topOffset + y; }
+    }
     this.setState(stateChanges);
     this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
   };
@@ -198,11 +206,11 @@ class DragDropContainer extends React.Component {
     const hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
     const nukeSource = hideSource && this.props.disappearDraggedElement;
     if (nukeSource) {
-      return {display: 'none'};
-    } else if (hideSource){
-      return {visibility: 'hidden'};
+      return { display: 'none' };
+    } else if (hideSource) {
+      return { visibility: 'hidden' };
     }
-    return {}
+    return {};
   };
 
   render() {
