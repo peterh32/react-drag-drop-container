@@ -28,12 +28,6 @@ export default class DragThingsToBoxesDemo extends React.Component {
         and uses it to construct a BoxItem. You can then drag BoxItems between boxes.
         <ul>
           <li><strong>dragHandleClassName</strong> specify that you can only drag a box by grabbing the 'x'.</li>
-          <li><strong>dragData</strong> to pass the food name and taste ("Yummy", "Weird").</li>
-          <li><strong>onDrop</strong> callback to tell the drag item what it was dropped on (shown in console.log).</li>
-          <li><strong>customDragElement</strong> (on the bananas) to drag a custom element.</li>
-          <li><strong>dragClone</strong> (on the cheeseburger) to drag a copy.</li>
-          <li><strong>Trick:</strong> Wrap element in multiple DropTargets to handle different 
-          types of data with different targetKeys (as on the trash can).</li>
         </ul>
 
       </div>
