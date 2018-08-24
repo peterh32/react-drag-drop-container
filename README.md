@@ -43,6 +43,7 @@ contains all this:
     dropData: [whatever you put in the dropData property for the DropTarget]
     dropElem: [reference to the DOM element being dragged]
     containerElem: [reference to the DragDropContainer DOM element]
+    sourceElem: [reference to the DOM element containing children of DragDropContainer]
     target: [reference to the DropContainer DOM element]
 }
 ```
@@ -64,6 +65,7 @@ are passed an event containing...
     dragData: [whatever you put in the dragData property for the DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
     containerElem: [reference to the DragDropContainer DOM element]
+    sourceElem: [reference to the DOM element containing children of DragDropContainer]
     target: [reference to the DropContainer DOM element]
 }
 ```
