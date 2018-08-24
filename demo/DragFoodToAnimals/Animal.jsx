@@ -24,7 +24,7 @@ export default class Animal extends React.Component {
     dropped(e) {
         e.containerElem.style.visibility="hidden";
         this.setState({thankYouMessage: `Thanks for the ${e.dragData.label}! ${e.dragData.tastes}!`})
-        console.log({'Contents of drop data:':e});
+        console.log({'onHit event passed to target animal:':e});
         this.setState({highlighted: false});
     }
 

@@ -62,6 +62,7 @@ export default class BoxItem extends React.Component {
             targetKey="boxItem"
             dragData={{label: this.props.children, index: this.props.index}}
             onDrop={this.deleteMe}
+            disappearDraggedElement={true}
           >
             <DropTarget
               onHit={this.handleDrop}
