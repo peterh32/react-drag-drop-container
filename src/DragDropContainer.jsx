@@ -17,7 +17,6 @@ class DragDropContainer extends React.Component {
       top: 0,
       clicked: false,
       dragging: false,
-      dragged: false,
     };
 
     // The DOM elem we're dragging, and the elements we're dragging over.
@@ -26,6 +25,8 @@ class DragDropContainer extends React.Component {
     this.sourceElem = null;
     this.currentTarget = null;
     this.prevTarget = null;
+    
+    this._isMounted = true;
   }
 
   componentDidMount() {
@@ -48,6 +49,10 @@ class DragDropContainer extends React.Component {
       this.addListeners(this.containerElem);
       this.containerElem.style.cursor = 'move';
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   addListeners = (elem) => {
@@ -185,7 +190,7 @@ class DragDropContainer extends React.Component {
   drop = (x, y) => {
     this.generateDropEvent(x, y);
     document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
-    this.setState({ left: 0, top: 0, dragging: false, dragged: true });
+    this._isMounted && this.setState({ dragging: false });
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
