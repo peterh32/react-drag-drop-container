@@ -8,7 +8,7 @@ import { DragDropContainer } from '../../src';
 export default class Food extends React.Component {
     landedOn(e) {
       console.log('I was dropped on ' + e.dropData.name)
-      console.log({'Contents of Drop Data': e});
+      console.log({'onDrop event passed back to Food': e});
     }
   
     render() {

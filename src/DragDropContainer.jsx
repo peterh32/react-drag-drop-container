@@ -194,6 +194,17 @@ class DragDropContainer extends React.Component {
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
+  getHideStyle = () => {
+    const hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
+    const nukeSource = hideSource && this.props.disappearDraggedElement;
+    if (nukeSource) {
+      return {display: 'none'};
+    } else if (hideSource){
+      return {visibility: 'hidden'};
+    }
+    return {}
+  };
+
   render() {
     // dragging will be applied to the "ghost" element
     let ghostContent;
@@ -219,11 +230,9 @@ class DragDropContainer extends React.Component {
       </div>
     );
 
-    const hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
-
     return (
       <div style={{ position: 'relative', display: 'inline-block' }} ref={(c) => { this.containerElem = c; }}>
-        <span style={{ visibility: hideSource ? 'hidden' : 'inherit' }} ref={(c) => { this.sourceElem = c; }}>
+        <span style={this.getHideStyle()} ref={(c) => { this.sourceElem = c; }}>
           {this.props.children}
         </span>
         {ghost}
@@ -240,6 +249,9 @@ DragDropContainer.propTypes = {
 
   // If provided, we'll drag this instead of the actual object. Takes priority over dragClone if both are set
   customDragElement: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
+
+  // Makes the dragged element completely disappear while dragging so that it takes up no space
+  disappearDraggedElement: React.PropTypes.bool,
 
   // If true, then we will drag a clone of the object instead of the object itself. See also customDragElement
   dragClone: React.PropTypes.bool,
@@ -273,6 +285,7 @@ DragDropContainer.propTypes = {
 DragDropContainer.defaultProps = {
   targetKey: 'ddc',
   customDragElement: null,
+  disappearDraggedElement: false,
   dragClone: false,
   dragElemOpacity: 0.9,
   dragData: {},

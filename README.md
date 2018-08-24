@@ -40,7 +40,7 @@ __onDrop__: Callback that fires after a successful drop on a compatible target. 
 contains all this:
 ```
 {
-    dropData: [whatever you put in the dropData property for the DropTarget]
+    dropData: [whatever you put in the dropData prop for the DropTarget]
     dropElem: [reference to the DOM element being dragged]
     containerElem: [reference to the DragDropContainer DOM element]
     target: [reference to the DropContainer DOM element]
@@ -61,7 +61,7 @@ passes over. __onHit__ is when a compatible container is dropped on the target. 
 are passed an event containing...
 ```
 {
-    dragData: [whatever you put in the dragData property for the DragDropContainer]
+    dragData: [whatever you put in the dragData prop for the DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
     containerElem: [reference to the DragDropContainer DOM element]
     target: [reference to the DropContainer DOM element]
@@ -76,16 +76,16 @@ Wrapper components for dragging an element and dropping it on a target.
 * Can set it up to drag the element itself or drag a "ghost" node that 
 represents the element.
 
-* Use property __targetKey__ to to identify compatible drag elements 
+* Use prop __targetKey__ to to identify compatible drag elements 
 and targets.
 
-* Can specify drag handle(s) (if desired) with property __dragHandleClassName__.
+* Can specify drag handle(s) (if desired) with prop __dragHandleClassName__.
 
 * Can tell the element to return-to-base after dragging, or to stay where you put it.
 
 * Can constrain dragging to one dimension, horizontal or vertical.
 
-* Includes callback properties for __onStartDrag__, __onDragging__,  __onEndDrag__,
+* Includes callback props for __onStartDrag__, __onDragging__,  __onEndDrag__,
 and __onDropped__. 
  
 * Data from the target element is included with the __onDropped__ event triggered in 
@@ -185,9 +185,9 @@ to the child element, which we assume toggles some highlighted style.
 ```
 
 
-## DragDropContainer Properties
+## DragDropContainer Props
 
-### Key Properties
+### Key Props
 
 These are not required, but you'll almost always want to set them.
 
@@ -197,7 +197,7 @@ Data about the dragged item that you want to pass to the target. Default is empt
 ##### targetKey
 Optional string to specify which DropTargets will accept which DragDropContainers.
 
-### Other Properties
+### Other Props
 
 ##### customDragElement
 If a DOM node is provided, we'll drag it instead of the actual object (which
@@ -209,6 +209,11 @@ let elem = <div class="drag_elem">Drag Me</div>;
 
 <DragDropContainer customDragElement={elem}>
 ```
+
+#### disappearDraggedElement
+If true, then dragging an element causes it to disappear such that it takes up no space. Defaults to
+false, so that the element space is still reserved while you are dragging it. Not compatible with
+dragClone. 
 
 ##### dragClone
 If true, then the user appears to be dragging a copy of the original element (this is false by
@@ -241,7 +246,7 @@ If that doesn't work for you, change it here.
 All optional; specify in props.
 ##### onDragStart(dragData)
 Runs when you start dragging. __dragData__ is whatever you passed in with
-the dragData property.
+the dragData prop.
 
 ##### onDrag(dragData, currentTarget, x, y)
 Runs as you drag.  __currentTarget__ is the DOM element you're currently dragging
@@ -253,9 +258,9 @@ When you drop.
 ##### onDrop(dropData, dropTarget)
 Triggered after a drop onto a compatible DropTarget. __dropTarget__ is the DOM
 element of the DropTarget you dropped on, and  __dropData__ 
-is  an optional property of DropTarget. 
+is  an optional prop of DropTarget. 
 
-### DropTarget Properties
+### DropTarget Props
 
 ##### targetKey
 Optional string to specify which DragDropContainers this target will accept.
@@ -263,14 +268,14 @@ Optional string to specify which DragDropContainers this target will accept.
 ##### dropData
 Data to be provided to the DragDropContainer when it is dropped on the target.
 
-#### Callbacks 
+#### DropTarget Callbacks 
 
 All optional; specify in props.
 ##### onDragEnter(e), onDragLeave(e), onHit(e)
 The event e contains
 ```
 {
-    dragData: [whatever you put in the dragData property for DragDropContainer]
+    dragData: [whatever you put in the dragData prop for DragDropContainer]
     dragElem: [reference to the DOM element being dragged]
     containerElem: [reference to the DragDropContainer DOM element]
     sourceElem: [reference to the DOM element containing children of DragDropContainer]
