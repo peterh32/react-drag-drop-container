@@ -209,7 +209,7 @@ class DragDropContainer extends React.Component {
       left: this.state.left,
       top: this.state.top,
       zIndex: this.props.zIndex,
-      opacity: this.props.dragCloneOpacity,
+      opacity: this.props.dragElemOpacity,
       display: this.state.dragging ? 'block' : 'none',
     };
 
@@ -245,7 +245,7 @@ DragDropContainer.propTypes = {
   dragClone: React.PropTypes.bool,
 
   // ghost will display with this opacity
-  dragCloneOpacity: React.PropTypes.number,
+  dragElemOpacity: React.PropTypes.number,
 
   // We will pass this data to the target when you drag or drop over it
   dragData: React.PropTypes.object,
@@ -274,7 +274,7 @@ DragDropContainer.defaultProps = {
   targetKey: 'ddc',
   customDragElement: null,
   dragClone: false,
-  dragCloneOpacity: 0.9,
+  dragElemOpacity: 0.9,
   dragData: {},
   dragHandleClassName: '',
   onDragStart: () => {},

@@ -21,7 +21,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
         <div className="foods" style={scrollBoxStyle}>
           <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
           <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
-          <Food dragClone={true} targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
+          <Food dragClone={true} dragElemOpacity={0.4} targetKey="dogFood" label="cheeseburger" tastes="Yummy" image="img/surprise.png"/>
           <Food customDragElement={customElem} targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
         </div>
         <div className="animals">
