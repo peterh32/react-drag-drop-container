@@ -6,7 +6,7 @@ import Box from './Box';
 export default class DragThingsToBoxesDemo extends React.Component {
   render() {
     return (
-      <div>
+      <div className="drag_things_to_boxes">
         <h2>Demo: Drag things into boxes</h2>
         You can also drag between boxes and drag to re-order within boxes, and drag the boxes using the x as a drag handle.
         <div className="things_to_drag">

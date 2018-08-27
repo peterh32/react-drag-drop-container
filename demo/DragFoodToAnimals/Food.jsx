@@ -12,6 +12,7 @@ export default class Food extends React.Component {
     }
   
     render() {
+      // note use of render prop below, rather than child element
       return (
         <DragDropContainer
           targetKey={this.props.targetKey}
@@ -19,9 +20,11 @@ export default class Food extends React.Component {
           dragData={{label: this.props.label, tastes: this.props.tastes}}
           customDragElement={this.props.customDragElement}
           onDrop={this.landedOn}
-        >
-          <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>
-        </DragDropContainer>
+          render = {() => {
+            return <img src={this.props.image} height="45" style={{ marginLeft: 40}}/>
+          }}
+        />
+          
       );
     }
   }

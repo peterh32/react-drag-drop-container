@@ -37,15 +37,6 @@ export default class Box extends React.Component {
     };
   
     render() {
-      const styles = {
-        border: "2px solid black",
-        borderRadius: 4,
-        width: 400,
-        height: 100,
-        margin: 10,
-        display: 'inline-block',
-        position: 'relative',
-      };
       /*
           Note the two layers of DropTarget. 
           This enables it to handle dropped items from 
@@ -63,7 +54,7 @@ export default class Box extends React.Component {
               targetKey="boxItem"
               dropData={{name: this.props.name}}
             >
-              <div style={styles}>
+              <div className="box">
                 <div className="grab_me" style={{position: 'absolute', bottom: 0, right: 0}}>&times;</div>
                 {this.state.items.map((item, index) => {
                   return (
