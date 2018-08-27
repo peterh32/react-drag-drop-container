@@ -31,6 +31,7 @@ class DropTarget extends React.Component {
     const evt = this.createEvent(
       `${this.props.targetKey}Dropped`,
       {
+        dragData: e.dragData,
         dropElem: this.elem,
         dropData: this.props.dropData,
       },
@@ -42,16 +43,17 @@ class DropTarget extends React.Component {
   render() {
     return (
       <span ref={(t) => { this.elem = t; }}>
-        {this.props.children}
+        {this.props.render ? this.props.render() : this.props.children}
       </span>
     );
   }
 }
 
 DropTarget.propTypes = {
-  children: React.PropTypes.node.isRequired,
+  children: React.PropTypes.node,
+  render: React.PropTypes.func,
 
-  // needs to match the targetKey in the DragDropContainer
+  // needs to match the targetKey in the DragDropContainer -- matched via the enter/leave/drop event names, above
   targetKey: React.PropTypes.string,
 
   // data that gets sent back to the DragDropContainer and shows up in its onDrop() callback event
@@ -64,11 +66,13 @@ DropTarget.propTypes = {
 };
 
 DropTarget.defaultProps = {
+  children: null,
   targetKey: 'ddc',
   onDragEnter: () => {},
   onDragLeave: () => {},
   onHit: () => () => {},
   dropData: {},
+  render: null,
 };
 
 export default DropTarget;

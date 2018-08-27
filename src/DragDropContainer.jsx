@@ -214,12 +214,14 @@ class DragDropContainer extends React.Component {
   };
 
   render() {
+    const content = this.props.render ? this.props.render(this.state) : this.props.children;
+
     // dragging will be applied to the "ghost" element
     let ghostContent;
     if (this.props.customDragElement) {
       ghostContent = this.props.customDragElement;
     } else {
-      ghostContent = this.props.children;   // dragging a clone
+      ghostContent = content;   // dragging a clone
     }
 
     const ghostStyles = {
@@ -241,7 +243,7 @@ class DragDropContainer extends React.Component {
     return (
       <div style={{ position: 'relative', display: 'inline-block' }} ref={(c) => { this.containerElem = c; }}>
         <span style={this.getHideStyle()} ref={(c) => { this.sourceElem = c; }}>
-          {this.props.children}
+          {content}
         </span>
         {ghost}
       </div>
@@ -250,7 +252,7 @@ class DragDropContainer extends React.Component {
 }
 
 DragDropContainer.propTypes = {
-  children: React.PropTypes.node.isRequired,
+  children: React.PropTypes.node,
 
   // Determines what you can drop on
   targetKey: React.PropTypes.string,
@@ -282,6 +284,9 @@ DragDropContainer.propTypes = {
   onDragEnd: React.PropTypes.func,
   onDragStart: React.PropTypes.func,
 
+  // Enable a render prop
+  render: React.PropTypes.func,
+
   // Constrain dragging to the x or y directions only
   xOnly: React.PropTypes.bool,
   yOnly: React.PropTypes.bool,
@@ -292,6 +297,7 @@ DragDropContainer.propTypes = {
 
 DragDropContainer.defaultProps = {
   targetKey: 'ddc',
+  children: null,
   customDragElement: null,
   disappearDraggedElement: false,
   dragClone: false,
@@ -303,6 +309,7 @@ DragDropContainer.defaultProps = {
   onDragEnd: () => {},
   onDrop: () => {},
   noDragging: false,
+  render: null,
   xOnly: false,
   yOnly: false,
   zIndex: 1000,

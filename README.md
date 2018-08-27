@@ -2,6 +2,8 @@
 
 Live demo: [peterh32.github.io/react-drag-drop-container](http://peterh32.github.io/react-drag-drop-container/)
 
+## Basics
+
 Make something draggable:
 ```
 import { DragDropContainer } from 'react-drag-drop-container';
@@ -24,32 +26,58 @@ import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
 </DropTarget>
 ```
 
-Wire up events and data on the DragDropContainer:
+## Anatomy of a Drag and Drop
+<img src="./readme_img/drag_drop_anatomy.png" width="500">
+
+
+* While dragging, the `onDragEnter` and `onDragLeave` events fire in the `DropTarget`. On a successful drop, the `onHit` event fires. These
+all pass the event data shown. 
+
+* On a successful drop, the `onDrop` event fires in the `DragDropContainer`, passing back the event data shown, 
+including information about the drop target.
+
+## Wiring it Up
+
+### In the DragDropContainer:
 ```
-<DragDropContainer targetKey="foo" dragData={some object} onDragStart={some method} onDrop={some method}...>
+<DragDropContainer 
+    targetKey="foo" 
+    dragData={some object} 
+    onDrop={some method}
+    onDragStart={some method} 
+    onDrag={some method} 
+    onDragEnd={some method} 
+>
     <div>Drag Me!</div>
 </DragDropContainer>
 ```
-__dragData__: Data to pass to the drop target.
+__targetKey__: Determines what elements it can be dropped on.
 
-__onDragStart__, __onDrag__, __onDragEnd__: Callbacks during the drag process. These are passed the dragData object set 
-above. __onDrag__ and __onDragEnd__ are also passed dropTarget (the DOM element we're currently over), 
-x, and y (current position).
+__dragData__: Data to pass to the drop target.
 
 __onDrop__: Callback that fires after a successful drop on a compatible target. It gets passed an event object that 
 contains all this:
+
+__onDragStart__, __onDrag__, __onDragEnd__ (less commonly used): Callbacks during the drag process. These are passed the dragData object set above. __onDrag__ and __onDragEnd__ are also passed dropTarget (the DOM element we're currently over), 
+x, and y (current position).
+
 ```
 {
     dropData: [whatever you put in the dropData prop for the DropTarget]
     dropElem: [reference to the DOM element being dragged]
-    containerElem: [reference to the DragDropContainer DOM element]
+    dragData: [whatever you put in the dragData prop]
     target: [reference to the DropContainer DOM element]
 }
 ```
 
-Wire up events and data in the DropTarget:
+### In the DropTarget:
 ```
-<DropTarget targetKey="foo" dropData={some object} onDragEnter={highlight method} onDragLeave={unHighlight} onHit={some function}>
+<DropTarget 
+    targetKey="foo" dropData={some object} 
+    onDragEnter={highlight method} 
+    onDragLeave={unHighlight} 
+    onHit={some function}
+>
     <p>Drop something on me</p>
 </DropTarget>
 ```
@@ -127,7 +155,7 @@ npm install react-drag-drop-container --save
 Wrap your element in a DragDropContainer:
 
 ```
-import { DragDropContainer } from 'react-drag-drop-container';
+import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
 
 <DragDropContainer>
     <span>Example</span>
@@ -155,8 +183,6 @@ Specify targetKey. This determines what dropTargets will accept your drag:
 
 Wrap an element in a DropTarget, giving it the same targetKey as your draggable:
 ```
-  import { DropTarget } from 'react-drag-drop-container';
-
   <DropTarget targetKey="foo">
       [some element or text]
   </DropTarget>
@@ -183,6 +209,23 @@ to the child element, which we assume toggles some highlighted style.
     <ChildElement highlighted=this.state.highlighted />
   </DropTarget>
 ```
+
+## Using with a Render Prop
+If you prefer, you can specify a render prop rather than a child component for `DragDropContainer` or `DropTarget`. 
+i.e, These are equivalent:
+```
+    <DragDropContainer targetKey="foo">
+        <div>Drag Me!</div>
+    </DragDropContainer>
+```
+and
+```
+    <DragDropContainer 
+        targetKey="foo">
+        render={() => return <div>Drag Me!</div>}
+    />
+```
+
 
 
 ## DragDropContainer Props
