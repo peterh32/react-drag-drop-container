@@ -3,7 +3,6 @@ import { DragDropContainer, DropTarget } from '../../src';
 import Animal from './Animal';
 import Food from './Food';
 
-
 export default class DragFoodToAnimalsDemo extends React.Component {
   render() {
 
@@ -15,7 +14,7 @@ export default class DragFoodToAnimalsDemo extends React.Component {
     };
 
     return (
-      <div>
+      <div className='drag_food_to_animals'>
         <h2>Demo: Drag the food from the scrolling box to the correct animal</h2>
         You can also drag the animals
         <div className="foods" style={scrollBoxStyle}>

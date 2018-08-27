@@ -18,3 +18,30 @@ textarea {
 	width: 100%;
 	font-size: 12px;
 }
+
+.drag_food_to_animals .animal {
+	padding: 4px;
+	border-radius: 30px;
+	margin: 12px;
+	display: inline-block;
+	width: 160px;
+	text-align: center;
+}
+
+.drag_food_to_animals .highlighted .animal {
+	background-color: #eee;
+}
+
+.drag_things_to_boxes .box {
+	border: 2px solid black;
+	border-radius: 4px;
+	width: 400px;
+	height: 100px;
+	margin: 10px;
+	display: inline-block;
+	position: relative;
+}
+
+.drag_things_to_boxes .highlighted .box {
+	box-shadow: inset 0 0 4px #00f;
+}

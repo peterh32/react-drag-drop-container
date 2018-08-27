@@ -8,13 +8,15 @@ Live demo: [peterh32.github.io/react-drag-drop-container](http://peterh32.github
 
 * Works on mouse and touch devices.
 
+* Automatically scrolls the page when you drag to the edge, so you can drag to a target that's initially offscreen.
+
 * Optional drag handles (with `dragHandleClassName` prop).
+
+* Can automatically highlight the dropTarget when dragging over it (`highlightClassName` property).
 
 * Can constrain dragging to one dimension with `xOnly` and `yOnly` properties.
 
-* Useful options like `dragClone` (drag a copy of the element), `customDragElement` (drag a custom element rather than the source object), and `disappearDraggedElement` (make the original element completely disappear while dragging). 
-
-* Automatically scrolls the page when you drag to the edge, so you can drag to a target that's initially offscreen.
+* Useful options like `dragClone` (drag a copy of the element), `customDragElement` (drag a custom element rather than the source element), and `disappearDraggedElement` (make the original element completely disappear while dragging). 
 
 * Can implement using the components as wrappers or by passing them a render prop.
 
@@ -53,9 +55,7 @@ import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
 * On a successful drop, the `onDrop` event fires in the `DragDropContainer`, passing back the event data shown.
 
 ---
-## Wiring it Up
-
-### In the DragDropContainer:
+## Wiring Up the DragDropContainer:
 ```
 <DragDropContainer 
     targetKey="foo" 
@@ -84,23 +84,20 @@ Passed back to `DragDropContainer` in the `onDrop` event:
     dropElem: [reference to the DOM element being dragged]
     dragData: [whatever you put in the dragData prop]
     target: [reference to the DragDropContainer DOM element]
-    // for onDrag and onDragEnd events only:
-    dropTarget: [the DOM element we're currently over]
-    x: [current X position]
-    y: [current Y position]
-    ...plus a lot of standard event data
+    ...plus a lot of standard react/js event data
 }
 ```
 
  ---
 
-### In the DropTarget:
+## Wiring Up the DropTarget:
 ```
 <DropTarget 
-    targetKey="foo" dropData={some object} 
-    onDragEnter={highlight method} 
-    onDragLeave={unHighlight} 
+    targetKey="foo" 
+    dropData={some object} 
     onHit={some function}
+    onDragEnter={some function} 
+    onDragLeave={some function} 
 >
     <p>Drop something on me</p>
 </DropTarget>
@@ -125,73 +122,71 @@ Passed in `onDragEnter`, `onDragLeave`, and `onHit`:
 ```
 
 ---
-## Usage
+## Examples
 
-#### Set up Draggable Element
-
-Wrap your element in a DragDropContainer:
-
-```
-import { DragDropContainer, DropTarget } from 'react-drag-drop-container';
-
-<DragDropContainer>
-    <span>Example</span>
-</DragDropContainer>
-```
-The element should now be draggable.
-
-##### Set up for dragging to a target
-Add the data you want to send to the target when you drop the element on it:
-```
-<DragDropContainer dragData={{label: 'Example', id: 123}}>
-	<span>Example</span>
-</DragDropContainer>
-```
-
-Specify targetKey. This determines what dropTargets will accept your drag:
-```
-<DragDropContainer dragData={{label: 'Example', id: 123}} targetKey="foo">
-	<span>Example</span>
-</DragDropContainer>
-```
-
-
-#### Set up Target(s)
-
-Wrap an element in a `DropTarget`, giving it the same `targetKey` as your draggable:
+### DropTarget with Multiple targetKeys
+Wrap the element in multiple `DropTarget`s, one for each `targetKey`:
 ```
   <DropTarget targetKey="foo">
-      [some element or text]
+    <DropTarget targetKey="bar">
+      <div>You can drop a "foo" or a "bar on me</div>
+    </DropTarget>
   </DropTarget>
 ```
 
-(__Tip__: to create a target that can accept more than one `targetKey`, wrap your element in multiple `DropTarget`s, one for each `targetKey`.)
 
-In DropTarget's parent, add handlers for the enter, leave, and drop events. For example:
+### Draggable Drop Target
+Wrap the element in a `DragDropContainer` and a `DropTarget`:
 ```
-  highlight(ev){
-    this.setState({'highlighted': true})
-  }
+  <DragDropContainer targetKey="foo">
+    <DropTarget targetKey="bar">
+      <div>You can drop a "bar" on me, or drag and drop me onto a "foo"</div>
+    </DropTarget>
+  </DragDropContainer>
+```
 
-  unHighlight(ev){
- 	this.setState({'highlighted': false})
-  }
-  
-  dropped(ev){
-    ... do something with event data ...
-  }
+
+### Apply Hover Highlighting to a DropTarget
+By default the container for your DropTarget has the classname 'highlighted' applied when a compatible DragDropContainer is hovering over it.
 ```
-Wire them up to DropTarget. In this example we are passing the "highlighted" state
-to the child element, which we assume toggles some highlighted style.
-```
-  <DropTarget targetKey="foo" onDragEnter={this.highlight} onDragLeave={this.unHighlight} onHit={this.dropped}>
-    <ChildElement highlighted=this.state.highlighted />
+  <style>
+    .highlighted .my_target {background-color: 'lightblue'}
+  </style>
+
+  <DropTarget targetKey="foo" onHit={this.dropped}>
+    <div className="my_target">I turn blue when you drag a "foo" over me</div>
   </DropTarget>
 ```
+...or do it manually with the onDragEnter and onDragLeave events:
+```
+  <DropTarget targetKey="foo" 
+    onHit={this.dropped}
+    onDragEnter={this.highlight}
+    onDragLeave={this.unHighlight}
+    >
+    <div>Drop something on me</div>
+  </DropTarget>
+```
+...where `highlight` and `unHighlight` are your own methods.
 
-## Tip: Using with a Render Prop
+
+### Make the target "consume" the draggable
+Use `event.containerElem` to hide or delete the original element after a successful
+drop. In your DropTarget element:
+```
+  ...
+  dropped(e){
+      e.containerElem.style.visibility = 'hidden';
+  }
+  render() {
+    return <DropTarget targetKey="foo" onHit={this.dropped}>[element code]</DropTarget>
+  }
+  ...
+```
+
+### Use with a Render Prop
 If you prefer, you can specify a render prop rather than a child component for `DragDropContainer` or `DropTarget`. 
-i.e, These are equivalent:
+These are equivalent:
 ```
     <DragDropContainer targetKey="foo">
         <div>Drag Me!</div>
@@ -265,7 +260,7 @@ If that doesn't work for you, change it here.
 
 #### DragDropContainer Callbacks 
 
-All optional.
+All optional. You'll generally set `onDrop`, but often skip the others.
 ##### onDragStart(dragData)
 Runs when you start dragging. `dragData` is whatever you passed in with
 the dragData prop.
@@ -289,6 +284,8 @@ Optional string to specify which DragDropContainers this target will accept.
 ##### dropData
 Data to be provided to the DragDropContainer when it is dropped on the target.
 
+##### highlightClassName 
+CSS classname to apply when a compatible DragDropContainer is hovering over the DropTarget. Defaults to `highlighted`. Set to empty string if you do not want any highlight behavior.
 
 #### DropTarget Callbacks 
 
@@ -302,15 +299,6 @@ The event e contains
     containerElem: [reference to the DragDropContainer DOM element]
     sourceElem: [reference to the DOM element containing children of DragDropContainer]
 }
-```
-
-##### Example: make the target "consume" the draggable
-Use `event.containerElem` to hide or delete the original element after a successful
-drop.
-```
-  dropped(ev){
-      ev.containerElem.style.visibility = 'hidden';
-  }
 ```
 
 

@@ -4,12 +4,13 @@ class DropTarget extends React.Component {
   constructor(props) {
     super(props);
     this.elem = null;
-    this.handleDrop = this.handleDrop.bind(this);
+    this.state = {highlighted: false};
   }
+
   componentDidMount() {
-    this.elem.addEventListener(`${this.props.targetKey}DragEnter`, (e) => { this.props.onDragEnter(e); }, false);
-    this.elem.addEventListener(`${this.props.targetKey}DragLeave`, (e) => { this.props.onDragLeave(e); }, false);
-    this.elem.addEventListener(`${this.props.targetKey}Drop`, (e) => { this.handleDrop(e); }, false);
+    this.elem.addEventListener(`${this.props.targetKey}DragEnter`, this.handleDragEnter, false);
+    this.elem.addEventListener(`${this.props.targetKey}DragLeave`, this.handleDragLeave, false);
+    this.elem.addEventListener(`${this.props.targetKey}Drop`, this.handleDrop, false);
   }
 
   createEvent(eventName, eventData) {
@@ -26,7 +27,7 @@ class DropTarget extends React.Component {
     return e;
   }
 
-  handleDrop(e) {
+  handleDrop = (e) => {
     // tell the drop source about the drop, then do the callback
     const evt = this.createEvent(
       `${this.props.targetKey}Dropped`,
@@ -38,11 +39,25 @@ class DropTarget extends React.Component {
     );
     e.containerElem.dispatchEvent(evt);
     this.props.onHit(e);
+    this.setState({highlighted: false})
+  }
+
+  handleDragEnter = (e) => {
+    console.log('enter')
+    const _e = e;
+    this.props.highlightClassName && this.setState({highlighted: true})
+    this.props.onDragEnter(_e);
+  }
+
+  handleDragLeave = (e) => {
+    const _e = e;
+    this.props.highlightClassName && this.setState({highlighted: false})
+    this.props.onDragLeave(_e);
   }
 
   render() {
     return (
-      <span ref={(t) => { this.elem = t; }}>
+      <span ref={(t) => { this.elem = t; }} className={this.state.highlighted ? this.props.highlightClassName : ''}>
         {this.props.render ? this.props.render() : this.props.children}
       </span>
     );
@@ -52,6 +67,7 @@ class DropTarget extends React.Component {
 DropTarget.propTypes = {
   children: React.PropTypes.node,
   render: React.PropTypes.func,
+  highlightClassName: React.PropTypes.string,
 
   // needs to match the targetKey in the DragDropContainer -- matched via the enter/leave/drop event names, above
   targetKey: React.PropTypes.string,
@@ -72,6 +88,7 @@ DropTarget.defaultProps = {
   onDragLeave: () => {},
   onHit: () => () => {},
   dropData: {},
+  highlightClassName: 'highlighted',
   render: null,
 };
 
