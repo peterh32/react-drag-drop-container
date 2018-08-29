@@ -6,7 +6,7 @@ Live demo: [peterh32.github.io/react-drag-drop-container](http://peterh32.github
 ## Features
 * Very easy to implement and understand.
 
-* Works on mouse and touch devices (though has problems on touch devices when you resize the screen).
+* Works on mouse and touch devices.
 
 * Automatically scrolls the page when you drag to the edge, so you can drag to a target that's initially offscreen.
 
