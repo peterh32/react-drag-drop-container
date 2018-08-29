@@ -5,6 +5,22 @@ function usesLeftButton(e) {
   return button === 1;
 }
 
+function getFixedOffset() {
+  // When browser window is zoomed, IOS browsers will offset "location:fixed" component coordinates
+  // from the actual window coordinates
+  let fixedElem = document.createElement('div');
+  fixedElem.style.cssText = 'position:fixed; top: 0; left: 0';
+  document.body.appendChild(fixedElem);
+  const rect = fixedElem.getBoundingClientRect();
+  document.body.removeChild(fixedElem);
+  return [rect.left, rect.top]
+}
+
+function isZoomed() {
+  // somewhat arbitrary figure to decide whether we need to use getFixedOffset (above) or not
+  return Math.abs(1 - (document.body.clientWidth / window.innerWidth)) > 0.02;
+}
+
 class DragDropContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -25,6 +41,15 @@ class DragDropContainer extends React.Component {
     this.prevTarget = null;
 
     this._isMounted = true;
+
+    // offset factors that occur when dragging in a zoomed-in IOS browser
+    this.fixedOffsetLeft = 0;
+    this.fixedOffsetTop = 0;
+
+    // scrolling at edge of window
+    this.scrollTimer = null;
+    this.xScroll = 0;
+    this.yScroll = 0;
   }
 
   componentDidMount() {
@@ -89,6 +114,29 @@ class DragDropContainer extends React.Component {
     this.currentTarget = this.dragElem.contains(target) ? document.body : target;
   };
 
+  setFixedOffset = () => {
+    if (isZoomed()){
+      [this.fixedOffsetLeft, this.fixedOffsetTop] = getFixedOffset();
+    }
+  };
+
+  doScroll = () => {
+    window.scrollBy(this.xScroll, this.yScroll)
+    this.setFixedOffset();
+  };
+
+  startScrolling = (x, y) => {
+    [this.xScroll, this.yScroll] = [x,y];
+    if(!this.scrollTimer){
+      this.scrollTimer = setInterval(this.doScroll, 50);
+    }
+  };
+
+  stopScrolling = () => {
+    clearInterval(this.scrollTimer);
+    this.scrollTimer = null;
+  };
+
   generateEnterLeaveEvents = (x, y) => {
     // generate events as we enter and leave elements while dragging
     const prefix = this.props.targetKey;
@@ -119,6 +167,7 @@ class DragDropContainer extends React.Component {
   handleTouchStart = (e) => {
     if (!this.props.noDragging) {
       e.stopPropagation();
+      this.setFixedOffset();
       this.startDrag(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
     }
   };
@@ -157,9 +206,13 @@ class DragDropContainer extends React.Component {
   };
 
   getOffscreenCoordinates = (x, y) => {
-    // are we offscreen? if so by how much?
-    const xOff = x < 0 ? x : x > window.innerWidth ? x - window.innerWidth : 0;
-    const yOff = y < 0 ? y : y > window.innerHeight? y - window.innerHeight : 0;
+    // are we offscreen (or very close, anyway)? if so by how much?
+    const LEFTEDGE = 10
+    const RIGHTEDGE = window.innerWidth - 10
+    const TOPEDGE = 10
+    const BOTTOMEDGE = window.innerHeight - 10
+    const xOff = x < LEFTEDGE ? x - LEFTEDGE : x > RIGHTEDGE ? x - RIGHTEDGE : 0;
+    const yOff = y < TOPEDGE ? y - TOPEDGE : y > BOTTOMEDGE? y - BOTTOMEDGE : 0;
     return yOff || xOff ? [xOff, yOff] : false;
   };
 
@@ -168,10 +221,11 @@ class DragDropContainer extends React.Component {
     const stateChanges = { dragging: true };
     const offScreen = this.getOffscreenCoordinates(x, y);
     if (offScreen) {
-      window.scrollBy(...offScreen)
+      this.startScrolling(...offScreen)
     } else {
-      if (!this.props.yOnly) { stateChanges.left = this.state.leftOffset + x; }
-      if (!this.props.xOnly) { stateChanges.top = this.state.topOffset + y; }
+      this.stopScrolling();
+      if (!this.props.yOnly) { stateChanges.left = (this.state.leftOffset + x) - this.fixedOffsetLeft; }
+      if (!this.props.xOnly) { stateChanges.top = (this.state.topOffset + y) - this.fixedOffsetTop; }
     }
     this.setState(stateChanges);
     this.props.onDrag(this.props.dragData, this.currentTarget, x, y);
@@ -196,6 +250,7 @@ class DragDropContainer extends React.Component {
   };
 
   drop = (x, y) => {
+    this.stopScrolling();
     this.generateDropEvent(x, y);
     document.removeEventListener(`${this.props.targetKey}Dropped`, this.props.onDrop);
     this._isMounted && this.setState({ dragging: false });
