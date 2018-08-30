@@ -40,15 +40,16 @@ export default class BoxItem extends React.Component {
         padding: 10,
         margin: 3,
         display: 'inline-block',
-        backgroundColor: '#005577'
+        backgroundColor: '#005577',
+        width: 90,
       };
       let outerStyles = {
         paddingLeft: 1,
         marginLeft: 2,
-        borderLeft: '3px solid transparent'
+        borderTop: '3px solid transparent'
       };
       if (this.state.highlighted) {
-        outerStyles.borderLeft = '3px solid darkblue';
+        outerStyles.borderTop = '3px solid darkblue';
       }
 
       /*
@@ -58,23 +59,23 @@ export default class BoxItem extends React.Component {
       */
 
       return (
+        <div style={outerStyles}>
           <DragDropContainer
-            targetKey="boxItem"
-            dragData={{label: this.props.children, index: this.props.index}}
-            onDrop={this.deleteMe}
-            disappearDraggedElement={true}
-          >
-            <DropTarget
-              onHit={this.handleDrop}
-              onDragEnter={this.highlight}
-              onDragLeave={this.unHighlight}
               targetKey="boxItem"
+              dragData={{label: this.props.children, index: this.props.index}}
+              onDrop={this.deleteMe}
+              disappearDraggedElement={true}
             >
-              <div style={outerStyles}>
+              <DropTarget
+                onHit={this.handleDrop}
+                onDragEnter={this.highlight}
+                onDragLeave={this.unHighlight}
+                targetKey="boxItem"
+              >
                 <div style={styles}>{this.props.children}</div>
-              </div>
-          </DropTarget>
-        </DragDropContainer>
+            </DropTarget>
+          </DragDropContainer>
+        </div>
       );
     }
   }

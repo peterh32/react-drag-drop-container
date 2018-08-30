@@ -257,19 +257,19 @@ class DragDropContainer extends React.Component {
     this.props.onDragEnd(this.props.dragData, this.currentTarget, x, y);
   };
 
-  getHideStyle = () => {
-    const hideSource = this.state.dragging && !this.props.dragClone && !this.props.customDragElement;
-    const nukeSource = hideSource && this.props.disappearDraggedElement;
-    if (nukeSource) {
-      return { display: 'none' };
-    } else if (hideSource) {
-      return { visibility: 'hidden' };
+  getDisplayMode = () => {
+    if (this.state.dragging && !this.props.dragClone && !this.props.customDragElement) {
+      if (this.props.disappearDraggedElement) {
+        return 'disappeared'
+      }
+      return 'hidden'
     }
-    return {};
+    return 'normal'
   };
 
   render() {
     const content = this.props.render ? this.props.render(this.state) : this.props.children;
+    const displayMode = this.getDisplayMode();
 
     // dragging will be applied to the "ghost" element
     let ghostContent;
@@ -295,9 +295,19 @@ class DragDropContainer extends React.Component {
       </div>
     );
 
+    const containerStyles = { 
+      position: displayMode === 'disappeared' ? 'absolute' : 'relative', 
+      display: 'inline-block', 
+    };
+
+    const sourceElemStyles = {
+      display: displayMode === 'disappeared' ? 'none' : 'inherit',
+      visibility: displayMode === 'hidden' ? 'hidden' : 'inherit',
+    };
+
     return (
-      <div style={{ position: 'relative', display: 'inline-block' }} ref={(c) => { this.containerElem = c; }}>
-        <span style={this.getHideStyle()} ref={(c) => { this.sourceElem = c; }}>
+      <div style={containerStyles} ref={(c) => { this.containerElem = c; }}>
+        <span style={sourceElemStyles} ref={(c) => { this.sourceElem = c; }}>
           {content}
         </span>
         {ghost}

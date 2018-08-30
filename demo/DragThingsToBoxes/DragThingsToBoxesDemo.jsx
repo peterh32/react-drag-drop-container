@@ -1,6 +1,7 @@
 import React from 'react';
 import Boxable from './Boxable';
 import Box from './Box';
+import './DragThingsToBoxesDemo.css';
 
 
 export default class DragThingsToBoxesDemo extends React.Component {
@@ -19,9 +20,9 @@ export default class DragThingsToBoxesDemo extends React.Component {
         </div>
         <div className="boxes">
           <Box targetKey="box"/>
-          <br/>
           <Box targetKey="box"/>
         </div>
+        <div style={{clear: 'both'}}>&nbsp;</div>
 
         <h3>Notes:</h3>
         When you drag an item into a box, the Box element gets info from the onHit event's dragData property
