@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 
 function usesLeftButton(e) {
   const button = e.buttons || e.which || e.button;
@@ -317,47 +319,47 @@ class DragDropContainer extends React.Component {
 }
 
 DragDropContainer.propTypes = {
-  children: React.PropTypes.node,
+  children: PropTypes.node,
 
   // Determines what you can drop on
-  targetKey: React.PropTypes.string,
+  targetKey: PropTypes.string,
 
   // If provided, we'll drag this instead of the actual object. Takes priority over dragClone if both are set
-  customDragElement: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.node]),
+  customDragElement: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
   // Makes the dragged element completely disappear while dragging so that it takes up no space
-  disappearDraggedElement: React.PropTypes.bool,
+  disappearDraggedElement: PropTypes.bool,
 
   // If true, then we will drag a clone of the object instead of the object itself. See also customDragElement
-  dragClone: React.PropTypes.bool,
+  dragClone: PropTypes.bool,
 
   // ghost will display with this opacity
-  dragElemOpacity: React.PropTypes.number,
+  dragElemOpacity: PropTypes.number,
 
   // We will pass this data to the target when you drag or drop over it
-  dragData: React.PropTypes.object,
+  dragData: PropTypes.object,
 
   // If included, we'll only let you drag by grabbing elements with this className
-  dragHandleClassName: React.PropTypes.string,
+  dragHandleClassName: PropTypes.string,
 
   // if True, then dragging is turned off
-  noDragging: React.PropTypes.bool,
+  noDragging: PropTypes.bool,
 
   // callbacks (optional):
-  onDrop: React.PropTypes.func,
-  onDrag: React.PropTypes.func,
-  onDragEnd: React.PropTypes.func,
-  onDragStart: React.PropTypes.func,
+  onDrop: PropTypes.func,
+  onDrag: PropTypes.func,
+  onDragEnd: PropTypes.func,
+  onDragStart: PropTypes.func,
 
   // Enable a render prop
-  render: React.PropTypes.func,
+  render: PropTypes.func,
 
   // Constrain dragging to the x or y directions only
-  xOnly: React.PropTypes.bool,
-  yOnly: React.PropTypes.bool,
+  xOnly: PropTypes.bool,
+  yOnly: PropTypes.bool,
 
   // Defaults to 1000 while dragging, but you can customize it if you need it to go higher
-  zIndex: React.PropTypes.number,
+  zIndex: PropTypes.number,
 };
 
 DragDropContainer.defaultProps = {
