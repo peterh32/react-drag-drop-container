@@ -10,9 +10,9 @@ var App = React.createClass({
 	render () {
 		return (
 			<div>
-				<DragFoodToAnimalsDemo/>
-				<hr />
 				<DragThingsToBoxesDemo/>
+				<hr />
+				<DragFoodToAnimalsDemo/>
 				<hr />
 				<BasicDragDemo />
 				<hr />

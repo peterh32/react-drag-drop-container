@@ -1,6 +1,6 @@
 {
   "name": "react-drag-drop-container",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "DragDropContainer",
   "main": "lib/bundle.js",
   "author": "Peter Hollingsworth",
@@ -56,5 +56,7 @@
     "react": ">=0.14.0",
     "react-dom": ">=0.14.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "prop-types": "^15.6.2"
+  }
 }

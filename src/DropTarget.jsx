@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 
 class DropTarget extends React.Component {
   constructor(props) {
@@ -55,9 +57,11 @@ class DropTarget extends React.Component {
     this.props.onDragLeave(_e);
   }
 
+
   render() {
+    const classNames = 'droptarget ' +  (this.state.highlighted ? this.props.highlightClassName : '');
     return (
-      <span ref={(t) => { this.elem = t; }} className={this.state.highlighted ? this.props.highlightClassName : ''}>
+      <span ref={(t) => { this.elem = t; }} className={classNames}>
         {this.props.render ? this.props.render() : this.props.children}
       </span>
     );
@@ -65,20 +69,20 @@ class DropTarget extends React.Component {
 }
 
 DropTarget.propTypes = {
-  children: React.PropTypes.node,
-  render: React.PropTypes.func,
-  highlightClassName: React.PropTypes.string,
+  children: PropTypes.node,
+  render: PropTypes.func,
+  highlightClassName: PropTypes.string,
 
   // needs to match the targetKey in the DragDropContainer -- matched via the enter/leave/drop event names, above
-  targetKey: React.PropTypes.string,
+  targetKey: PropTypes.string,
 
   // data that gets sent back to the DragDropContainer and shows up in its onDrop() callback event
-  dropData: React.PropTypes.object,
+  dropData: PropTypes.object,
 
   // callbacks
-  onDragEnter: React.PropTypes.func,
-  onDragLeave: React.PropTypes.func,
-  onHit: React.PropTypes.func,
+  onDragEnter: PropTypes.func,
+  onDragLeave: PropTypes.func,
+  onHit: PropTypes.func,
 };
 
 DropTarget.defaultProps = {

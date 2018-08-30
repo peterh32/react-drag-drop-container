@@ -43,30 +43,29 @@ export default class Box extends React.Component {
           outside AND items dragged between boxes.
       */
       return (
-        <DragDropContainer dragHandleClassName="grab_me">
-          <DropTarget
-            onHit={this.handleDrop}
-            targetKey={this.props.targetKey}
-            dropData={{name: this.props.name}}
-          >
+        <div className="component_box">
             <DropTarget
               onHit={this.handleDrop}
-              targetKey="boxItem"
+              targetKey={this.props.targetKey}
               dropData={{name: this.props.name}}
             >
-              <div className="box">
-                <div className="grab_me" style={{position: 'absolute', bottom: 0, right: 0}}>&times;</div>
-                {this.state.items.map((item, index) => {
-                  return (
-                    <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
-                      {item.label}
-                    </BoxItem>
-                  )
-                })}
-              </div>
+              <DropTarget
+                onHit={this.handleDrop}
+                targetKey="boxItem"
+                dropData={{name: this.props.name}}
+              >
+                <div className="box">
+                  {this.state.items.map((item, index) => {
+                    return (
+                      <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
+                        {item.label}
+                      </BoxItem>
+                    )
+                  })}
+                </div>
+              </DropTarget>
             </DropTarget>
-          </DropTarget>
-        </DragDropContainer>
+        </div>
       );
     }
   }
