@@ -44,7 +44,6 @@ export default class Box extends React.Component {
       */
       return (
         <div className="component_box">
-          <DragDropContainer dragHandleClassName="grab_me">
             <DropTarget
               onHit={this.handleDrop}
               targetKey={this.props.targetKey}
@@ -56,7 +55,6 @@ export default class Box extends React.Component {
                 dropData={{name: this.props.name}}
               >
                 <div className="box">
-                  <div className="grab_me" style={{position: 'absolute', bottom: 0, right: 0}}>&times;</div>
                   {this.state.items.map((item, index) => {
                     return (
                       <BoxItem key={item.uid} uid={item.uid} kill={this.kill} index={index} swap={this.swap}>
@@ -67,7 +65,6 @@ export default class Box extends React.Component {
                 </div>
               </DropTarget>
             </DropTarget>
-          </DragDropContainer>
         </div>
       );
     }

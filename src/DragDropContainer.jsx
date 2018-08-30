@@ -292,7 +292,7 @@ class DragDropContainer extends React.Component {
     };
 
     const ghost = (
-      <div style={ghostStyles} ref={(c) => { this.dragElem = c; }}>
+      <div className="ddcontainerghost" style={ghostStyles} ref={(c) => { this.dragElem = c; }}>
         {ghostContent}
       </div>
     );
@@ -308,8 +308,8 @@ class DragDropContainer extends React.Component {
     };
 
     return (
-      <div style={containerStyles} ref={(c) => { this.containerElem = c; }}>
-        <span style={sourceElemStyles} ref={(c) => { this.sourceElem = c; }}>
+      <div className="ddcontainer" style={containerStyles} ref={(c) => { this.containerElem = c; }}>
+        <span className="ddcontainersource" style={sourceElemStyles} ref={(c) => { this.sourceElem = c; }}>
           {content}
         </span>
         {ghost}

@@ -16,7 +16,6 @@ export default class DragFoodToAnimalsDemo extends React.Component {
     return (
       <div className='drag_food_to_animals'>
         <h2>Demo: Drag the food from the scrolling box to the correct animal</h2>
-        You can also drag the animals
         <div className="foods" style={scrollBoxStyle}>
           <Food targetKey="fruitsAndVeggies" label="orange" tastes="Delicious" image="img/orange.png"/>
           <Food targetKey="dogFood" label="pickle" tastes="It tasted weird" image="img/pickle.png"/>
@@ -24,29 +23,22 @@ export default class DragFoodToAnimalsDemo extends React.Component {
           <Food customDragElement={customElem} targetKey="fruitsAndVeggies" label="bananas" tastes="Yummy" image="img/banana.png"/>
         </div>
         <div className="animals">
-        {/* These are each enclosed in DragDropContainer so you can drag them too. */}
-          <DragDropContainer>
             <Animal targetKey="fruitsAndVeggies" name="Kong">
               <img src="img/gorilla.png" width="100"/>
               <h5>I eat fruit</h5>
             </Animal>
-          </DragDropContainer>
 
-          <DragDropContainer>
             <Animal targetKey="dogFood" name="Skippy">
               <img src="img/puppy.png" width="100"/>
               <h5>I eat meat & pickles</h5>
             </Animal>
-          </DragDropContainer>
 
-          <DragDropContainer>
             <Animal targetKey="dogFood" name="Bozo">
               <Animal targetKey="fruitsAndVeggies" name="Bozo">
                 <img src="img/trashcan.png" width="100"/>
                 <h5>I eat everything</h5>
               </Animal>
             </Animal>
-          </DragDropContainer>
 
         </div>
         <h3>Notes:</h3>

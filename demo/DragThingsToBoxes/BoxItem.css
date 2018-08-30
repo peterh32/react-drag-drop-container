@@ -1,0 +1,28 @@
+.box_item_component {
+    width: 100%;
+}
+
+.box_item_component .outer {
+    border-top: none;
+    min-width: 140px;
+    max-width: 140px;
+    overflow: hidden;
+}
+
+.box_item_component .highlighted .outer {
+    border-top: 40px solid #ddd;
+}
+
+.box_item_component .item {
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 3px;
+    background-color: #005577;
+}
+
+.box_item_component .grabber {
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 6px;
+}

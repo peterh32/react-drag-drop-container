@@ -57,9 +57,11 @@ class DropTarget extends React.Component {
     this.props.onDragLeave(_e);
   }
 
+
   render() {
+    const classNames = 'droptarget ' +  (this.state.highlighted ? this.props.highlightClassName : '');
     return (
-      <span ref={(t) => { this.elem = t; }} className={this.state.highlighted ? this.props.highlightClassName : ''}>
+      <span ref={(t) => { this.elem = t; }} className={classNames}>
         {this.props.render ? this.props.render() : this.props.children}
       </span>
     );
