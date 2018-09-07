@@ -10,6 +10,13 @@ export default class BoxItem extends React.Component {
     // the things that appear in the boxes
     constructor(props) {
       super(props);
+      this.state = {transitions: false};
+      this.height = 0;
+    }
+
+    componentDidMount() {
+      this.height = this.elem.offsetHeight;
+      console.log(this.height)
     }
     
     handleDrop = (e) => {
@@ -21,6 +28,16 @@ export default class BoxItem extends React.Component {
     deleteMe = () => {
       this.props.kill(this.props.uid);
     };
+
+    transitionsOn = () => {
+      if(!this.state.transitions) {
+        this.setState({transitions: true});
+      }
+    };
+
+    transitionsOff = () => {
+      this.setState({transitions: false});
+    };
   
     render() {
       /*
@@ -28,13 +45,16 @@ export default class BoxItem extends React.Component {
         in a DropTarget (enabling you to rearrange items in the box by dragging them on
         top of each other)
       */
+      const className = "box_item_component" + (this.state.transitions ? ' transitions_on' : ' transitions_off');
 
       return (
-        <div className="box_item_component">
+        <div className={className} ref={(c) => { this.elem = c; }}>
           <DragDropContainer
               targetKey="boxItem"
               dragData={{label: this.props.children, index: this.props.index}}
               onDrop={this.deleteMe}
+              onDrag={this.transitionsOn}
+              onDragEnd={this.transitionsOff}
               disappearDraggedElement={true}
               dragHandleClassName="grabber"
             >

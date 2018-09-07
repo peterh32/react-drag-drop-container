@@ -7,17 +7,21 @@
     min-width: 140px;
     max-width: 140px;
     overflow: hidden;
+    border: 0px solid transparent;
+}
+
+.box_item_component.transitions_on .outer {
+    transition: border-top-width 0.5s;
 }
 
 .box_item_component .highlighted .outer {
-    border-top: 40px solid #ddd;
+    border-top-width: 40px;
 }
 
 .box_item_component .item {
     color: white;
     border-radius: 5px;
     padding: 10px;
-    margin: 3px;
     background-color: #005577;
 }
 

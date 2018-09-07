@@ -307,6 +307,8 @@ class DragDropContainer extends React.Component {
       visibility: displayMode === 'hidden' ? 'hidden' : 'inherit',
     };
 
+    
+
     return (
       <div className="ddcontainer" style={containerStyles} ref={(c) => { this.containerElem = c; }}>
         <span className="ddcontainersource" style={sourceElemStyles} ref={(c) => { this.sourceElem = c; }}>
