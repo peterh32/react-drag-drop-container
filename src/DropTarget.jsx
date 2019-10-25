@@ -45,7 +45,6 @@ class DropTarget extends React.Component {
   }
 
   handleDragEnter = (e) => {
-    console.log('enter')
     const _e = e;
     this.props.highlightClassName && this.setState({highlighted: true})
     this.props.onDragEnter(_e);
