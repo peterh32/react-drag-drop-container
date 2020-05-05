@@ -307,7 +307,6 @@ The event e contains
 
 To view locally, clone the repository then
 ```
-$ npm run install
 $ npm run build
 $ npm run watch
 ```
@@ -318,9 +317,7 @@ File locations:
 
 ```
 /src    Source code for components
-/demo   Source code for demo
 /lib/bundle.js  Transpiled output
-/public   Demo files, compiled
 ```
 
 
