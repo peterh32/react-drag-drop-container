@@ -1,99 +1,108 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 class DropTarget extends React.Component {
-  constructor(props) {
-    super(props);
-    this.elem = null;
-    this.state = {highlighted: false};
-  }
+	constructor(props) {
+		super(props);
 
-  componentDidMount() {
-    this.elem.addEventListener(`${this.props.targetKey}DragEnter`, this.handleDragEnter, false);
-    this.elem.addEventListener(`${this.props.targetKey}DragLeave`, this.handleDragLeave, false);
-    this.elem.addEventListener(`${this.props.targetKey}Drop`, this.handleDrop, false);
-  }
+		this.state = {
+			highlighted: false,
+		};
 
-  createEvent(eventName, eventData) {
-    // utility to create an event
-    let e;
-    if (typeof window.CustomEvent !== 'function') {
-      // we are in IE 11 and must use old-style method of creating event
-      e = document.createEvent('CustomEvent');
-      e.initCustomEvent(eventName, true, true, {});
-    } else {
-      e = new CustomEvent(eventName, { bubbles: true, cancelable: true });
-    }
-    Object.assign(e, eventData);
-    return e;
-  }
+		this.targetElement = null;
 
-  handleDrop = (e) => {
-    // tell the drop source about the drop, then do the callback
-    const evt = this.createEvent(
-      `${this.props.targetKey}Dropped`,
-      {
-        dragData: e.dragData,
-        dropElem: this.elem,
-        dropData: this.props.dropData,
-      },
-    );
-    e.containerElem.dispatchEvent(evt);
-    this.props.onHit(e);
-    this.setState({highlighted: false})
-  }
+		this.setTargetElementRef = this.setTargetElementRef.bind(this);
+	}
 
-  handleDragEnter = (e) => {
-    console.log('enter')
-    const _e = e;
-    this.props.highlightClassName && this.setState({highlighted: true})
-    this.props.onDragEnter(_e);
-  }
+	componentDidMount() {
+		const { targetKey } = this.props;
 
-  handleDragLeave = (e) => {
-    const _e = e;
-    this.props.highlightClassName && this.setState({highlighted: false})
-    this.props.onDragLeave(_e);
-  }
+		this.targetElement.addEventListener(`${targetKey}DragEnter`, this.handleDragEnter);
+		this.targetElement.addEventListener(`${targetKey}DragLeave`, this.handleDragLeave);
+		this.targetElement.addEventListener(`${targetKey}Drop`, this.handleDrop);
+	}
+
+	setTargetElementRef(node) {
+		this.targetElement = node;
+	}
+
+	createEvent(eventName, eventData) {
+		const event = new CustomEvent(eventName, { bubbles: true, cancelable: true });
+
+		Object.assign(event, eventData);
+		return event;
+	}
+
+	// tell the drop source about the drop, then do the callback
+	handleDrop = event => {
+		const { targetKey, dropData, onHit } = this.props;
+		const evt = this.createEvent(`${targetKey}Dropped`, {
+			dropData,
+			dragData: event.dragData,
+			dropElem: this.targetElement,
+		});
+
+		event.containerElem.dispatchEvent(evt);
+		onHit(event);
+		this.setState({ highlighted: false });
+	}
+
+	handleDragEnter = event => {
+		const { highlightClassName, onDragEnter } = this.props;
+
+		highlightClassName && this.setState({ highlighted: true });
+
+		onDragEnter(event);
+	}
+
+	handleDragLeave = event => {
+		const { highlightClassName, onDragLeave } = this.props;
+
+		highlightClassName && this.setState({ highlighted: false });
+
+		onDragLeave(event);
+	}
 
 
-  render() {
-    const classNames = 'droptarget ' +  (this.state.highlighted ? this.props.highlightClassName : '');
-    return (
-      <span ref={(t) => { this.elem = t; }} className={classNames}>
-        {this.props.render ? this.props.render() : this.props.children}
-      </span>
-    );
-  }
+	render() {
+		const { highlightClassName, render: propsRender, children } = this.props;
+		const { highlighted } = this.state;
+		const targetElemClassNames = `droptarget ${highlighted ? highlightClassName : ''}`;
+
+		return (
+			<span ref={this.setTargetElementRef} className={targetElemClassNames}>
+				{propsRender ? propsRender() : children}
+			</span>
+		);
+	}
 }
 
 DropTarget.propTypes = {
-  children: PropTypes.node,
-  render: PropTypes.func,
-  highlightClassName: PropTypes.string,
+	children: PropTypes.node,
+	render: PropTypes.func,
+	highlightClassName: PropTypes.string,
 
-  // needs to match the targetKey in the DragDropContainer -- matched via the enter/leave/drop event names, above
-  targetKey: PropTypes.string,
+	// needs to match the targetKey in the DragDropContainer -- matched via the enter/leave/drop event names, above
+	targetKey: PropTypes.string,
 
-  // data that gets sent back to the DragDropContainer and shows up in its onDrop() callback event
-  dropData: PropTypes.object,
+	// data that gets sent back to the DragDropContainer and shows up in its onDrop() callback event
+	dropData: PropTypes.string,
 
-  // callbacks
-  onDragEnter: PropTypes.func,
-  onDragLeave: PropTypes.func,
-  onHit: PropTypes.func,
+	// callbacks
+	onDragEnter: PropTypes.func,
+	onDragLeave: PropTypes.func,
+	onHit: PropTypes.func,
 };
 
 DropTarget.defaultProps = {
-  children: null,
-  targetKey: 'ddc',
-  onDragEnter: () => {},
-  onDragLeave: () => {},
-  onHit: () => () => {},
-  dropData: {},
-  highlightClassName: 'highlighted',
-  render: null,
+	children: null,
+	targetKey: 'ddc',
+	onDragEnter: () => {},
+	onDragLeave: () => {},
+	onHit: () => () => {},
+	dropData: {},
+	highlightClassName: 'highlighted',
+	render: null,
 };
 
 export default DropTarget;
