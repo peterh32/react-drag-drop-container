@@ -26,8 +26,6 @@ class DragDropContainer extends React.Component {
 		this.currentTarget = null;
 		this.prevTarget = null;
 
-		this.isAlreadyDropped = false;
-
 		// scrolling at edge of window
 		this.scrollTimer = null;
 		this.xScroll = 0;
@@ -109,14 +107,13 @@ class DragDropContainer extends React.Component {
 	generateDropEvent = (x, y) => {
 		const { targetKey } = this.props;
 
-		if (!this.isAlreadyDropped) {
-			this.isAlreadyDropped = true;
+		// generate a drop event in whatever we're currently dragging over
+		this.setCurrentTarget(x, y);
+		const customEvent = this.buildCustomEvent(`${targetKey}Drop`, { x, y });
+		this.currentTarget.dispatchEvent(customEvent);
 
-			// generate a drop event in whatever we're currently dragging over
-			this.setCurrentTarget(x, y);
-			const customEvent = this.buildCustomEvent(`${targetKey}Drop`, { x, y });
-			this.currentTarget.dispatchEvent(customEvent);
-		}
+		// to prevent multiplying events on drop
+		document.removeEventListener(`${targetKey}Dropped`, onDrop);
 	};
 
 	handleMouseDown = e => {
