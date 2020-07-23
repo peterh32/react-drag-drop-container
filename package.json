@@ -50,7 +50,7 @@
     "shortid": "^2.2.12",
     "style-loader": "^0.16.1",
     "webpack": "^2.7.0",
-    "webpack-dev-server": "^2.11.2"
+    "webpack-dev-server": "^3.1.11"
   },
   "peerDependencies": {
     "react": ">=0.14.0",
