@@ -32,7 +32,7 @@
   ],
   "devDependencies": {
     "babel-core": "^6.26.3",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "^9.1.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
@@ -49,7 +49,7 @@
     "sass-loader": "^6.0.7",
     "shortid": "^2.2.12",
     "style-loader": "^0.16.1",
-    "webpack": "^2.7.0",
+    "webpack": "^5.74.0",
     "webpack-dev-server": "^3.1.11"
   },
   "peerDependencies": {
